@@ -1,0 +1,51 @@
+public/index.html:106:.section-title{font-family:'Cabinet Grotesk',sans-serif;font-size:17px;font-weight:800;letter-spacing:-.3px;color:var(--cream)}
+public/index.html:406:        <div class="section-title">Жанры</div>
+public/index.html:413:        <div class="section-title">Артисты</div>
+public/index.html:421:        <div class="section-title">Все треки</div>
+public/index.html:422:        <span id="trackCount" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+public/index.html:669:const state={tracks:[],filtered:[],artists:[],currentArtist:null,currentIdx:-1,currentTrack:null,isPlaying:false,favorites:new Set(JSON.parse(localStorage.getItem('venyl_favorites')||'[]')),genres:new Set(),user:null,isAdmin:false,albumFiles:[]};
+public/index.html:695:async function loadTracks(){const data=await api('/api/tracks').catch(()=>({tracks:[]}));state.tracks=Array.isArray(data.tracks)?data.tracks:[];state.filtered=[...state.tracks];renderGenres();renderTracks();updatePlayerMeta()}
+public/index.html:708:    <div class="artist-pill" onclick="openArtistProfile(${a.id})">
+public/index.html:711:      <span class="artist-pill-count">· ${a.trackCount||0}</span>
+public/index.html:724:  renderTracks();
+public/index.html:730:  renderTracks();
+public/index.html:733:function renderTracks(list=state.filtered,targetId='tracksList'){
+public/index.html:735:  if(targetId==='tracksList')qs('trackCount').textContent=list.length+' треков';
+public/index.html:741:    const isPlay=state.currentTrack&&state.currentTrack.id===t.id;
+public/index.html:742:    return `<div class="track-row${isPlay?' playing':''}" onclick="playTrackFromList(${i},'${targetId}')">
+public/index.html:745:      <div class="track-info"><div class="track-name">${esc(t.title)}</div><div class="track-artist" onclick="event.stopPropagation();if(${t.artistId||0})openArtistProfile(${t.artistId||0})">${esc(t.artist)}</div></div>
+public/index.html:756:function getCurrentList(targetId){if(targetId==='artistTracksList'&&state.currentArtist)return state.currentArtist.tracks;return state.filtered}
+public/index.html:757:function playTrackFromList(idx,targetId){const list=getCurrentList(targetId);playTrackObject(list[idx],idx,list)}
+public/index.html:760:  state.currentIdx=idx;state.currentTrack=t;state.playList=list||state.filtered;
+public/index.html:764:    audio.play().then(()=>{state.isPlaying=true;updatePlayBtn();qs('eqBars').style.display='flex';renderTracks();if(state.currentArtist)renderTracks(state.currentArtist.tracks,'artistTracksList')})
+public/index.html:769:  const t=state.currentTrack;
+public/index.html:775:  if(!state.currentTrack){if(state.filtered[0])playTrackObject(state.filtered[0],0,state.filtered);return}
+public/index.html:793:audio.addEventListener('timeupdate',()=>{if(!audio.duration)return;qs('progFill').style.width=(audio.currentTime/audio.duration*100)+'%';qs('curTime').textContent=fmtTime(audio.currentTime);qs('durTime').textContent=fmtTime(audio.duration)});
+public/index.html:794:audio.addEventListener('ended',nextTrack);
+public/index.html:795:audio.addEventListener('play',()=>{state.isPlaying=true;qs('eqBars').style.display='flex';updatePlayBtn()});
+public/index.html:796:audio.addEventListener('pause',()=>{state.isPlaying=false;qs('eqBars').style.display='none';updatePlayBtn()});
+public/index.html:802:  saveFavs();renderTracks();if(state.currentArtist)renderTracks(state.currentArtist.tracks,'artistTracksList');
+public/index.html:804:function toggleFavCurrent(){if(state.currentTrack)toggleFav(state.currentTrack.id)}
+public/index.html:809:  await api('/api/tracks/'+id,{method:'DELETE'}).then(async()=>{toast('Трек удалён');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id)}).catch(e=>toast(e.message||'Не удалось удалить трек','err'));
+public/index.html:823:    const r=await fetch('/api/tracks/upload',{method:'POST',body:fd,credentials:'include'});
+public/index.html:834:async function openArtistProfile(id){
+public/index.html:864:        <div class="section-head"><div class="section-title">Альбомы</div><span style="font-size:12px;color:var(--muted)">${data.albums.length}</span></div>
+public/index.html:876:          <div class="section-title">Треки артиста</div>
+public/index.html:887:        <div class="tracks-list" id="artistTracksList"></div>
+public/index.html:892:    renderTracks(data.tracks,'artistTracksList');
+public/index.html:896:function filterArtistAlbum(name){if(!state.currentArtist)return;renderTracks(state.currentArtist.tracks.filter(t=>t.album===name),'artistTracksList')}
+public/index.html:917:    toast('Профиль сохранён','ok');closeArtistEdit();await loadArtists();await loadTracks();if(id)openArtistProfile(id);
+public/index.html:944:    toast('Трек добавлен','ok');closeArtistTrackModal();await loadTracks();await loadArtists();openArtistProfile(id);
+public/index.html:979:    toast('Альбом создан','ok');closeAlbumModal();await loadTracks();await loadArtists();openArtistProfile(Number(artistId));
+public/index.html:990:    await api('/api/tracks/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,artist,album,genre})});
+public/index.html:991:    toast('Трек обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);
+public/index.html:1003:    toast('Альбом обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);
+public/index.html:1010:    toast('Альбом удалён');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);
+public/index.html:1032:  if(s==='favorites'){state.filtered=state.tracks.filter(t=>state.favorites.has(t.id));qs('trackCount').textContent=state.filtered.length+' в избранном';renderTracks();return}
+public/index.html:1034:  state.filtered=[...state.tracks];renderTracks();
+server.js:166:app.get('/api/tracks', (req, res) => res.json({ tracks: [...db.tracks].sort((a,b)=>b.id-a.id).map(mapTrack) }));
+server.js:167:app.post('/api/tracks/upload', authRequired, adminOnly, upload.fields([{name:'audio',maxCount:1},{name:'cover',maxCount:1}]), (req,res)=>{ try{ const title=String(req.body.title||'').trim(), artistName=String(req.body.artist||'').trim(), albumName=String(req.body.album||'').trim(), genre=String(req.body.genre||'').trim(); const audioFile=req.files?.audio?.[0], coverFile=req.files?.cover?.[0]; if(!title||!artistName||!audioFile){ cleanupRequestFiles(req); return res.status(400).json({error:'Укажи название, артиста и аудиофайл.'}); } const artists=ensureArtists(artistName), main=artists[0], album=albumName?ensureAlbum(main.id, albumName):null; const tr={id:nextId('tracks'), title, artist:artists.map(a=>a.name).join(', '), artist_id:main.id, album:album?album.name:albumName, album_id:album?album.id:null, genre, cover_path:coverFile?path.basename(coverFile.filename):(album?.cover_path||''), audio_path:path.basename(audioFile.filename), uploaded_by_user_id:req.user.id, created_at:now()}; db.tracks.push(tr); syncTrackArtists(tr.id, artists); saveDb(); res.json({ok:true, track:mapTrack(tr)}); }catch(e){ cleanupRequestFiles(req); res.status(500).json({error:e.message||'Не удалось загрузить трек.'}); } });
+server.js:168:app.delete('/api/tracks/:id', authRequired, adminOnly, (req,res)=>{ const id=Number(req.params.id); const t=db.tracks.find(x=>Number(x.id)===id); if(!t) return res.status(404).json({error:'Трек не найден.'}); deleteFileSafe(path.join(tracksDir,t.audio_path)); if(t.cover_path){ deleteFileSafe(path.join(coversDir,t.cover_path)); invalidateCoverCache(t.cover_path); } db.tracks=db.tracks.filter(x=>Number(x.id)!==id); db.track_artists=db.track_artists.filter(x=>Number(x.track_id)!==id); saveDb(); res.json({ok:true}); });
+server.js:169:app.put('/api/tracks/:id', authRequired, adminOnly, (req,res)=>{ const id=Number(req.params.id); const t=db.tracks.find(x=>Number(x.id)===id); if(!t) return res.status(404).json({error:'Трек не найден.'}); const title=String(req.body.title||t.title).trim(), artistNames=String(req.body.artist||t.artist).trim(), albumName=String(req.body.album||'').trim(), genre=String(req.body.genre||'').trim(); const artists=ensureArtists(artistNames), main=artists[0], album=albumName?ensureAlbum(main.id, albumName):null; Object.assign(t,{title, artist:artists.map(a=>a.name).join(', '), artist_id:main.id, album:album?album.name:albumName, album_id:album?album.id:null, genre, cover_path:t.cover_path||(album?.cover_path||'')}); syncTrackArtists(id, artists); saveDb(); res.json({ok:true, track:mapTrack(t)}); });
+server.js:171:app.get('/api/artists', (req,res)=>{ const artists=[...db.artists].sort((a,b)=>String(a.name).localeCompare(String(b.name),'ru')); res.json({ artists: artists.map(a=>({...mapArtist(a), trackCount: db.tracks.filter(t=>Number(t.artist_id)===Number(a.id)||String(t.artist||'').toLowerCase().split(',').map(s=>s.trim()).includes(String(a.name).toLowerCase())).length })) }); });
+server.js:182:app.listen(PORT, '0.0.0.0', () => console.log(`Venyl running on ${APP_BASE_URL}`));

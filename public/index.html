@@ -1,0 +1,3554 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venyl — музыка течёт</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;700;800;900&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #08080C;
+  --ink2: #0F0F16;
+  --ink3: #161620;
+  --ink4: #1E1E2A;
+  --ink5: #252535;
+  --muted: #4A4A62;
+  --muted2: #7070A0;
+  --wire: rgba(255,255,255,0.04);
+  --wire2: rgba(255,255,255,0.08);
+  --wire3: rgba(255,255,255,0.12);
+  --cream: #F2EEE8;
+  --cream2: rgba(242,238,232,0.82);
+  --accent: #C8A96E;
+  --accent2: #E0C285;
+  --accent3: #B89558;
+  --accent-dim: rgba(200,169,110,0.12);
+  --accent-glow: rgba(200,169,110,0.06);
+  --accent-border: rgba(200,169,110,0.22);
+  --red: #D94F4F;
+  --green: #4DB87A;
+  --r: 12px;
+  --r2: 18px;
+  --r3: 28px;
+  --r4: 36px;
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.28);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.45);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.6);
+  --shadow-gold: 0 8px 32px rgba(200,169,110,0.12);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Cabinet Grotesk',sans-serif;
+  background:var(--ink);
+  color:var(--cream);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(200,169,110,0.04) 0%, transparent 70%);
+}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--ink5);border-radius:2px}
+::selection{background:var(--accent-dim);color:var(--accent2)}
+
+/* ===================== LAYOUT ===================== */
+.shell{
+  display:grid;
+  grid-template-columns:240px 1fr;
+  grid-template-rows:auto 1fr auto;
+  grid-template-areas:"sidebar header""sidebar main""player player";
+  min-height:100vh;
+}
+.page{display:none}.page.active{display:block}
+
+/* ===================== SIDEBAR ===================== */
+.sidebar{
+  grid-area:sidebar;
+  background:var(--ink2);
+  border-right:1px solid var(--wire2);
+  display:flex;
+  flex-direction:column;
+  padding-bottom:80px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  z-index:30;
+  background-image:
+    linear-gradient(180deg, rgba(200,169,110,0.03) 0%, transparent 40%);
+}
+
+.logo-wrap{
+  padding:28px 22px 26px;
+  border-bottom:1px solid var(--wire);
+}
+.logo-mark{display:flex;align-items:center;gap:12px}
+.logo-disc{
+  width:34px;height:34px;
+  border-radius:50%;
+  border:1.5px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;position:relative;
+  box-shadow:0 0 16px rgba(200,169,110,0.15), inset 0 0 12px rgba(200,169,110,0.05);
+}
+.logo-disc::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.logo-disc::after{
+  content:'';width:20px;height:20px;border-radius:50%;
+  border:1px solid rgba(200,169,110,0.35);
+  position:absolute;
+  animation:logoRotate 20s linear infinite;
+}
+@keyframes logoRotate{to{transform:rotate(360deg)}}
+.logo-text{font-size:21px;font-weight:900;letter-spacing:-.5px;color:var(--cream)}
+.logo-sub{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-top:2px;font-weight:500}
+
+.nav-section{padding:20px 14px 8px}
+.nav-label{
+  font-size:9px;font-weight:800;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);
+  padding:0 8px;margin-bottom:10px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 12px;
+  border-radius:var(--r);
+  cursor:pointer;
+  transition:all .18s ease;
+  color:var(--muted2);
+  font-size:13.5px;font-weight:500;
+  text-decoration:none;
+  margin-bottom:2px;
+  border:1px solid transparent;
+  position:relative;
+}
+.nav-item:hover{
+  background:rgba(255,255,255,0.04);
+  color:var(--cream2);
+  border-color:var(--wire);
+}
+.nav-item.active{
+  background:linear-gradient(135deg, rgba(200,169,110,0.14) 0%, rgba(200,169,110,0.06) 100%);
+  color:var(--accent2);
+  border-color:var(--accent-border);
+  font-weight:700;
+  box-shadow:0 0 20px rgba(200,169,110,0.08), inset 0 1px 0 rgba(200,169,110,0.1);
+}
+.nav-item.active::before{
+  content:'';
+  position:absolute;
+  left:-1px;top:25%;bottom:25%;
+  width:2.5px;
+  background:var(--accent);
+  border-radius:0 2px 2px 0;
+  box-shadow:0 0 8px var(--accent);
+}
+.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.65;display:flex;align-items:center;justify-content:center}
+.nav-item.active .nav-icon{opacity:1}
+
+.sidebar-bottom{
+  margin-top:auto;
+  padding:14px;
+  border-top:1px solid var(--wire);
+}
+.sidebar-user{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 11px;border-radius:var(--r);
+  cursor:pointer;transition:all .18s;
+  border:1px solid transparent;
+}
+.sidebar-user:hover{background:var(--ink3);border-color:var(--wire2)}
+.avatar{
+  width:33px;height:33px;border-radius:50%;
+  background:linear-gradient(135deg,#3A2810,#7A5820);
+  border:1.5px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:var(--accent2);
+  flex-shrink:0;letter-spacing:.5px;overflow:hidden;
+  box-shadow:0 0 10px rgba(200,169,110,0.15);
+}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.user-name{font-size:13px;font-weight:700;color:var(--cream);letter-spacing:-.1px}
+.user-role{font-size:10.5px;color:var(--muted);letter-spacing:.3px;margin-top:1px}
+
+/* ===================== TOPBAR ===================== */
+.topbar{
+  grid-area:header;
+  background:rgba(8,8,12,0.88);
+  backdrop-filter:blur(32px);
+  -webkit-backdrop-filter:blur(32px);
+  border-bottom:1px solid var(--wire2);
+  padding:12px 32px;
+  display:flex;align-items:center;gap:14px;
+  position:sticky;top:0;z-index:20;
+}
+.search-wrap{flex:1;max-width:480px;position:relative}
+.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted);width:14px;height:14px}
+.search-input{
+  width:100%;
+  background:var(--ink3);
+  border:1px solid var(--wire2);
+  border-radius:50px;
+  padding:10px 18px 10px 42px;
+  color:var(--cream);
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-size:13.5px;font-weight:400;
+  outline:none;
+  transition:all .2s;
+}
+.search-input::placeholder{color:var(--muted)}
+.search-input:focus{
+  border-color:var(--accent);
+  background:var(--ink2);
+  box-shadow:0 0 0 3px rgba(200,169,110,0.08);
+}
+.topbar-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.btn-sm{
+  display:flex;align-items:center;gap:6px;
+  background:var(--ink4);
+  border:1px solid var(--wire2);
+  color:var(--cream2);
+  border-radius:50px;
+  padding:8px 18px;
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.btn-sm:hover{background:var(--ink5);border-color:var(--wire3);color:var(--cream)}
+.btn-accent{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:var(--ink);
+  box-shadow:var(--shadow-gold);
+}
+.btn-accent:hover{background:var(--accent2);border-color:var(--accent2);box-shadow:0 8px 24px rgba(200,169,110,0.25)}
+.btn-icon{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--ink3);border:1px solid var(--wire2);
+  color:var(--muted2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.btn-icon:hover{background:var(--ink4);color:var(--cream)}
+
+/* ===================== MAIN ===================== */
+main{grid-area:main;padding:36px 40px;overflow-y:auto;min-height:0}
+
+/* ===================== HERO ===================== */
+.hero{
+  background:var(--ink2);
+  border:1px solid var(--wire2);
+  border-radius:var(--r3);
+  padding:52px 48px;
+  margin-bottom:48px;
+  display:flex;align-items:center;gap:52px;
+  position:relative;overflow:hidden;
+  background-image:
+    radial-gradient(ellipse 60% 80% at 90% 50%, rgba(200,169,110,0.06) 0%, transparent 60%),
+    linear-gradient(135deg, rgba(255,255,255,0.01) 0%, transparent 100%);
+  box-shadow:var(--shadow-md);
+}
+.hero-deco{
+  position:absolute;top:-80px;right:-80px;
+  width:320px;height:320px;
+  border-radius:50%;
+  border:1px solid rgba(200,169,110,0.06);
+  pointer-events:none;
+}
+.hero-deco::before{
+  content:'';position:absolute;top:50px;left:50px;right:50px;bottom:50px;
+  border-radius:50%;border:1px solid rgba(200,169,110,0.05);
+}
+.hero-deco::after{
+  content:'';position:absolute;top:90px;left:90px;right:90px;bottom:90px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(200,169,110,0.05) 0%, transparent 70%);
+}
+.hero-vinyl{width:140px;height:140px;flex-shrink:0}
+.vinyl-svg{
+  animation:spinDisc 12s linear infinite;
+  animation-play-state:paused;
+  cursor:pointer;
+  filter:drop-shadow(0 12px 32px rgba(0,0,0,0.6)) drop-shadow(0 0 24px rgba(200,169,110,0.1));
+}
+.vinyl-svg:hover{animation-play-state:running}
+@keyframes spinDisc{to{transform:rotate(360deg)}}
+.hero-content{flex:1;position:relative;z-index:1}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--accent-dim);
+  border:1px solid var(--accent-border);
+  color:var(--accent);
+  font-size:9.5px;font-weight:800;
+  letter-spacing:2.5px;text-transform:uppercase;
+  padding:5px 14px;border-radius:50px;margin-bottom:16px;
+}
+.hero-tag::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent)}
+.hero h1{
+  font-family:'Instrument Serif',serif;
+  font-size:40px;font-weight:400;
+  line-height:1.16;margin-bottom:12px;
+  color:var(--cream);
+  letter-spacing:-.5px;
+}
+.hero h1 em{font-style:italic;color:var(--accent)}
+.hero p{color:var(--muted2);font-size:14.5px;line-height:1.7;max-width:500px}
+.hero-actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.btn-primary{
+  display:flex;align-items:center;gap:8px;
+  background:var(--accent);
+  color:var(--ink);
+  border:none;border-radius:50px;
+  padding:12px 26px;
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-size:14px;font-weight:800;
+  cursor:pointer;transition:all .22s;
+  letter-spacing:.2px;
+  box-shadow:var(--shadow-gold);
+}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 12px 36px rgba(200,169,110,0.28)}
+.btn-ghost{
+  background:transparent;
+  color:var(--cream2);
+  border:1px solid var(--wire3);
+  border-radius:50px;
+  padding:11px 24px;
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-size:14px;font-weight:500;
+  cursor:pointer;transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+
+/* ===================== SECTION HEADERS ===================== */
+.section-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  margin-bottom:20px;
+}
+.section-title{
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-size:18px;font-weight:900;letter-spacing:-.3px;color:var(--cream);
+}
+.section-link{
+  font-size:11.5px;color:var(--muted);
+  text-decoration:none;cursor:pointer;font-weight:600;letter-spacing:.5px;
+  transition:color .15s;
+}
+.section-link:hover{color:var(--accent)}
+.mb-section{margin-bottom:44px}
+
+/* ===================== GENRES ===================== */
+.genre-grid{display:flex;gap:8px;flex-wrap:wrap}
+.genre-chip{
+  padding:8px 18px;
+  background:var(--ink3);
+  border:1px solid var(--wire2);
+  border-radius:50px;
+  font-size:12.5px;font-weight:600;
+  color:var(--muted2);
+  cursor:pointer;transition:all .18s;letter-spacing:.2px;
+}
+.genre-chip:hover{background:var(--ink4);color:var(--cream);border-color:var(--wire3)}
+.genre-chip.active{
+  background:var(--accent-dim);
+  border-color:rgba(200,169,110,0.4);
+  color:var(--accent);
+  box-shadow:0 0 16px rgba(200,169,110,0.08);
+}
+
+/* ===================== ARTIST CARDS ===================== */
+.artist-grid{display:flex;gap:8px;flex-wrap:wrap}
+.artist-pill{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 16px 8px 8px;
+  background:var(--ink3);
+  border:1px solid var(--wire);
+  border-radius:50px;cursor:pointer;
+  transition:all .18s;
+}
+.artist-pill:hover{
+  background:var(--ink4);
+  border-color:var(--wire2);
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-sm);
+}
+.artist-pill-avatar{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#201040,#140828);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:var(--accent2);
+  overflow:hidden;flex-shrink:0;
+  border:1px solid rgba(200,169,110,0.2);
+}
+.artist-pill-avatar img{width:100%;height:100%;object-fit:cover}
+.artist-pill-name{font-size:13.5px;font-weight:700;color:var(--cream2)}
+.artist-pill-count{font-size:11.5px;color:var(--muted);margin-left:2px}
+
+/* ===================== TRACKS TABLE ===================== */
+.tracks-header{
+  display:grid;
+  grid-template-columns:44px 58px 1fr 1fr 100px 68px;
+  align-items:center;gap:14px;
+  padding:0 16px 12px;
+  border-bottom:1px solid var(--wire2);
+}
+.tracks-col{font-size:9.5px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted)}
+.tracks-list{display:flex;flex-direction:column}
+.track-row{
+  display:grid;
+  grid-template-columns:44px 58px 1fr 1fr 100px 68px;
+  align-items:center;gap:14px;
+  padding:10px 16px;
+  border-radius:var(--r);
+  cursor:pointer;transition:all .15s;
+  border:1px solid transparent;
+  position:relative;
+}
+.track-row:hover{
+  background:var(--ink3);
+  border-color:var(--wire);
+}
+.track-row.playing{
+  background:rgba(200,169,110,0.06);
+  border-color:rgba(200,169,110,0.14);
+}
+.track-num{
+  font-size:12.5px;color:var(--muted);
+  text-align:center;font-weight:600;
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-feature-settings:"tnum";
+}
+.track-row.playing .track-num{color:var(--accent)}
+.track-cover{
+  width:58px;height:58px;
+  border-radius:10px;
+  background:var(--ink4);overflow:hidden;flex-shrink:0;position:relative;
+  box-shadow:var(--shadow-sm);
+}
+.track-cover img{width:100%;height:100%;object-fit:cover}
+.cover-fallback{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#180E28,#0C0818);
+}
+.cover-fallback svg{width:18px;height:18px;color:var(--muted);opacity:.4}
+.track-info .track-name{
+  font-size:14px;font-weight:700;color:var(--cream);
+  letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.track-row.playing .track-name{color:var(--accent2)}
+.track-info .track-artist{
+  font-size:12px;color:var(--muted2);margin-top:3px;
+  transition:color .15s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.track-artist-link{cursor:pointer;transition:color .15s}
+.track-artist-link:hover{color:var(--accent)}
+.track-artist-sep{color:var(--muted);margin-right:4px}
+.track-album-cell{
+  font-size:13px;color:var(--muted2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.track-genre-pill{
+  display:inline-block;
+  background:var(--ink4);
+  font-size:10.5px;color:var(--muted);
+  padding:4px 10px;border-radius:50px;
+  font-weight:700;letter-spacing:.3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:95px;
+}
+.track-actions{
+  display:flex;gap:4px;opacity:0;transition:opacity .15s;
+  justify-content:flex-end;position:relative;z-index:5;
+}
+.track-row{overflow:visible}
+.track-row:hover .track-actions,.track-actions.open{opacity:1}
+.track-more-btn{
+  width:32px;height:32px;border-radius:10px;
+  background:var(--ink3);border:1px solid var(--wire);
+  color:var(--muted2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;
+  font-size:20px;line-height:1;font-weight:800;
+  box-shadow:var(--shadow-sm);
+}
+.track-more-btn:hover,.track-actions.open .track-more-btn{
+  background:var(--accent-dim);
+  border-color:var(--accent-border);
+  color:var(--accent2);
+  transform:translateY(-1px);
+}
+.track-menu{
+  position:fixed;
+  width:min(350px,calc(100vw - 24px));
+  background:rgba(22,22,32,0.98);
+  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:20px;
+  box-shadow:0 28px 80px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.04);
+  padding:10px;display:none;z-index:1000;color:var(--cream);overflow:hidden;
+}
+.track-menu.open{display:block;animation:menuPop .14s ease-out}
+@keyframes menuPop{from{opacity:0;transform:translateY(-5px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.track-menu-item{
+  width:100%;border:0;background:transparent;color:#EDEDF4;
+  display:flex;align-items:center;gap:13px;
+  padding:11px 13px;border-radius:12px;
+  font-family:'Cabinet Grotesk',sans-serif;font-size:13.5px;font-weight:700;
+  text-align:left;cursor:pointer;
+  transition:background .12s,color .12s;line-height:1.25;
+}
+.track-menu-item:hover{background:rgba(255,255,255,0.07)}
+.track-menu-item:active{background:rgba(255,255,255,0.04)}
+.track-menu-item svg{width:16px;height:16px;color:#B0B0CC;flex:0 0 16px}
+.track-menu-item .menu-text{min-width:0;white-space:normal;overflow-wrap:anywhere}
+.track-menu-item.active{color:var(--accent2);background:rgba(200,169,110,0.09)}
+.track-menu-item.active svg{color:var(--accent2)}
+.track-menu-item.disabled{opacity:.38;cursor:not-allowed}
+.track-menu-item.disabled:hover{background:transparent}
+.track-menu-item.danger{color:#FF9494}
+.track-menu-item.danger:hover{background:rgba(217,79,79,0.11)}
+.track-menu-item.danger svg{color:#FF9494}
+.track-menu-sep{height:1px;background:rgba(255,255,255,0.07);margin:7px 5px}
+.track-menu-title{padding:8px 13px 7px;color:var(--muted2);font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:2px}
+.track-info-card{display:grid;grid-template-columns:84px 1fr;gap:18px;align-items:start}
+.track-info-card .track-cover{width:84px;height:84px}
+.track-info-meta{display:grid;gap:9px}
+.track-info-line{font-size:13px;color:var(--muted2)}
+.track-info-line b{color:var(--cream)}
+.icon-btn{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--ink4);border:1px solid var(--wire);
+  color:var(--muted2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;
+}
+.icon-btn:hover{background:var(--accent);color:var(--ink);border-color:var(--accent)}
+.icon-btn svg{width:12px;height:12px}
+.icon-btn.danger:hover{background:var(--red);border-color:var(--red)}
+
+/* EQ ANIMATION */
+.eq-bars{display:flex;align-items:flex-end;gap:2.5px;height:14px}
+.eq-bar{width:2.5px;background:var(--accent);border-radius:1px;animation:eqAnim .65s ease-in-out infinite alternate}
+.eq-bar:nth-child(1){height:5px;animation-delay:0s}
+.eq-bar:nth-child(2){height:12px;animation-delay:.1s}
+.eq-bar:nth-child(3){height:8px;animation-delay:.22s}
+.eq-bar:nth-child(4){height:14px;animation-delay:.34s}
+@keyframes eqAnim{from{transform:scaleY(.2)}to{transform:scaleY(1)}}
+
+/* ===================== ARTIST PROFILE ===================== */
+.artist-profile-hero{
+  background:var(--ink2);
+  border:1px solid var(--wire2);
+  border-radius:var(--r3);
+  padding:40px;margin-bottom:36px;
+  display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:start;
+  position:relative;overflow:hidden;
+  background-image:
+    radial-gradient(ellipse 70% 100% at 90% 40%, rgba(200,169,110,0.06) 0%, transparent 60%);
+  box-shadow:var(--shadow-md);
+}
+.artist-profile-deco{
+  position:absolute;top:0;right:0;width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle at 70% 30%, rgba(200,169,110,0.05) 0%,transparent 70%);
+  pointer-events:none;
+}
+.artist-photo-wrap{position:relative;flex-shrink:0}
+.artist-photo{
+  width:120px;height:120px;border-radius:50%;
+  background:linear-gradient(135deg,#2A1A50,#180A30);
+  border:2.5px solid rgba(200,169,110,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Instrument Serif',serif;font-size:44px;color:var(--accent);
+  overflow:hidden;flex-shrink:0;
+  box-shadow:0 0 0 4px rgba(200,169,110,0.06), var(--shadow-md);
+}
+.artist-photo img{width:100%;height:100%;object-fit:cover}
+.artist-verified{
+  position:absolute;bottom:4px;right:4px;
+  width:24px;height:24px;background:var(--accent);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:2.5px solid var(--ink2);
+  box-shadow:0 2px 8px rgba(200,169,110,0.4);
+}
+.artist-verified svg{width:10px;height:10px;color:var(--ink)}
+.artist-meta{position:relative;z-index:1}
+.artist-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--accent-dim);
+  border:1px solid var(--accent-border);
+  color:var(--accent);
+  font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;
+  padding:4px 12px;border-radius:50px;margin-bottom:14px;
+}
+.artist-name{
+  font-family:'Instrument Serif',serif;
+  font-size:40px;font-weight:400;line-height:1.1;
+  margin-bottom:12px;color:var(--cream);letter-spacing:-.5px;
+}
+.artist-bio{
+  color:var(--muted2);font-size:14px;line-height:1.7;
+  max-width:600px;margin-bottom:22px;
+}
+.artist-stats{display:flex;gap:28px;margin-bottom:22px}
+.artist-stat{text-align:left}
+.artist-stat-val{
+  font-size:24px;font-weight:900;color:var(--cream);
+  letter-spacing:-.7px;line-height:1;
+}
+.artist-stat-label{
+  font-size:10px;color:var(--muted);font-weight:600;
+  text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;
+}
+.profile-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ===================== ALBUMS ===================== */
+.albums-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:14px;margin-bottom:44px;
+}
+.album-card{
+  background:var(--ink3);
+  border:1px solid var(--wire);
+  border-radius:var(--r2);
+  padding:15px;cursor:pointer;
+  transition:all .22s;
+  display:flex;flex-direction:column;gap:13px;
+}
+.album-card:hover{
+  background:var(--ink4);
+  border-color:var(--wire2);
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-md);
+}
+.album-cover{
+  width:100%;aspect-ratio:1;border-radius:var(--r);
+  background:var(--ink4);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-sm);
+}
+.album-cover img{width:100%;height:100%;object-fit:cover}
+.album-cover-placeholder{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#1A0E22,#0E0818);
+}
+.album-card-name{font-size:14px;font-weight:800;color:var(--cream);letter-spacing:-.1px}
+.album-card-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-top:2px}
+.album-card-actions{display:flex;gap:7px;margin-top:auto}
+
+/* ===================== PLAYER ===================== */
+.player{
+  grid-area:player;
+  background:rgba(12,12,20,0.97);
+  backdrop-filter:blur(48px);-webkit-backdrop-filter:blur(48px);
+  border-top:1px solid var(--wire2);
+  padding:0 32px;
+  display:grid;grid-template-columns:280px 1fr 280px;
+  align-items:center;height:80px;
+  position:sticky;bottom:0;z-index:40;
+  box-shadow:0 -8px 40px rgba(0,0,0,0.5);
+}
+.now-playing{display:flex;align-items:center;gap:13px}
+.np-cover{
+  width:48px;height:48px;border-radius:10px;
+  background:var(--ink4);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;overflow:hidden;
+  border:1px solid var(--wire2);
+  box-shadow:var(--shadow-sm);
+}
+.np-cover img{width:100%;height:100%;object-fit:cover}
+.np-cover svg{width:16px;height:16px;color:var(--muted);opacity:.5}
+.np-text{min-width:0}
+.np-title{
+  font-size:14px;font-weight:800;color:var(--cream);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:-.15px;
+}
+.np-artist{
+  font-size:11.5px;color:var(--muted);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.np-fav{
+  margin-left:12px;cursor:pointer;color:var(--muted);
+  transition:color .2s, transform .2s;flex-shrink:0;line-height:1;
+}
+.np-fav:hover{color:var(--red);transform:scale(1.15)}
+.np-fav.active{color:var(--red)}
+.np-fav svg{width:15px;height:15px}
+.player-center{display:flex;flex-direction:column;align-items:center;gap:8px}
+.player-controls{display:flex;align-items:center;gap:16px}
+.ctrl-btn{
+  background:none;border:none;color:var(--muted2);
+  cursor:pointer;transition:color .15s;
+  display:flex;align-items:center;padding:5px;border-radius:50%;
+}
+.ctrl-btn:hover{color:var(--cream)}
+.ctrl-btn.active{color:var(--accent)}
+.ctrl-btn svg{width:16px;height:16px}
+.play-btn{
+  width:40px;height:40px;
+  background:var(--cream);border:none;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .18s;flex-shrink:0;
+  box-shadow:0 4px 20px rgba(242,238,232,0.18);
+}
+.play-btn:hover{background:var(--accent);transform:scale(1.08);box-shadow:var(--shadow-gold)}
+.play-btn svg{width:15px;height:15px;color:var(--ink)}
+.progress-wrap{display:flex;align-items:center;gap:9px;width:100%;max-width:500px}
+.prog-time{
+  font-size:10px;color:var(--muted);min-width:34px;
+  font-weight:700;letter-spacing:.5px;font-feature-settings:"tnum";
+}
+.prog-bar{
+  flex:1;height:2.5px;background:var(--ink5);
+  border-radius:2px;position:relative;cursor:pointer;
+  transition:height .2s;
+}
+.prog-bar:hover{height:4.5px}
+.prog-fill{
+  height:100%;background:var(--accent);border-radius:2px;width:0%;
+  transition:width .2s linear;
+  box-shadow:0 0 8px rgba(200,169,110,0.4);
+}
+.player-right{display:flex;align-items:center;gap:12px;justify-content:flex-end}
+.vol-wrap{display:flex;align-items:center;gap:9px}
+.vol-icon{color:var(--muted2);cursor:pointer;line-height:1}
+.vol-icon svg{width:14px;height:14px}
+.vol-slider{
+  width:72px;height:2.5px;
+  background:var(--ink5);border-radius:2px;
+  appearance:none;cursor:pointer;outline:none;
+  accent-color:var(--accent);
+}
+.vol-slider::-webkit-slider-thumb{
+  appearance:none;width:11px;height:11px;border-radius:50%;
+  background:var(--cream);cursor:pointer;
+  box-shadow:0 1px 4px rgba(0,0,0,0.4);
+}
+.vol-slider::-moz-range-thumb{
+  width:11px;height:11px;border-radius:50%;
+  background:var(--cream);cursor:pointer;border:none;
+}
+
+/* ===================== AUTH ===================== */
+.auth-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:var(--ink);position:relative;overflow:hidden;
+  background-image:radial-gradient(ellipse 60% 60% at 50% 0%, rgba(200,169,110,0.04) 0%, transparent 70%);
+}
+.auth-bg{position:absolute;inset:0;pointer-events:none}
+.auth-bg-disc{
+  position:absolute;width:600px;height:600px;border-radius:50%;
+  border:1px solid rgba(200,169,110,0.05);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+}
+.auth-bg-disc:nth-child(2){width:420px;height:420px;border-color:rgba(200,169,110,0.04)}
+.auth-bg-disc:nth-child(3){width:240px;height:240px;border-color:rgba(200,169,110,0.03)}
+.auth-bg-glow{
+  position:absolute;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle, rgba(200,169,110,0.04) 0%, transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+}
+.auth-card{
+  width:420px;max-width:92vw;
+  background:var(--ink2);
+  border:1px solid var(--wire2);
+  border-radius:var(--r3);
+  padding:48px 44px;
+  position:relative;z-index:1;
+  box-shadow:var(--shadow-lg);
+  background-image:linear-gradient(135deg, rgba(255,255,255,0.015) 0%, transparent 60%);
+}
+.auth-logo-wrap{
+  display:flex;align-items:center;gap:11px;
+  justify-content:center;margin-bottom:40px;
+}
+.auth-logo-disc{
+  width:38px;height:38px;border-radius:50%;
+  border:1.5px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;position:relative;
+  box-shadow:0 0 16px rgba(200,169,110,0.15);
+}
+.auth-logo-disc::before{content:'';width:9px;height:9px;border-radius:50%;background:var(--accent)}
+.auth-logo-disc::after{
+  content:'';position:absolute;inset:6px;
+  border-radius:50%;border:1px solid rgba(200,169,110,0.4);
+}
+.auth-logo-text{font-size:24px;font-weight:900;letter-spacing:-.5px;color:var(--cream)}
+.auth-eyebrow{
+  font-size:9.5px;font-weight:800;
+  letter-spacing:3.5px;text-transform:uppercase;
+  color:var(--accent);text-align:center;margin-bottom:8px;
+}
+.auth-title{
+  font-family:'Instrument Serif',serif;
+  font-size:30px;text-align:center;margin-bottom:7px;color:var(--cream);
+}
+.auth-sub{font-size:13.5px;color:var(--muted2);text-align:center;margin-bottom:34px;line-height:1.55}
+.form-group{margin-bottom:14px}
+.form-label{
+  font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted2);margin-bottom:8px;display:block;
+}
+.form-input,.form-textarea{
+  width:100%;
+  background:var(--ink3);
+  border:1px solid var(--wire2);
+  border-radius:var(--r);
+  padding:11px 15px;
+  color:var(--cream);
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-size:14px;font-weight:500;
+  outline:none;transition:all .2s;
+}
+.form-textarea{min-height:115px;resize:vertical}
+.form-input:focus,.form-textarea:focus{
+  border-color:var(--accent);
+  background:var(--ink2);
+  box-shadow:0 0 0 3px rgba(200,169,110,0.08);
+}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--muted);font-weight:400}
+select.form-input{cursor:pointer}
+.auth-btn-full{
+  width:100%;border-radius:var(--r);padding:14px;margin-top:6px;
+  background:var(--accent);border:none;color:var(--ink);
+  font-family:'Cabinet Grotesk',sans-serif;font-size:15px;font-weight:900;
+  cursor:pointer;transition:all .22s;letter-spacing:.1px;
+  box-shadow:var(--shadow-gold);
+}
+.auth-btn-full:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 10px 28px rgba(200,169,110,0.28)}
+.auth-link{text-align:center;margin-top:22px;font-size:13px;color:var(--muted2)}
+.auth-link a{color:var(--accent);text-decoration:none;cursor:pointer;font-weight:700;transition:color .15s}
+.auth-link a:hover{color:var(--accent2)}
+.auth-divider{border:none;border-top:1px solid var(--wire);margin:22px 0}
+
+/* ===================== MODALS ===================== */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  z-index:100;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--ink2);
+  border:1px solid var(--wire2);
+  border-radius:var(--r3);
+  padding:34px;width:560px;
+  max-width:92vw;max-height:88vh;overflow-y:auto;
+  transform:translateY(14px) scale(.985);transition:transform .25s;
+  box-shadow:var(--shadow-lg);
+  background-image:linear-gradient(135deg, rgba(255,255,255,0.012) 0%, transparent 60%);
+}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
+.modal-title{font-size:20px;font-weight:900;color:var(--cream);letter-spacing:-.25px}
+.modal-close{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--ink3);border:1px solid var(--wire);
+  color:var(--muted2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;
+}
+.modal-close:hover{background:var(--ink4);color:var(--cream)}
+.modal-close svg{width:14px;height:14px}
+.drop-zone{
+  border:1.5px dashed var(--wire2);border-radius:var(--r);
+  padding:26px;text-align:center;cursor:pointer;transition:all .2s;
+}
+.drop-zone:hover{border-color:var(--accent);background:var(--accent-glow)}
+.drop-zone.has-file{border-color:rgba(77,184,122,0.4);background:rgba(77,184,122,0.04)}
+.drop-text{font-size:13px;color:var(--muted2);line-height:1.6}
+.drop-text span{color:var(--accent);font-weight:700}
+.drop-text .file-name{color:var(--green);font-weight:700}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.track-meta-row{display:grid;grid-template-columns:1.3fr .8fr;gap:9px;margin-bottom:9px}
+
+/* ===================== TOAST ===================== */
+.toast{
+  position:fixed;bottom:98px;left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--ink3);
+  border:1px solid var(--wire2);
+  border-radius:50px;padding:11px 24px;
+  font-size:13px;font-weight:700;
+  opacity:0;transition:all .3s;z-index:200;
+  white-space:nowrap;pointer-events:none;
+  color:var(--cream2);letter-spacing:.1px;
+  box-shadow:var(--shadow-md);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(77,184,122,0.4);color:var(--green)}
+.toast.err{border-color:rgba(217,79,79,0.4);color:var(--red)}
+
+/* ===================== EMPTY STATE ===================== */
+.empty-state{text-align:center;padding:64px 20px;color:var(--muted2)}
+.empty-state svg{width:40px;height:40px;color:var(--muted);opacity:.35;margin-bottom:18px}
+.empty-state p{font-size:14px;line-height:1.65}
+
+.profile-trigger{overflow:hidden;padding:0}
+.profile-trigger .profile-btn-inner{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;overflow:hidden;
+}
+.profile-trigger .profile-btn-inner img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:none;image-rendering:auto;
+}
+.profile-trigger .profile-btn-inner:not(:has(img)){
+  background:linear-gradient(135deg,#3A2810,#7A5820);
+  color:var(--accent2);font-weight:800;font-size:13px;
+}
+.profile-avatar-lg{
+  width:76px;height:76px;border-radius:50%;
+  background:linear-gradient(135deg,#3A2810,#7A5820);
+  border:2.5px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;font-weight:800;color:var(--accent2);
+  overflow:hidden;margin:0 auto 18px;
+  box-shadow:var(--shadow-gold);
+}
+.profile-avatar-lg img{width:100%;height:100%;object-fit:cover;display:block}
+.profile-note{font-size:12px;color:var(--muted2);line-height:1.55;margin-top:8px}
+.profile-note strong{color:var(--cream);font-weight:700}
+.profile-actions-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.profile-actions-row .btn-ghost,.profile-actions-row .auth-btn-full{margin-top:0;flex:1}
+
+/* ===================== ADMIN ===================== */
+.admin-panel-card{
+  background:var(--ink2);border:1px solid var(--wire2);
+  border-radius:var(--r2);padding:20px;overflow:auto;
+}
+.admin-users-table{width:100%;border-collapse:collapse;min-width:780px}
+.admin-users-table th,.admin-users-table td{
+  padding:11px 13px;border-bottom:1px solid var(--wire);
+  font-size:13px;text-align:left;color:var(--cream2);
+}
+.admin-users-table th{
+  font-size:9.5px;text-transform:uppercase;letter-spacing:1.6px;
+  color:var(--muted);font-weight:800;
+}
+.admin-users-table tr:hover td{background:rgba(255,255,255,0.022)}
+.role-pill{
+  display:inline-flex;padding:4px 10px;border-radius:50px;
+  background:var(--ink4);font-size:11px;font-weight:800;color:var(--muted2);
+}
+.role-pill.admin{
+  background:var(--accent-dim);color:var(--accent2);
+  border:1px solid var(--accent-border);
+}
+.admin-color-dot{
+  width:18px;height:18px;border-radius:50%;border:1px solid var(--wire2);
+  display:inline-block;vertical-align:middle;background:var(--ink4);
+}
+.color-row{display:flex;align-items:center;gap:10px}
+.color-preview{width:22px;height:22px;border-radius:50%;border:1px solid var(--wire2);background:var(--muted)}
+
+/* ===================== PLAYLISTS ===================== */
+.playlist-card{
+  background:var(--ink3);border:1px solid var(--wire);
+  border-radius:var(--r2);padding:15px;
+  display:flex;gap:14px;align-items:center;
+  cursor:pointer;transition:all .18s;
+}
+.playlist-card:hover{
+  background:var(--ink4);border-color:var(--wire2);
+  transform:translateY(-2px);box-shadow:var(--shadow-sm);
+}
+.playlist-cover{
+  width:58px;height:58px;border-radius:14px;
+  background:linear-gradient(135deg,#201040,#140828);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+  color:var(--accent);font-weight:900;font-size:22px;flex-shrink:0;
+  box-shadow:var(--shadow-sm);
+}
+.playlist-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.playlist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.playlist-track-tools{display:flex;gap:5px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.playlist-track-tools .icon-btn{opacity:1}
+.add-playlist-list{display:flex;flex-direction:column;gap:9px}
+.add-playlist-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:var(--ink3);border:1px solid var(--wire);
+  border-radius:var(--r);padding:11px 14px;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media(max-width:820px){
+  .shell{grid-template-columns:1fr;grid-template-areas:"header""main""player"}
+  .sidebar{display:none}
+  main{padding:22px 18px}
+  .player{grid-template-columns:1fr auto}
+  .player-right,.prog-wrap .prog-time:first-child{display:none}
+  .hero,.artist-profile-hero{flex-direction:column;padding:28px;gap:26px}
+  .tracks-header,.track-row{grid-template-columns:32px 46px 1fr auto}
+  .track-album-cell,.track-genre-pill{display:none}
+  .albums-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr))}
+}
+
+/* ===================== HOME V2 - CINEMATIC HERO ===================== */
+.hero-v2 {
+  border-radius: var(--r3);
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  align-items: center;
+  min-height: 280px;
+  position: relative;
+  overflow: hidden;
+  background: var(--ink2);
+  border: 1px solid var(--wire2);
+  box-shadow: var(--shadow-lg);
+  background-image:
+    radial-gradient(ellipse 80% 100% at 85% 50%, rgba(200,169,110,0.08) 0%, transparent 55%),
+    linear-gradient(135deg, rgba(255,255,255,0.01) 0%, transparent 60%);
+}
+.hero-v2::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 90% at 0% 50%, rgba(200,169,110,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-v2-left {
+  padding: 52px 48px;
+  position: relative;
+  z-index: 1;
+}
+.hero-v2-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1.14;
+  margin-bottom: 14px;
+  color: var(--cream);
+  letter-spacing: -.5px;
+}
+.hero-v2-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-v2-sub {
+  color: var(--muted2);
+  font-size: 14.5px;
+  line-height: 1.68;
+  max-width: 440px;
+  margin-bottom: 26px;
+}
+.hero-v2-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 100%;
+  min-height: 280px;
+  overflow: hidden;
+}
+.hero-vinyl-wrap {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: -40px;
+}
+/* Concentric glow rings behind vinyl */
+.hvr {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(200,169,110,0.1);
+  animation: hvrPulse 4s ease-in-out infinite;
+}
+.hvr1 { width: 320px; height: 320px; animation-delay: 0s; border-color: rgba(200,169,110,0.12); }
+.hvr2 { width: 380px; height: 380px; animation-delay: .8s; border-color: rgba(200,169,110,0.07); }
+.hvr3 { width: 440px; height: 440px; animation-delay: 1.6s; border-color: rgba(200,169,110,0.04); }
+@keyframes hvrPulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.015); }
+}
+/* Gold ambient glow behind vinyl */
+.hero-vinyl-wrap::before {
+  content: '';
+  position: absolute;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,169,110,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-vinyl-lg {
+  width: 280px;
+  height: 280px;
+  filter: drop-shadow(0 24px 64px rgba(0,0,0,0.8)) drop-shadow(0 0 40px rgba(200,169,110,0.15));
+  animation: spinDisc 18s linear infinite;
+  animation-play-state: paused;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+.hero-vinyl-lg:hover { animation-play-state: running; }
+
+/* ===================== STATS BAR ===================== */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  background: var(--ink2);
+  border: 1px solid var(--wire2);
+  border-radius: var(--r2);
+  padding: 20px 32px;
+  margin-bottom: 36px;
+  gap: 0;
+}
+.stats-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  flex: 1;
+}
+.stats-bar-val {
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--cream);
+  letter-spacing: -.6px;
+  line-height: 1;
+}
+.stats-bar-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.stats-bar-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--wire2);
+  margin: 0 28px;
+  flex-shrink: 0;
+}
+
+/* ===================== DISCOVERY GRID ===================== */
+.discovery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 44px;
+}
+.discovery-col {}
+
+/* FEATURED ARTISTS - cover cards grid */
+.featured-artists-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.featured-artist-card {
+  position: relative;
+  min-height: 172px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--ink3);
+  border: 1px solid var(--wire2);
+  cursor: pointer;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  box-shadow: var(--shadow-sm);
+}
+.featured-artist-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow-md);
+}
+.featured-artist-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,#201040,#140828);
+}
+.featured-artist-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.04) contrast(1.03);
+  transition: transform .28s ease;
+}
+.featured-artist-card:hover .featured-artist-bg img { transform: scale(1.06); }
+.featured-artist-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.25) 42%, rgba(0,0,0,0.84) 100%),
+    radial-gradient(circle at 50% 20%, rgba(200,169,110,0.14), transparent 58%);
+}
+.featured-artist-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  font-weight: 900;
+  color: var(--accent2);
+  background:
+    radial-gradient(circle at 50% 34%, rgba(200,169,110,0.2), transparent 44%),
+    linear-gradient(135deg,#24123f,#100718);
+}
+.fa-info {
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  bottom: 12px;
+  z-index: 2;
+  min-width: 0;
+}
+.fa-name {
+  font-size: 14px;
+  font-weight: 900;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+}
+.fa-tracks {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.72);
+  margin-top: 3px;
+  font-weight: 700;
+}
+.fa-follow-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  background: rgba(242,238,232,0.92);
+  border: 1px solid rgba(255,255,255,0.24);
+  color: var(--ink);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 10.5px;
+  font-weight: 900;
+  padding: 6px 11px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all .18s;
+  white-space: nowrap;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+}
+.fa-follow-btn.following {
+  background: rgba(8,8,12,0.72);
+  color: var(--accent2);
+  border-color: rgba(200,169,110,0.32);
+}
+.fa-follow-btn:hover { background: var(--accent2); color: var(--ink); transform: translateY(-1px); }
+.fa-follow-btn.following:hover { background: rgba(8,8,12,0.9); color: var(--cream); }
+@media(max-width:1100px){.featured-artists-list{grid-template-columns:1fr}.featured-artist-card{min-height:150px}}
+
+/* NEW RELEASES - 2x2 image grid */
+.new-releases-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.release-card {
+  position: relative;
+  border-radius: var(--r);
+  overflow: hidden;
+  aspect-ratio: 1;
+  cursor: pointer;
+  background: var(--ink4);
+  transition: all .22s;
+}
+.release-card:hover { transform: scale(1.03); box-shadow: var(--shadow-md); }
+.release-card img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .3s;
+}
+.release-card:hover img { transform: scale(1.05); }
+.release-card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 10px;
+}
+.release-card-overlay-empty {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg,#1A0E22,#0E0818);
+}
+.release-play-btn {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 40px; height: 40px;
+  background: rgba(200,169,110,0.9);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .2s;
+}
+.release-card:hover .release-play-btn { transform: translate(-50%, -50%) scale(1); }
+.release-play-btn svg { color: #08080C; }
+.release-name { font-size: 11.5px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.release-artist { font-size: 10.5px; color: rgba(255,255,255,0.65); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* HOME PLAYLISTS GRID */
+.home-playlists-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.home-playlist-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: var(--ink3);
+  border: 1px solid var(--wire);
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: all .18s;
+  overflow: hidden;
+}
+.home-playlist-card:hover {
+  background: var(--ink4);
+  border-color: var(--wire2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.hpc-cover {
+  width: 46px; height: 46px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #201040, #140828);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+.hpc-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hpc-name { font-size: 12.5px; font-weight: 800; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hpc-count { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.hpc-empty {
+  grid-column: span 2;
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ===================== SIDEBAR PREMIUM CARD ===================== */
+.sidebar-premium {
+  margin: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(200,169,110,0.12) 0%, rgba(200,169,110,0.05) 100%);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r2);
+  box-shadow: 0 4px 20px rgba(200,169,110,0.08);
+}
+.sidebar-premium-icon {
+  width: 28px; height: 28px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 10px rgba(200,169,110,0.35);
+}
+.sidebar-premium-icon svg { color: var(--ink); }
+.sidebar-premium-title {
+  font-size: 13px; font-weight: 900;
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 5px;
+}
+.sidebar-premium-sub {
+  font-size: 11.5px;
+  color: var(--muted2);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.sidebar-premium-btn {
+  width: 100%;
+  background: var(--accent);
+  border: none;
+  color: var(--ink);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 12px; font-weight: 800;
+  padding: 9px 16px;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 4px 14px rgba(200,169,110,0.22);
+}
+.sidebar-premium-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+
+@media(max-width:820px){
+  .hero-v2 { grid-template-columns: 1fr; }
+  .hero-v2-right { display: none; }
+  .hero-v2-left { padding: 32px 24px; }
+  .hero-v2-title { font-size: 30px; }
+  .stats-bar { flex-wrap: wrap; gap: 16px; }
+  .stats-bar-divider { display: none; }
+  .discovery-grid { grid-template-columns: 1fr; }
+  .new-releases-grid { grid-template-columns: repeat(4, 1fr); }
+}
+/* ===================== LANGUAGE SWITCHER ===================== */
+.language-select{
+  background:var(--ink3);border:1px solid var(--wire2);color:var(--cream2);
+  border-radius:50px;padding:8px 14px;font-family:'Cabinet Grotesk',sans-serif;
+  font-size:12.5px;font-weight:700;outline:none;cursor:pointer;transition:all .18s;
+}
+.language-select:hover,.language-select:focus{border-color:var(--accent);color:var(--cream);box-shadow:0 0 0 3px rgba(200,169,110,0.08)}
+.auth-language-row{display:flex;justify-content:center;margin:-18px 0 24px}
+.auth-language-row .language-select{min-width:190px;text-align:center}
+@media(max-width:820px){.language-select{padding:7px 10px;font-size:12px}.auth-language-row{margin:-12px 0 18px}}
+
+</style>
+<script>
+(function(){
+const og=document.getElementById.bind(document);
+document.getElementById=function(id){
+return og(id)||{style:{},classList:{add(){},remove(){},toggle(){}},innerHTML:'',textContent:'',value:'',appendChild(){},querySelector(){return null},querySelectorAll(){return[]},addEventListener(){},remove(){},src:'',onclick:null};
+};
+})();
+</script>
+</head>
+<body>
+
+<!-- MAIN APP -->
+<div id="app" class="page active">
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo-wrap">
+    <div class="logo-mark">
+      <div class="logo-disc"></div>
+      <div>
+        <div class="logo-text">Venyl</div>
+        <div class="logo-sub">музыка течёт</div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Главное</div>
+    <a class="nav-item active" onclick="showSection('home',this)">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2L2 8v10h6v-5h4v5h6V8L10 2z"/></svg></span>Главная
+    </a>
+    <a class="nav-item" onclick="showSection('artists',this)">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg></span>Артисты
+    </a>
+    <a class="nav-item" onclick="showSection('favorites',this)">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg></span>Избранное
+    </a>
+    <a class="nav-item" onclick="showSection('playlists',this)">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12.5a1 1 0 01-1.55.83L10 14.36l-4.45 2.97A1 1 0 014 16.5V4z"/></svg></span>Плейлисты
+    </a>
+  </div>
+  <div class="nav-section admin-only">
+    <div class="nav-label">Управление</div>
+    <a class="nav-item" onclick="openUpload()">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V15a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"/><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/></svg></span>Загрузить трек
+    </a>
+    <a class="nav-item" onclick="openArtistEdit()">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"/></svg></span>Новый артист
+    </a>
+    <a class="nav-item" onclick="openAlbumModal()">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg></span>Создать альбом
+    </a>
+    <a class="nav-item" onclick="showSection('admin',this)">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v2.08c0 .65-.21 1.28-.6 1.8L2.4 13.2A1 1 0 003.2 14.8h13.6a1 1 0 00.8-1.6l-1-1.32a3 3 0 01-.6-1.8V8a6 6 0 00-6-6zm-2 15a2 2 0 004 0H8z"/></svg></span>Админ-панель
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="sidebar-user" onclick="handleSidebarUserClick()">
+      <div class="avatar" id="avatarInitials">GU</div>
+      <div style="min-width:0">
+        <div class="user-name" id="sidebarName">Гость</div>
+        <div class="user-role" id="sidebarEmail">Нажми чтобы войти</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="m15 15 3 3" stroke-linecap="round"/></svg>
+    <input class="search-input" type="text" placeholder="Треки, артисты, альбомы…" id="searchInput" name="venyl_search_no_email_fill" autocomplete="new-password" data-lpignore="true" data-1p-ignore="true" data-form-type="other" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" inputmode="search" value="" readonly onfocus="this.removeAttribute('readonly')" onpointerdown="this.removeAttribute('readonly')" oninput="filterTracks()">
+  </div>
+  <select class="language-select" id="appLangSelect" onchange="setLanguage(this.value)" title="Language"><option value="sv">Svenska</option><option value="en">English</option><option value="uk">Українська</option><option value="ru">Русский</option></select>
+  <div class="topbar-actions">
+    <button class="btn-sm admin-only" onclick="openUpload()">
+      <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V15a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"/></svg>
+      Загрузить
+    </button>
+    <button class="btn-sm btn-accent admin-only" onclick="openAlbumModal()">+ Альбом</button>
+    <button class="btn-icon profile-trigger" id="topProfileBtn" onclick="handleProfileButtonClick()" title="Войти / Профиль">
+      <span class="profile-btn-inner" id="topProfileInner"><svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main id="mainContent">
+
+  <!-- HOME -->
+  <div id="homeView">
+
+    <!-- HERO - cinematic full-width -->
+    <div class="hero-v2">
+      <div class="hero-v2-left">
+        <div class="hero-tag">
+          <span class="hero-tag-dot"></span>
+          Venyl Music
+        </div>
+        <h1 class="hero-v2-title">Музыка, которая<br><em>живёт в моменте</em></h1>
+        <p class="hero-v2-sub">Платформа для артистов и слушателей. Загружай треки, открывай новое и создавай своё звучание.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="playRandom()">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><polygon points="4,3 17,10 4,17"/></svg>
+            Слушать всё
+          </button>
+          <button class="btn-ghost" onclick="showSection('artists', document.querySelector('.nav-item:nth-child(2)'))">Открыть артистов</button>
+        </div>
+      </div>
+      <div class="hero-v2-right">
+        <div class="hero-vinyl-wrap">
+          <div class="hero-vinyl-rings">
+            <div class="hvr hvr1"></div>
+            <div class="hvr hvr2"></div>
+            <div class="hvr hvr3"></div>
+          </div>
+          <svg class="vinyl-svg hero-vinyl-lg" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="vgMain" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#1E1E2C"/>
+                <stop offset="100%" stop-color="#080810"/>
+              </radialGradient>
+              <radialGradient id="vgSheen" cx="38%" cy="32%" r="55%">
+                <stop offset="0%" stop-color="#D8B87E" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="transparent"/>
+              </radialGradient>
+              <radialGradient id="vgLabel" cx="45%" cy="40%" r="55%">
+                <stop offset="0%" stop-color="#E8C880"/>
+                <stop offset="100%" stop-color="#A07830"/>
+              </radialGradient>
+              <filter id="vinylGlow">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+              </filter>
+            </defs>
+            <!-- outer disc -->
+            <circle cx="180" cy="180" r="175" fill="url(#vgMain)" stroke="#1E1E2C" stroke-width="1"/>
+            <circle cx="180" cy="180" r="175" fill="url(#vgSheen)"/>
+            <!-- groove rings -->
+            <circle cx="180" cy="180" r="168" fill="none" stroke="#18181E" stroke-width="1.2"/>
+            <circle cx="180" cy="180" r="160" fill="none" stroke="#161620" stroke-width="1"/>
+            <circle cx="180" cy="180" r="152" fill="none" stroke="#14141E" stroke-width="0.8"/>
+            <circle cx="180" cy="180" r="144" fill="none" stroke="#12121C" stroke-width="0.8"/>
+            <circle cx="180" cy="180" r="136" fill="none" stroke="#14141E" stroke-width="0.7"/>
+            <circle cx="180" cy="180" r="128" fill="none" stroke="#12121C" stroke-width="0.7"/>
+            <circle cx="180" cy="180" r="120" fill="none" stroke="#10101A" stroke-width="0.6"/>
+            <circle cx="180" cy="180" r="112" fill="none" stroke="#12121C" stroke-width="0.6"/>
+            <circle cx="180" cy="180" r="104" fill="none" stroke="#10101A" stroke-width="0.6"/>
+            <circle cx="180" cy="180" r="96" fill="none" stroke="#0E0E18" stroke-width="0.5"/>
+            <!-- label -->
+            <circle cx="180" cy="180" r="52" fill="url(#vgLabel)" filter="url(#vinylGlow)"/>
+            <circle cx="180" cy="180" r="52" fill="url(#vgSheen)" opacity="0.6"/>
+            <circle cx="180" cy="180" r="36" fill="#0A0A14"/>
+            <circle cx="180" cy="180" r="36" fill="url(#vgSheen)" opacity="0.3"/>
+            <!-- spindle -->
+            <circle cx="180" cy="180" r="8" fill="rgba(200,169,110,0.3)"/>
+            <circle cx="180" cy="180" r="5" fill="#06060E"/>
+            <!-- sheen highlight -->
+            <ellipse cx="138" cy="136" rx="28" ry="14" fill="rgba(255,255,255,0.035)" transform="rotate(-35 138 136)"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar" id="statsBar">
+      <div class="stats-bar-item">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" style="color:var(--accent)"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/></svg>
+        <div><div class="stats-bar-val" id="statTrackCount">—</div><div class="stats-bar-label">Треков</div></div>
+      </div>
+      <div class="stats-bar-divider"></div>
+      <div class="stats-bar-item">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" style="color:var(--accent)"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+        <div><div class="stats-bar-val" id="statArtistCount">—</div><div class="stats-bar-label">Артиста</div></div>
+      </div>
+      <div class="stats-bar-divider"></div>
+      <div class="stats-bar-item">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" style="color:var(--accent)"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0 4 4 0 010 5.656 1 1 0 01-1.414-1.414 2 2 0 000-2.828 1 1 0 010-1.414z"/><path d="M14.657 4.343a1 1 0 011.414 0 8 8 0 010 11.314 1 1 0 01-1.414-1.414 6 6 0 000-8.486 1 1 0 010-1.414z"/></svg>
+        <div><div class="stats-bar-val" id="statPlayCount">—</div><div class="stats-bar-label">Прослушиваний</div></div>
+      </div>
+      <div class="stats-bar-divider"></div>
+      <div class="stats-bar-item">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" style="color:var(--accent)"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/></svg>
+        <div><div class="stats-bar-val" id="statListeners">2.4K</div><div class="stats-bar-label">Слушателей сегодня</div></div>
+      </div>
+    </div>
+
+    <!-- GENRES -->
+    <div class="mb-section">
+      <div class="section-head">
+        <div class="section-title">Жанры</div>
+        <a class="section-link">Все жанры →</a>
+      </div>
+      <div class="genre-grid" id="genreGrid"></div>
+    </div>
+
+    <!-- THREE-COLUMN DISCOVERY -->
+    <div class="discovery-grid">
+      <!-- FEATURED ARTISTS -->
+      <div class="discovery-col">
+        <div class="section-head">
+          <div class="section-title">Рекомендуемые артисты</div>
+          <a class="section-link" onclick="showSection('artists', document.querySelector('.nav-item:nth-child(2)'))">Все артисты →</a>
+        </div>
+        <div class="featured-artists-list" id="featuredArtistsList"></div>
+      </div>
+
+      <!-- NEW RELEASES -->
+      <div class="discovery-col">
+        <div class="section-head">
+          <div class="section-title">Новые релизы</div>
+          <a class="section-link" id="allReleasesLink">Все релизы →</a>
+        </div>
+        <div class="new-releases-grid" id="newReleasesGrid"></div>
+      </div>
+
+      <!-- PLAYLISTS -->
+      <div class="discovery-col">
+        <div class="section-head">
+          <div class="section-title">Плейлисты для вас</div>
+          <a class="section-link" onclick="showSection('playlists', document.querySelector('.nav-item[onclick*=playlists]'))">Все плейлисты →</a>
+        </div>
+        <div class="home-playlists-grid" id="homePlaylistsGrid"></div>
+      </div>
+    </div>
+
+    <!-- CHART (hidden title, full width) -->
+    <div class="mb-section">
+      <div class="section-head">
+        <div class="section-title">Чарт</div>
+        <span id="trackCount" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+      </div>
+      <div class="tracks-header">
+        <div class="tracks-col" style="text-align:center">#</div>
+        <div></div>
+        <div class="tracks-col">Название</div>
+        <div class="tracks-col">Альбом</div>
+        <div class="tracks-col">Прослушивания</div>
+        <div></div>
+      </div>
+      <div class="tracks-list" id="tracksList"></div>
+    </div>
+  </div>
+
+<!-- ARTISTS TAB -->
+  <div id="artistsView" style="display:none">
+    <div class="mb-section">
+      <div class="section-head">
+        <div class="section-title">Мои артисты</div>
+        <span id="artistsFollowMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+      </div>
+      <div class="artist-grid" id="subscribedArtistsGrid"></div>
+    </div>
+
+    <div class="mb-section">
+      <div class="section-head">
+        <div class="section-title">Подборка треков</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <span id="artistsFeedMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+          <button class="btn-sm" onclick="shuffleSubscribedTracks()">Перемешать подборку</button>
+        </div>
+      </div>
+      <div class="tracks-header">
+        <div class="tracks-col" style="text-align:center">#</div>
+        <div></div>
+        <div class="tracks-col">Название</div>
+        <div class="tracks-col">Альбом</div>
+        <div class="tracks-col">Прослушивания</div>
+        <div></div>
+      </div>
+      <div class="tracks-list" id="subscribedTracksList"></div>
+    </div>
+  </div>
+
+  <!-- FAVORITES TAB -->
+  <div id="favoritesView" style="display:none">
+    <div class="mb-section">
+      <div class="section-head">
+        <div class="section-title">Избранное</div>
+        <span id="favoritesMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+      </div>
+      <div class="tracks-header">
+        <div class="tracks-col" style="text-align:center">#</div>
+        <div></div>
+        <div class="tracks-col">Название</div>
+        <div class="tracks-col">Альбом</div>
+        <div class="tracks-col">Прослушивания</div>
+        <div></div>
+      </div>
+      <div class="tracks-list" id="favoriteTracksList"></div>
+    </div>
+  </div>
+
+
+  <!-- PLAYLISTS TAB -->
+  <div id="playlistsView" style="display:none">
+    <div class="mb-section">
+      <div class="section-head">
+        <div class="section-title">Плейлисты</div>
+        <button class="btn-sm btn-accent" onclick="openPlaylistEditModal()">Создать плейлист</button>
+      </div>
+      <div class="playlist-grid" id="playlistsGrid"></div>
+    </div>
+  </div>
+
+  <!-- PLAYLIST PROFILE -->
+  <div id="playlistProfileView" style="display:none"></div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanelView" style="display:none">
+    <div class="mb-section">
+      <div class="section-head">
+        <div class="section-title">Админ-панель</div>
+        <button class="btn-sm" onclick="loadAdminUsers()">Обновить</button>
+      </div>
+      <div class="admin-panel-card">
+        <div id="adminUsersList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH RESULTS -->
+  <div id="searchView" style="display:none">
+    <div class="mb-section">
+      <div class="section-head">
+        <div class="section-title">Поиск</div>
+        <span id="searchMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+      </div>
+      <div id="searchEmpty" class="empty-state" style="display:none"><p>Ничего не найдено. Попробуй другое название, артиста, альбом или жанр.</p></div>
+    </div>
+
+    <div class="mb-section" id="searchArtistsSection">
+      <div class="section-head"><div class="section-title">Артисты</div><span id="searchArtistsMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
+      <div class="artist-grid" id="searchArtistsGrid"></div>
+    </div>
+
+    <div class="mb-section" id="searchAlbumsSection">
+      <div class="section-head"><div class="section-title">Альбомы</div><span id="searchAlbumsMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
+      <div class="albums-grid" id="searchAlbumsGrid"></div>
+    </div>
+
+    <div class="mb-section" id="searchTracksSection">
+      <div class="section-head"><div class="section-title">Треки</div><span id="searchTracksMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
+      <div class="tracks-header">
+        <div class="tracks-col" style="text-align:center">#</div>
+        <div></div>
+        <div class="tracks-col">Название</div>
+        <div class="tracks-col">Альбом</div>
+        <div class="tracks-col">Прослушивания</div>
+        <div></div>
+      </div>
+      <div class="tracks-list" id="searchTracksList"></div>
+    </div>
+  </div>
+
+
+  <!-- ARTIST PROFILE -->
+  <div id="artistProfileView" style="display:none"></div>
+  <div id="albumProfileView" style="display:none"></div>
+
+</main>
+
+<!-- PLAYER -->
+<div class="player">
+  <div class="now-playing">
+    <div class="np-cover" id="npCover">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/></svg>
+    </div>
+    <div class="np-text">
+      <div class="np-title" id="npTitle">Выберите трек</div>
+      <div class="np-artist" id="npArtist">—</div>
+    </div>
+    <div class="np-fav" onclick="toggleFavCurrent()" id="favBtn">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg>
+    </div>
+  </div>
+  <div class="player-center">
+    <div class="player-controls">
+      <button class="ctrl-btn" onclick="shuffle()" title="Перемешать">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg>
+      </button>
+      <button class="ctrl-btn" onclick="prevTrack()" title="Предыдущий">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"/></svg>
+      </button>
+      <button class="play-btn" onclick="togglePlay()" id="playBtn">
+        <svg id="playIcon" viewBox="0 0 20 20" fill="currentColor"><polygon points="5,3 17,10 5,17"/></svg>
+      </button>
+      <button class="ctrl-btn" onclick="nextTrack()" title="Следующий">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M11.555 14.832A1 1 0 0110 14v-2.798l-5.445 3.63A1 1 0 013 14V6a1 1 0 011.555-.832L10 8.798V6a1 1 0 011.555-.832l6 4a1 1 0 010 1.664l-6 4z"/></svg>
+      </button>
+      <button class="ctrl-btn" id="repeatBtn" onclick="toggleRepeat()" title="Повтор">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"/></svg>
+      </button>
+    </div>
+    <div class="progress-wrap">
+      <span class="prog-time" id="curTime">0:00</span>
+      <div class="prog-bar" id="progBar" onclick="seekTo(event)">
+        <div class="prog-fill" id="progFill"></div>
+      </div>
+      <span class="prog-time" id="durTime">0:00</span>
+    </div>
+  </div>
+  <div class="player-right">
+    <div class="eq-bars" id="eqBars" style="display:none">
+      <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+    </div>
+    <div class="vol-wrap">
+      <div class="vol-icon">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0 4 4 0 010 5.656 1 1 0 01-1.414-1.414 2 2 0 000-2.828 1 1 0 010-1.414z"/><path d="M14.657 4.343a1 1 0 011.414 0 8 8 0 010 11.314 1 1 0 01-1.414-1.414 6 6 0 000-8.486 1 1 0 010-1.414z"/></svg>
+      </div>
+      <input type="range" class="vol-slider" min="0" max="100" value="80" id="volSlider" oninput="setVolume(this.value)">
+    </div>
+  </div>
+</div>
+
+</div><!-- .shell -->
+</div><!-- #app -->
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="page">
+  <div class="auth-wrap">
+    <div class="auth-bg">
+      <div class="auth-bg-disc"></div>
+      <div class="auth-bg-disc"></div>
+      <div class="auth-bg-disc"></div>
+      <div class="auth-bg-glow"></div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-logo-wrap">
+        <div class="auth-logo-disc"></div>
+        <div class="auth-logo-text">Venyl</div>
+      </div>
+      <div class="auth-language-row"><select class="language-select" id="loginLangSelect" onchange="setLanguage(this.value)"><option value="sv">Svenska</option><option value="en">English</option><option value="uk">Українська</option><option value="ru">Русский</option></select></div>
+      <div class="auth-eyebrow">Добро пожаловать</div>
+      <div class="auth-title">С возвращением</div>
+      <div class="auth-sub">Войди, чтобы слушать и управлять музыкой</div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="loginEmail" placeholder="you@example.com"></div>
+      <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="auth-btn-full" onclick="doLogin()">Войти</button>
+      <div class="auth-link" style="margin-top:18px">Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a></div>
+      <hr class="auth-divider">
+      <div class="auth-link"><a onclick="showApp()" style="color:var(--muted)">← Вернуться к музыке</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER PAGE -->
+<div id="registerPage" class="page">
+  <div class="auth-wrap">
+    <div class="auth-bg">
+      <div class="auth-bg-disc"></div><div class="auth-bg-disc"></div><div class="auth-bg-disc"></div><div class="auth-bg-glow"></div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-logo-wrap">
+        <div class="auth-logo-disc"></div>
+        <div class="auth-logo-text">Venyl</div>
+      </div>
+      <div class="auth-language-row"><select class="language-select" id="registerLangSelect" onchange="setLanguage(this.value)"><option value="sv">Svenska</option><option value="en">English</option><option value="uk">Українська</option><option value="ru">Русский</option></select></div>
+      <div class="auth-eyebrow">Новый аккаунт</div>
+      <div class="auth-title">Присоединяйся</div>
+      <div class="auth-sub">Создай аккаунт и начни слушать</div>
+      <div class="form-group"><label class="form-label">Имя</label><input class="form-input" type="text" id="registerName" placeholder="Твоё имя"></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="registerEmail" placeholder="you@example.com"></div>
+      <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" type="password" id="registerPass" placeholder="Минимум 8 символов"></div>
+      <button class="auth-btn-full" onclick="doRegister()">Создать аккаунт</button>
+      <div class="auth-link" style="margin-top:18px">Уже есть аккаунт? <a onclick="showLogin()">Войти</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="uploadModal" onclick="if(event.target===this)closeUpload()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Загрузить трек</div>
+      <button class="modal-close" onclick="closeUpload()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Аудиофайл</label>
+      <div class="drop-zone" id="audioDrop" onclick="qs('audioFile').click()">
+        <div class="drop-text">Нажми или перетащи <span>MP3, WAV, FLAC</span></div>
+        <input type="file" id="audioFile" accept="audio/*" style="display:none" onchange="handleAudio(event)">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Обложка</label>
+      <div class="drop-zone" onclick="qs('coverFile').click()">
+        <div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
+        <input type="file" id="coverFile" accept="image/*" style="display:none">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Название</label><input class="form-input" type="text" id="uploadTitle" placeholder="Название трека"></div>
+      <div class="form-group"><label class="form-label">Исполнитель</label><input class="form-input" type="text" id="uploadArtist" placeholder="Имя артиста"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Альбом</label><input class="form-input" type="text" id="uploadAlbum" placeholder="Название альбома"></div>
+      <div class="form-group"><label class="form-label">Жанр</label><input class="form-input" type="text" id="uploadGenre" placeholder="Жанр"></div>
+    </div>
+    <button class="auth-btn-full" onclick="submitUpload()">Загрузить трек</button>
+  </div>
+</div>
+
+<!-- ARTIST EDIT MODAL -->
+<div class="modal-overlay" id="artistEditModal" onclick="if(event.target===this)closeArtistEdit()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="artistEditTitle">Профиль артиста</div>
+      <button class="modal-close" onclick="closeArtistEdit()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
+    </div>
+    <input type="hidden" id="artistEditId">
+    <div class="form-group"><label class="form-label">Имя артиста</label><input class="form-input" id="artistEditName" placeholder="Полное имя / псевдоним"></div>
+    <div class="form-group"><label class="form-label">Биография</label><textarea class="form-textarea" id="artistEditBio" placeholder="Расскажи об артисте…"></textarea></div>
+    <div class="form-group">
+      <label class="form-label">Фото профиля</label>
+      <div class="drop-zone" onclick="qs('artistPhotoFile').click()">
+        <div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
+        <input type="file" id="artistPhotoFile" accept="image/*" style="display:none">
+      </div>
+    </div>
+    <button class="auth-btn-full" onclick="saveArtistProfile()">Сохранить профиль</button>
+  </div>
+</div>
+
+<!-- ARTIST TRACK MODAL -->
+<div class="modal-overlay" id="artistTrackModal" onclick="if(event.target===this)closeArtistTrackModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Добавить трек артисту</div>
+      <button class="modal-close" onclick="closeArtistTrackModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
+    </div>
+    <input type="hidden" id="artistTrackArtistId">
+    <div class="form-group">
+      <label class="form-label">Аудиофайл</label>
+      <div class="drop-zone" onclick="qs('artistAudioFile').click()">
+        <div class="drop-text">Нажми или перетащи <span>MP3, WAV, FLAC</span></div>
+        <input type="file" id="artistAudioFile" accept="audio/*" style="display:none" onchange="handleArtistAudio(event)">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Обложка</label>
+      <div class="drop-zone" onclick="qs('artistCoverFile').click()">
+        <div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
+        <input type="file" id="artistCoverFile" accept="image/*" style="display:none">
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Название</label><input class="form-input" id="artistTrackTitle" placeholder="Название трека"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Альбом</label><input class="form-input" id="artistTrackAlbum" placeholder="Альбом"></div>
+      <div class="form-group"><label class="form-label">Жанр</label><input class="form-input" id="artistTrackGenre" placeholder="Жанр"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Фиты (через запятую)</label><input class="form-input" id="artistTrackFeatured" placeholder="morgenshtern, элджей"></div>
+    <button class="auth-btn-full" onclick="submitArtistTrack()">Добавить трек</button>
+  </div>
+</div>
+
+<!-- ALBUM MODAL -->
+<div class="modal-overlay" id="albumModal" onclick="if(event.target===this)closeAlbumModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Создать альбом</div>
+      <button class="modal-close" onclick="closeAlbumModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
+    </div>
+    <div class="form-group"><label class="form-label">Артист</label><select class="form-input" id="albumArtistSelect"></select></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Название альбома</label><input class="form-input" id="albumName" placeholder="Название"></div>
+      <div class="form-group"><label class="form-label">Описание</label><input class="form-input" id="albumDescription" placeholder="Краткое описание"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Обложка альбома</label>
+      <div class="drop-zone" onclick="qs('albumCoverFile').click()">
+        <div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
+        <input type="file" id="albumCoverFile" accept="image/*" style="display:none">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Аудиофайлы альбома</label>
+      <div class="drop-zone" onclick="qs('albumAudioFiles').click()">
+        <div class="drop-text">Выбери несколько аудиофайлов сразу</div>
+        <input type="file" id="albumAudioFiles" accept="audio/*" multiple style="display:none" onchange="handleAlbumFiles(event)">
+      </div>
+    </div>
+    <div id="albumTracksMeta"></div>
+    <button class="auth-btn-full" onclick="submitAlbum()">Создать альбом</button>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="profileModal" onclick="if(event.target===this)closeProfileModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Редактировать профиль</div>
+      <button class="modal-close" onclick="closeProfileModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
+    </div>
+    <div class="profile-avatar-lg" id="profileAvatarPreview">U</div>
+    <div class="form-group">
+      <label class="form-label">Ник</label>
+      <input class="form-input" id="profileName" maxlength="40" placeholder="Твой ник">
+      <div class="profile-note" id="profileNickNote"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Аватар</label>
+      <div class="drop-zone" onclick="qs('profileAvatarFile').click()">
+        <div class="drop-text">Нажми для выбора <span>JPG, PNG, WEBP</span></div>
+        <input type="file" id="profileAvatarFile" accept="image/*" style="display:none" onchange="handleProfileAvatarPreview(event)">
+      </div>
+      <div class="profile-note" id="profileAvatarNote"></div>
+    </div>
+    <div class="form-group" id="profileColorGroup" style="display:none">
+      <label class="form-label">Цвет ника администратора</label>
+      <div class="color-row">
+        <input class="form-input" id="profileNicknameColor" type="color" value="#c8a96e" style="padding:6px;width:90px">
+        <div class="color-preview" id="profileColorPreview"></div>
+      </div>
+      <div class="profile-note">Этот параметр доступен только администратору.</div>
+    </div>
+    <div class="profile-actions-row">
+      <button class="auth-btn-full" onclick="saveProfile()">Сохранить профиль</button>
+      <button class="btn-ghost" onclick="logoutFromProfile()">Выйти</button>
+    </div>
+  </div>
+</div>
+<!-- ADMIN USER EDIT MODAL -->
+<div class="modal-overlay" id="adminUserModal" onclick="if(event.target===this)closeAdminUserModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Редактировать пользователя</div>
+      <button class="modal-close" onclick="closeAdminUserModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
+    </div>
+    <input type="hidden" id="adminEditUserId">
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Имя</label><input class="form-input" id="adminEditName"></div>
+      <div class="form-group"><label class="form-label">Почта</label><input class="form-input" id="adminEditEmail" type="email"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Роль</label><select class="form-input" id="adminEditRole"><option value="user">user</option><option value="admin">admin</option></select></div>
+      <div class="form-group"><label class="form-label">Цвет ника</label><input class="form-input" id="adminEditColor" type="color" value="#c8a96e" style="padding:6px;width:96px"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Новый пароль</label><input class="form-input" id="adminEditPassword" type="text" placeholder="Оставь пустым, если не менять"></div>
+    <div class="profile-note">Текущий пароль не показывается. Админ может задать новый пароль пользователю.</div>
+    <button class="auth-btn-full" onclick="saveAdminUser()">Сохранить изменения</button>
+    <button class="btn-ghost" style="margin-top:10px;border-color:rgba(224,82,82,.45);color:var(--red);width:100%" onclick="deleteAdminUser()">Удалить аккаунт пользователя</button>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="playlistEditModal" onclick="if(event.target===this)closePlaylistEditModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="playlistEditTitle">Плейлист</div>
+      <button class="modal-close" onclick="closePlaylistEditModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
+    </div>
+    <input type="hidden" id="playlistEditId">
+    <div class="form-group"><label class="form-label">Название</label><input class="form-input" id="playlistEditName" placeholder="Мой плейлист"></div>
+    <div class="form-group">
+      <label class="form-label">Обложка</label>
+      <div class="drop-zone" onclick="qs('playlistCoverFile').click()">
+        <div class="drop-text">Нажми для выбора <span>JPG, PNG, WEBP</span></div>
+        <input type="file" id="playlistCoverFile" accept="image/*" style="display:none">
+      </div>
+    </div>
+    <button class="auth-btn-full" onclick="savePlaylist()">Сохранить</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addToPlaylistModal" onclick="if(event.target===this)closeAddToPlaylistModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Добавить в плейлист</div>
+      <button class="modal-close" onclick="closeAddToPlaylistModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
+    </div>
+    <input type="hidden" id="addPlaylistTrackId">
+    <div class="add-playlist-list" id="addPlaylistList"></div>
+  </div>
+</div>
+
+
+<!-- TRACK INFO MODAL -->
+<div class="modal-overlay" id="trackInfoModal" onclick="if(event.target===this)closeTrackInfoModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Сведения о треке</div>
+      <button class="modal-close" onclick="closeTrackInfoModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
+    </div>
+    <div id="trackInfoContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<audio id="audioEl"></audio>
+
+<script>
+const BASE='';
+const state={tracks:[],filtered:[],artists:[],currentArtist:null,currentAlbum:null,currentIdx:-1,currentTrack:null,isPlaying:false,favorites:new Set(),favoriteTracks:[],genres:new Set(),user:null,isAdmin:false,albumFiles:[],renderedLists:{},subscribedArtists:[],subscribedTracks:[],activeSection:'home',searchQuery:'',adminUsers:[],playlists:[],currentPlaylist:null,queue:[],excludedTracks:new Set(JSON.parse(localStorage.getItem('venyl_excluded_tracks')||'[]'))};
+const audio=qs('audioEl');
+const CHART_LIMIT=50;
+function sortByPopularity(list){return [...(list||[])].sort((a,b)=>(Number(b.playCount)||0)-(Number(a.playCount)||0) || (Number(b.id)||0)-(Number(a.id)||0))}
+function getChartTracks(list=state.tracks){return sortByPopularity(list).slice(0,CHART_LIMIT)}
+
+function qs(id){return document.getElementById(id)}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmtTime(s){s=Number(s||0);return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0')}
+async function api(url,options={}){const res=await fetch(BASE+url,{credentials:'include',...options});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||'Ошибка запроса');return data}
+
+let toastTimer;
+function toast(msg,type=''){
+  const el=qs('toast');
+  el.textContent=msg;
+  el.className='toast show'+(type?' '+type:'');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+function getInitials(name=''){return ((name||'U').split(/\s+/).filter(Boolean).slice(0,2).map(v=>(v[0]||'').toUpperCase()).join('')||'U')}
+function avatarMarkup(user){
+  const initials=getInitials(user?.name||'U');
+  return user?.avatarUrl?`<img src="${user.avatarUrl}" alt="${esc(user.name||'Профиль')}">`:initials;
+}
+function formatCooldown(nextAt, label){
+  if(!nextAt) return `${label} можно менять сейчас`;
+  const d=new Date(nextAt);
+  if(Number.isNaN(d.getTime()) || Date.now()>=d.getTime()) return `${label} можно менять сейчас`;
+  return `${label} можно менять снова ${d.toLocaleDateString('ru-RU')}`;
+}
+function updateUserUI(){
+  const nameEl=qs('sidebarName');
+  const emailEl=qs('sidebarEmail');
+  const avatarEl=qs('avatarInitials');
+  const topInner=qs('topProfileInner');
+  nameEl.textContent=state.user?state.user.name:'Гость';
+  emailEl.textContent=state.user?state.user.email:'Нажми чтобы войти';
+  nameEl.style.color=state.user?.nicknameColor || '';
+  avatarEl.innerHTML=avatarMarkup(state.user);
+  topInner.innerHTML=state.user?avatarMarkup(state.user):'<svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>';
+  document.querySelectorAll('.admin-only').forEach(el=>{
+    if(!state.isAdmin){ el.style.display='none'; return; }
+    if(el.classList.contains('nav-section')) el.style.display='block';
+    else el.style.display='flex';
+  });
+}
+async function loadSession(){try{const data=await api('/api/auth/me');state.user=data.user||null;state.isAdmin=!!data.user?.isAdmin}catch{state.user=null;state.isAdmin=false}updateUserUI();await Promise.all([loadSubscribedFeed(),loadFavorites(),loadPlaylists()]);}
+
+async function loadFavorites(){
+  if(!state.user){
+    state.favorites=new Set();
+    state.favoriteTracks=[];
+    renderFavoritesSection();
+    if(state.currentPlaylist)renderTracks(state.currentPlaylist.tracks,'playlistTracksList');
+    if(state.searchQuery)renderSearchResults(state.searchQuery);
+    updatePlayerMeta();
+    return;
+  }
+  try{
+    const data=await api('/api/favorites');
+    state.favorites=new Set((data.favoriteTrackIds||[]).map(Number));
+    state.favoriteTracks=Array.isArray(data.favorites)?data.favorites:[];
+  }catch{
+    state.favorites=new Set();
+    state.favoriteTracks=[];
+  }
+  renderFavoritesSection();
+  updatePlayerMeta();
+}
+
+async function loadTracks(){const data=await api('/api/tracks').catch(()=>({tracks:[]}));state.tracks=sortByPopularity(Array.isArray(data.tracks)?data.tracks:[]);state.filtered=getChartTracks();renderGenres();renderTracks(state.filtered,'tracksList');renderFavoritesSection();if(state.searchQuery)renderSearchResults(state.searchQuery);updatePlayerMeta();renderHomeAll();}
+async function loadArtists(){const data=await api('/api/artists').catch(()=>({artists:[]}));state.artists=data.artists||[];renderArtists();renderArtistSelect();renderSubscribedArtistsSection();if(state.searchQuery)renderSearchResults(state.searchQuery)}
+
+function renderGenres(){
+  state.genres.clear();
+  state.tracks.forEach(t=>{if(t.genre)t.genre.split(',').forEach(g=>state.genres.add(g.trim()))});
+  qs('genreGrid').innerHTML='<div class="genre-chip active" onclick="filterByGenre(null,this)">Все</div>'+[...state.genres].filter(Boolean).map(g=>`<div class="genre-chip" onclick='filterByGenre(${JSON.stringify(g)},this)'>${esc(g)}</div>`).join('');
+}
+
+function artistCardMarkup(a,{showFollowButton=false}={}){
+  return `<div class="artist-pill" onclick="openArtistProfile(${a.id})">
+    <div class="artist-pill-avatar">${a.photoUrl?`<img src="${a.photoUrl}" alt="">`:esc((a.name||'?')[0].toUpperCase())}</div>
+    <span class="artist-pill-name">${esc(a.name)}</span>
+    <span class="artist-pill-count">· ${a.trackCount||0}</span>
+    ${showFollowButton?`<button class="btn-sm ${a.isSubscribed?'':'btn-accent'}" style="margin-left:8px;padding:6px 12px;font-size:11px" onclick="event.stopPropagation();toggleArtistSubscription(${a.id})">${a.isSubscribed?'Отписаться':'Подписаться'}</button>`:''}
+  </div>`;
+}
+function renderArtists(){
+  const grid=qs('artistGrid');
+  if(!state.artists.length){grid.innerHTML='<div style="color:var(--muted)">Артистов пока нет</div>';return}
+  grid.innerHTML=state.artists.map(a=>artistCardMarkup(a,{showFollowButton:!!state.user})).join('');
+  renderFeaturedArtists();
+}
+
+function renderFavoritesSection(){
+  const meta=qs('favoritesMeta');
+  if(meta){
+    if(!state.user) meta.textContent='Войди в аккаунт, чтобы видеть свои любимые треки';
+    else meta.textContent=state.favoriteTracks.length ? `${state.favoriteTracks.length} треков` : 'Список пока пуст';
+  }
+  renderTracks(state.favoriteTracks,'favoriteTracksList');
+}
+
+function renderSubscribedArtistsSection(){
+  const grid=qs('subscribedArtistsGrid');
+  const meta=qs('artistsFollowMeta');
+  const feedMeta=qs('artistsFeedMeta');
+  if(!grid||!meta||!feedMeta)return;
+  if(!state.user){
+    meta.textContent='';
+    feedMeta.textContent='';
+    grid.innerHTML=`<div class="empty-state"><p>Войди в аккаунт, чтобы видеть персональные подписки на артистов.</p></div>`;
+    renderTracks([], 'subscribedTracksList');
+    return;
+  }
+  meta.textContent=`${state.subscribedArtists.length} подписок`;
+  feedMeta.textContent=`${state.subscribedTracks.length} треков`;
+  if(!state.subscribedArtists.length){
+    grid.innerHTML=`<div class="empty-state"><p>Ты пока ни на кого не подписан. Открой артиста и нажми «Подписаться».</p></div>`;
+  }else{
+    grid.innerHTML=state.subscribedArtists.map(a=>artistCardMarkup(a,{showFollowButton:true})).join('');
+  }
+  renderTracks(state.subscribedTracks,'subscribedTracksList');
+}
+
+async function loadSubscribedFeed(){
+  if(!state.user){
+    state.subscribedArtists=[];
+    state.subscribedTracks=[];
+    renderSubscribedArtistsSection();
+    return;
+  }
+  const data=await api('/api/artists/feed').catch(()=>({subscribedArtists:[],tracks:[]}));
+  state.subscribedArtists=Array.isArray(data.subscribedArtists)?data.subscribedArtists:[];
+  state.subscribedTracks=Array.isArray(data.tracks)?data.tracks:[];
+  renderSubscribedArtistsSection();
+}
+async function toggleArtistSubscription(artistId){
+  if(!state.user){ showLogin(); toast('Войди в аккаунт, чтобы подписываться','err'); return; }
+  try{
+    const data=await api('/api/artists/'+artistId+'/subscribe',{method:'POST'});
+    state.subscribedArtists=Array.isArray(data.subscribedArtists)?data.subscribedArtists:state.subscribedArtists;
+    state.subscribedTracks=Array.isArray(data.tracks)?data.tracks:state.subscribedTracks;
+    state.artists=state.artists.map(a=>a.id===artistId?{...a,isSubscribed:data.subscribed}:a);
+    if(state.currentArtist?.artist?.id===artistId){
+      state.currentArtist.artist.isSubscribed=data.subscribed;
+      const btn=qs('artistProfileSubscribeBtn');
+      if(btn) btn.textContent=data.subscribed?'Отписаться':'Подписаться';
+      if(btn) btn.classList.toggle('btn-accent', !data.subscribed);
+    }
+    renderArtists();
+    renderSubscribedArtistsSection();
+    toast(data.subscribed?'Подписка оформлена':'Подписка удалена','ok');
+  }catch(e){toast(e.message||'Не удалось обновить подписку','err')}
+}
+function shuffleSubscribedTracks(){
+  if(!state.user) return toast('Сначала войди в аккаунт','err');
+  if(!state.subscribedTracks.length) return toast('Подборка пока пустая','err');
+  state.subscribedTracks=[...state.subscribedTracks].sort(()=>Math.random()-0.5);
+  renderSubscribedArtistsSection();
+  toast('Подборка перемешана','ok');
+}
+function renderArtistSelect(){
+  const sel=qs('albumArtistSelect');if(!sel)return;
+  sel.innerHTML=state.artists.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
+}
+
+function filterByGenre(g,el){
+  document.querySelectorAll('.genre-chip').forEach(c=>c.classList.remove('active'));
+  if(el)el.classList.add('active');
+  state.filtered=g?getChartTracks(state.tracks.filter(t=>(t.genre||'').includes(g))):getChartTracks();
+  renderTracks(state.filtered,'tracksList');
+}
+
+function normSearch(s){return String(s||'').toLowerCase().trim()}
+function trackMatches(t,q){
+  const hay=[t.title,t.artist,t.album,t.genre].map(normSearch).join(' ');
+  return hay.includes(q);
+}
+function artistMatches(a,q){
+  const hay=[a.name,a.bio].map(normSearch).join(' ');
+  return hay.includes(q);
+}
+function buildAlbumIndex(){
+  const byKey=new Map();
+  state.tracks.forEach(t=>{
+    const album=(t.album||'').trim();
+    if(!album)return;
+    const key=(t.artistId||t.artist||'')+'::'+album.toLowerCase();
+    if(!byKey.has(key)){
+      byKey.set(key,{id:t.albumId||0,name:album,artist:t.artist||'',artistId:t.artistId||0,coverUrl:t.coverUrl||'',genre:t.genre||'',tracks:0,plays:0});
+    }
+    const a=byKey.get(key);
+    a.tracks+=1;
+    a.plays+=Number(t.playCount)||0;
+    if(!a.coverUrl&&t.coverUrl)a.coverUrl=t.coverUrl;
+  });
+  return [...byKey.values()].sort((a,b)=>(b.plays-a.plays)||a.name.localeCompare(b.name,'ru'));
+}
+function filterTracks(){
+  const q=normSearch(qs('searchInput').value);
+  state.searchQuery=q;
+  if(!q){
+    hideSearchView();
+    return;
+  }
+  renderSearchResults(q);
+}
+function hideAllMainViews(){
+  ['homeView','artistsView','favoritesView','playlistsView','playlistProfileView','artistProfileView','albumProfileView','searchView','adminPanelView'].forEach(id=>{const el=qs(id);if(el)el.style.display='none'});
+}
+function hideSearchView(){
+  qs('searchView').style.display='none';
+  if(state.activeSection==='artists'){qs('artistsView').style.display='block';renderSubscribedArtistsSection();return}
+  if(state.activeSection==='favorites'){qs('favoritesView').style.display='block';renderFavoritesSection();return}
+  if(state.activeSection==='playlists'){qs('playlistsView').style.display='block';renderPlaylistsSection();return}
+  if(state.activeSection==='playlistProfile'&&state.currentPlaylist){qs('playlistProfileView').style.display='block';return}
+  if(state.activeSection==='artistProfile'&&state.currentArtist){qs('artistProfileView').style.display='block';return}
+  if(state.activeSection==='albumProfile'&&state.currentAlbum){qs('albumProfileView').style.display='block';return}
+  qs('homeView').style.display='block';
+  state.filtered=getChartTracks();
+  renderTracks(state.filtered,'tracksList');
+}
+function clearSearch(restore=true){
+  const input=qs('searchInput');
+  if(input)input.value='';
+  state.searchQuery='';
+  if(restore)hideSearchView();
+}
+function renderSearchResults(q=state.searchQuery){
+  if(!q)return hideSearchView();
+  hideAllMainViews();
+  qs('searchView').style.display='block';
+
+  const foundTracks=state.tracks.filter(t=>trackMatches(t,q));
+  const foundArtists=state.artists.filter(a=>artistMatches(a,q) || state.tracks.some(t=>Number(t.artistId)===Number(a.id)&&trackMatches(t,q)));
+  const foundAlbums=buildAlbumIndex().filter(a=>[a.name,a.artist,a.genre].map(normSearch).join(' ').includes(q));
+  const total=foundTracks.length+foundArtists.length+foundAlbums.length;
+
+  qs('searchMeta').textContent=`${total} результатов по запросу «${qs('searchInput').value.trim()}»`;
+  qs('searchEmpty').style.display=total?'none':'block';
+
+  qs('searchArtistsSection').style.display=foundArtists.length?'block':'none';
+  qs('searchArtistsMeta').textContent=foundArtists.length?`${foundArtists.length}`:'';
+  qs('searchArtistsGrid').innerHTML=foundArtists.map(a=>artistCardMarkup(a,{showFollowButton:!!state.user})).join('');
+
+  qs('searchAlbumsSection').style.display=foundAlbums.length?'block':'none';
+  qs('searchAlbumsMeta').textContent=foundAlbums.length?`${foundAlbums.length}`:'';
+  qs('searchAlbumsGrid').innerHTML=foundAlbums.map(al=>`
+    <div class="album-card" onclick="openAlbumFromSearch(${al.artistId}, ${JSON.stringify(al.name).replace(/"/g,'&quot;')})">
+      <div class="album-cover">${al.coverUrl?`<img src="${al.coverUrl}" alt="">`:'<div class="album-cover-placeholder"><svg width="32" height="32" viewBox="0 0 20 20" fill="currentColor" style="color:var(--muted);opacity:.4"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg></div>'}</div>
+      <div><div class="album-card-name">${esc(al.name)}</div><div class="album-card-desc">${esc(al.artist)} · ${al.tracks} треков</div></div>
+    </div>`).join('');
+
+  qs('searchTracksSection').style.display=foundTracks.length?'block':'none';
+  qs('searchTracksMeta').textContent=foundTracks.length?`${foundTracks.length}`:'';
+  renderTracks(foundTracks,'searchTracksList');
+}
+async function openAlbumFromSearch(artistId,albumName){
+  clearSearch(false);
+  const match=buildAlbumIndex().find(al=>Number(al.artistId)===Number(artistId) && String(al.name).toLowerCase()===String(albumName).toLowerCase());
+  if(match?.id) return openAlbumProfile(match.id);
+  if(artistId){
+    return openArtistProfile(artistId);
+  }
+}
+
+
+function findArtistForName(name){
+  const n=String(name||'').trim().toLowerCase();
+  if(!n)return null;
+  return state.artists.find(a=>String(a.name||'').trim().toLowerCase()===n) || null;
+}
+function getClickableTrackArtists(t){
+  if(Array.isArray(t.artists) && t.artists.length){
+    return t.artists.map(a=>({id:Number(a.id)||0,name:a.name||''})).filter(a=>a.name);
+  }
+  const names=String(t.artist||'').split(',').map(v=>v.trim()).filter(Boolean);
+  if(!names.length && t.artist) names.push(String(t.artist));
+  return names.map((name,idx)=>{
+    const match=findArtistForName(name);
+    const isMain=idx===0 && t.artistId;
+    return {id:match?.id || (isMain ? Number(t.artistId)||0 : 0), name};
+  });
+}
+function artistLinksMarkup(t){
+  const artists=getClickableTrackArtists(t);
+  if(!artists.length)return esc(t.artist||'Unknown Artist');
+  return artists.map((a,idx)=>{
+    const sep=idx?'<span class="track-artist-sep">,</span> ':'';
+    if(a.id){
+      return `${sep}<span class="track-artist-link" onclick="event.stopPropagation();openArtistProfile(${a.id})">${esc(a.name)}</span>`;
+    }
+    return `${sep}<span>${esc(a.name)}</span>`;
+  }).join('');
+}
+
+function renderTracks(list=state.filtered,targetId='tracksList'){
+  const listEl=qs(targetId);if(!listEl)return;
+  state.renderedLists[targetId]=Array.isArray(list)?[...list]:[];
+  if(targetId==='tracksList')qs('trackCount').textContent=`топ ${Math.min(CHART_LIMIT, list.length)} треков`;
+  if(!list.length){
+    listEl.innerHTML=`<div class="empty-state"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/></svg><p>Треки не найдены</p></div>`;
+    return;
+  }
+  listEl.innerHTML=list.map((t,i)=>{
+    const isPlay=state.currentTrack&&state.currentTrack.id===t.id;
+    const playCount=Number(t.playCount)||0;
+    return `<div class="track-row${isPlay?' playing':''}" onclick="playTrackFromList(${i},'${targetId}')">
+      <div class="track-num">${isPlay?'<div class="eq-bars" style="margin:auto"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>':i+1}</div>
+      <div class="track-cover">${t.coverUrl?`<img src="${t.coverUrl}" alt="">`:'<div class="cover-fallback"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/></svg></div>'}</div>
+      <div class="track-info"><div class="track-name">${esc(t.title)}</div><div class="track-artist">${artistLinksMarkup(t)}</div></div>
+      <div class="track-album-cell" ${(t.album&&t.albumId)?`onclick="event.stopPropagation();openAlbumProfile(${t.albumId})" style="cursor:pointer" title="Открыть альбом"`:''}>${esc(t.album||'Сингл')}</div>
+      <div><span class="track-genre-pill" title="Прослушивания">${playCount.toLocaleString('ru-RU')}</span></div>
+      <div class="track-actions" onclick="event.stopPropagation()">
+        <button class="track-more-btn" onclick="toggleTrackMenu(event,${t.id},'${targetId}')" title="Действия">⋯</button>
+        <div class="track-menu" id="trackMenu-${targetId}-${t.id}">
+          <div class="track-menu-title">Действия с треком</div>
+          <button class="track-menu-item" onclick="openAddToPlaylistModal(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"/></svg><span class="menu-text">Добавить в плейлист</span></button>
+          <button class="track-menu-item ${state.favorites.has(t.id)?'active':''}" onclick="toggleFav(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg><span class="menu-text">${state.favorites.has(t.id)?'Убрать из любимых треков':'Добавить в любимые треки'}</span></button>
+          <button class="track-menu-item" onclick="playTrackNext(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a1 1 0 011.555-.832l6 4a1 1 0 010 1.664l-6 4A1 1 0 015 12V4zm9 0a1 1 0 112 0v8a1 1 0 11-2 0V4zm-9 11a1 1 0 011-1h7a1 1 0 110 2H6a1 1 0 01-1-1z"/></svg><span class="menu-text">Играть следующим</span></button>
+          <button class="track-menu-item" onclick="addTrackToQueue(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 5a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zm0 5a1 1 0 011-1h7a1 1 0 110 2H5a1 1 0 01-1-1zm0 5a1 1 0 011-1h4a1 1 0 110 2H5a1 1 0 01-1-1zm11-4a1 1 0 011 1v2h2a1 1 0 110 2h-2v2a1 1 0 11-2 0v-2h-2a1 1 0 110-2h2v-2a1 1 0 011-1z"/></svg><span class="menu-text">Добавить в очередь</span></button>
+          <button class="track-menu-item" onclick="excludeTrack(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM5.636 5.636a6 6 0 018.728 8.728L5.636 5.636zm-.707 1.414l8.021 8.021A6 6 0 014.929 7.05z" clip-rule="evenodd"/></svg><span class="menu-text">Исключить из музыкальных предпочтений</span></button>
+          <div class="track-menu-sep"></div>
+          <button class="track-menu-item" onclick="startTrackRadio(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 13a3 3 0 100-6 3 3 0 000 6z"/><path fill-rule="evenodd" d="M4.222 4.222a1 1 0 011.414 1.414 6.18 6.18 0 000 8.728 1 1 0 11-1.414 1.414 8.18 8.18 0 010-11.556zm10.142 1.414a1 1 0 111.414-1.414 8.18 8.18 0 010 11.556 1 1 0 11-1.414-1.414 6.18 6.18 0 000-8.728z" clip-rule="evenodd"/></svg><span class="menu-text">К радио по треку</span></button>
+          <button class="track-menu-item ${(t.album&&t.albumId)?'':'disabled'}" onclick="${(t.album&&t.albumId)?`goToTrackAlbum(${t.id});closeTrackMenus()`:'event.preventDefault()'}"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 10a2 2 0 110-4 2 2 0 010 4z"/></svg><span class="menu-text">К альбому</span></button>
+          <button class="track-menu-item" onclick="showTrackInfo(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M18 10A8 8 0 112 10a8 8 0 0116 0zM9 9a1 1 0 000 2v4a1 1 0 102 0v-4a1 1 0 00-1-1H9zm1-4a1.25 1.25 0 100 2.5A1.25 1.25 0 0010 5z"/></svg><span class="menu-text">Посмотреть сведения</span></button>
+          <button class="track-menu-item" onclick="shareTrack(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M15 8a3 3 0 10-2.83-4H12a3 3 0 00.17 1L7.6 7.29a3 3 0 100 5.42L12.17 15A3 3 0 1013 13.83L8.43 11.54a3.04 3.04 0 000-3.08L13 6.17A3 3 0 0015 8z"/></svg><span class="menu-text">Поделиться</span></button>
+          ${targetId==='playlistTracksList'?`<div class="track-menu-sep"></div><button class="track-menu-item" onclick="movePlaylistTrack(${t.id},-1);closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 4l5 6H5l5-6zm0 12l-5-6h10l-5 6z"/></svg><span class="menu-text">Переместить выше</span></button><button class="track-menu-item" onclick="movePlaylistTrack(${t.id},1);closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 16l-5-6h10l-5 6zM10 4l5 6H5l5-6z"/></svg><span class="menu-text">Переместить ниже</span></button><button class="track-menu-item danger" onclick="removeTrackFromPlaylist(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M6 7a1 1 0 012 0v8a1 1 0 11-2 0V7zm6 0a1 1 0 112 0v8a1 1 0 11-2 0V7z"/><path fill-rule="evenodd" d="M4 4a1 1 0 011-1h3a1 1 0 011-1h2a1 1 0 011 1h3a1 1 0 110 2H5a1 1 0 01-1-1zm1 3a1 1 0 011-1h8a1 1 0 011 1l-.6 9.1A2 2 0 0112.4 18H7.6a2 2 0 01-2-1.9L5 7z" clip-rule="evenodd"/></svg><span class="menu-text">Удалить из плейлиста</span></button>`:''}
+          ${state.isAdmin?`<div class="track-menu-sep"></div><button class="track-menu-item" onclick="editTrack(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-9.9 9.9-3.536.707.707-3.535 9.9-9.9z"/></svg><span class="menu-text">Редактировать трек</span></button><button class="track-menu-item danger" onclick="deleteTrack(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 2a1 1 0 00-1 1v1H4a1 1 0 100 2h12a1 1 0 100-2h-3V3a1 1 0 00-1-1H8zM6 7a1 1 0 011 1v8a1 1 0 102 0V8a1 1 0 00-1-1H7zm5 1a1 1 0 112 0v8a1 1 0 11-2 0V8z" clip-rule="evenodd"/></svg><span class="menu-text">Удалить трек</span></button>`:''}
+        </div>
+      </div></div>`;
+  }).join('');
+}
+
+
+function findTrackById(trackId){return state.tracks.find(t=>Number(t.id)===Number(trackId)) || state.favoriteTracks.find(t=>Number(t.id)===Number(trackId)) || state.subscribedTracks.find(t=>Number(t.id)===Number(trackId)) || state.currentPlaylist?.tracks?.find(t=>Number(t.id)===Number(trackId)) || state.currentArtist?.tracks?.find(t=>Number(t.id)===Number(trackId)) || state.currentAlbum?.tracks?.find(t=>Number(t.id)===Number(trackId));}
+function closeTrackMenus(){
+  document.querySelectorAll('.track-menu.open').forEach(m=>m.classList.remove('open'));
+  document.querySelectorAll('.track-actions.open').forEach(a=>a.classList.remove('open'));
+}
+function toggleTrackMenu(event,trackId,targetId){
+  event.stopPropagation();
+  const menu=qs(`trackMenu-${targetId}-${trackId}`);
+  const actions=menu?.closest('.track-actions');
+  const btn=event.currentTarget;
+  const wasOpen=menu?.classList.contains('open');
+  closeTrackMenus();
+  if(menu && !wasOpen){
+    menu.classList.add('open');
+    actions?.classList.add('open');
+    const r=btn.getBoundingClientRect();
+    const mw=Math.min(342, window.innerWidth-24);
+    let left=Math.min(window.innerWidth-mw-12, Math.max(12, r.right-mw));
+    let top=r.bottom+8;
+    menu.style.width=mw+'px';
+    menu.style.left=left+'px';
+    menu.style.top=top+'px';
+    requestAnimationFrame(()=>{
+      const mr=menu.getBoundingClientRect();
+      if(mr.bottom>window.innerHeight-12){
+        menu.style.top=Math.max(12, r.top-mr.height-8)+'px';
+      }
+    });
+  }
+}
+document.addEventListener('click', closeTrackMenus);
+function playTrackNext(trackId){
+  const t=findTrackById(trackId);
+  if(!t)return toast('Трек не найден','err');
+  state.queue=state.queue.filter(x=>Number(x.id)!==Number(t.id));
+  state.queue.unshift(t);
+  toast('Трек будет играть следующим','ok');
+}
+function addTrackToQueue(trackId){
+  const t=findTrackById(trackId);
+  if(!t)return toast('Трек не найден','err');
+  state.queue.push(t);
+  toast('Добавлено в очередь','ok');
+}
+function excludeTrack(trackId){
+  state.excludedTracks.add(Number(trackId));
+  localStorage.setItem('venyl_excluded_tracks',JSON.stringify([...state.excludedTracks]));
+  toast('Трек исключён из музыкальных предпочтений','ok');
+}
+function startTrackRadio(trackId){
+  const base=findTrackById(trackId);
+  if(!base)return toast('Трек не найден','err');
+  const genre=String(base.genre||'').toLowerCase();
+  const artist=String(base.artist||'').toLowerCase();
+  const radio=state.tracks.filter(t=>Number(t.id)!==Number(trackId) && (String(t.artist||'').toLowerCase()===artist || (genre && String(t.genre||'').toLowerCase().includes(genre))));
+  const list=[base,...radio.sort(()=>Math.random()-0.5)];
+  playTrackObject(list[0],0,list);
+  toast('Запущено радио по треку','ok');
+}
+function goToTrackAlbum(trackId){
+  const t=findTrackById(trackId);
+  if(t?.albumId)return openAlbumProfile(t.albumId);
+  toast('У трека нет альбома','err');
+}
+function showTrackInfo(trackId){
+  const t=findTrackById(trackId);
+  if(!t)return toast('Трек не найден','err');
+  const cover=t.coverUrl?`<img src="${t.coverUrl}" alt="">`:'<div class="cover-fallback"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/></svg></div>';
+  qs('trackInfoContent').innerHTML=`<div class="track-info-card"><div class="track-cover">${cover}</div><div class="track-info-meta"><div class="track-info-line"><b>Название:</b> ${esc(t.title||'—')}</div><div class="track-info-line"><b>Исполнитель:</b> ${esc(t.artist||'—')}</div><div class="track-info-line"><b>Альбом:</b> ${esc(t.album||'Сингл')}</div><div class="track-info-line"><b>Жанр:</b> ${esc(t.genre||'—')}</div><div class="track-info-line"><b>Прослушивания:</b> ${(Number(t.playCount)||0).toLocaleString('ru-RU')}</div></div></div>`;
+  qs('trackInfoModal').classList.add('open');
+}
+function closeTrackInfoModal(){qs('trackInfoModal').classList.remove('open')}
+async function shareTrack(trackId){
+  const t=findTrackById(trackId);
+  if(!t)return toast('Трек не найден','err');
+  const text=`${t.title||'Трек'} — ${t.artist||'Venyl'}`;
+  const url=window.location.href;
+  try{
+    if(navigator.share){await navigator.share({title:text,text,url});}
+    else if(navigator.clipboard){await navigator.clipboard.writeText(`${text} ${url}`);toast('Ссылка скопирована','ok');}
+    else{prompt('Скопируй ссылку:', `${text} ${url}`);}
+  }catch{toast('Не удалось поделиться','err')}
+}
+
+function getCurrentList(targetId){
+  return state.renderedLists[targetId]
+    || ((targetId==='artistTracksList'&&state.currentArtist)?state.currentArtist.tracks:null)
+    || ((targetId==='albumTracksList'&&state.currentAlbum)?state.currentAlbum.tracks:null)
+    || state.filtered
+}
+function playTrackFromList(idx,targetId){const list=getCurrentList(targetId);playTrackObject(list[idx],idx,list)}
+function playTrackObject(t,idx,list){
+  if(!t)return;
+  state.currentIdx=idx;state.currentTrack=t;state.playList=list||state.filtered;
+  updatePlayerMeta();
+  if(t.audioUrl){
+    const shouldReload=audio.src!==new URL(t.audioUrl, window.location.origin).href;
+    if(shouldReload) audio.src=t.audioUrl;
+    audio.play().then(()=>{state.isPlaying=true;updatePlayBtn();qs('eqBars').style.display='flex';registerListen(t.id);renderTracks(state.filtered,'tracksList');if(state.currentArtist)renderTracks(state.currentArtist.tracks,'artistTracksList');if(state.currentAlbum)renderTracks(state.currentAlbum.tracks,'albumTracksList');renderTracks(state.subscribedTracks,'subscribedTracksList');renderTracks(state.favoriteTracks,'favoriteTracksList');if(state.currentPlaylist)renderTracks(state.currentPlaylist.tracks,'playlistTracksList');updatePlayerMeta();})
+    .catch(()=>{state.isPlaying=false;updatePlayBtn();toast('Не удалось воспроизвести трек','err')});
+  }
+}
+function updatePlayerMeta(){
+  const t=state.currentTrack;
+  qs('npCover').innerHTML=t?(t.coverUrl?`<img src="${t.coverUrl}" style="width:100%;height:100%;object-fit:cover">`:'<svg viewBox="0 0 20 20" fill="currentColor"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/></svg>'):'';
+  qs('npTitle').textContent=t?t.title:'Выберите трек';
+  qs('npArtist').textContent=t?(t.artist||'—'):'—';
+  qs('favBtn').classList.toggle('active', !!(t && state.favorites.has(Number(t.id))));
+}
+
+function togglePlay(){
+  if(!state.currentTrack){if(state.filtered[0])playTrackObject(state.filtered[0],0,state.filtered);return}
+  if(state.isPlaying){audio.pause();state.isPlaying=false;qs('eqBars').style.display='none'}
+  else{audio.play().catch(()=>{});state.isPlaying=true;qs('eqBars').style.display='flex'}
+  updatePlayBtn();
+}
+function updatePlayBtn(){
+  qs('playIcon').innerHTML=state.isPlaying
+    ?'<rect x="5" y="3" width="4" height="14" rx="1"/><rect x="11" y="3" width="4" height="14" rx="1"/>'
+    :'<polygon points="4,3 17,10 4,17"/>';
+}
+function nextTrack(){
+  if(state.queue.length){
+    const next=state.queue.shift();
+    const l=state.playList||state.filtered;
+    const idx=l.findIndex(t=>Number(t.id)===Number(next.id));
+    playTrackObject(next,idx>=0?idx:0,l.length?l:[next]);
+    return;
+  }
+  const l=state.playList||state.filtered;if(!l.length)return;const i=(state.currentIdx+1)%l.length;playTrackObject(l[i],i,l)
+}
+function prevTrack(){const l=state.playList||state.filtered;if(!l.length)return;const i=(state.currentIdx-1+l.length)%l.length;playTrackObject(l[i],i,l)}
+function shuffle(){if(!state.filtered.length)return;const i=Math.floor(Math.random()*state.filtered.length);playTrackObject(state.filtered[i],i,state.filtered);toast('Перемешано')}
+function toggleRepeat(){audio.loop=!audio.loop;qs('repeatBtn').classList.toggle('active',audio.loop);toast(audio.loop?'Повтор включён':'Повтор выключен')}
+function playRandom(){shuffle()}
+function seekTo(e){if(!audio.duration)return;const r=qs('progBar').getBoundingClientRect();audio.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*audio.duration}
+function setVolume(v){audio.volume=Number(v)/100}
+
+audio.addEventListener('timeupdate',()=>{if(!audio.duration)return;qs('progFill').style.width=(audio.currentTime/audio.duration*100)+'%';qs('curTime').textContent=fmtTime(audio.currentTime);qs('durTime').textContent=fmtTime(audio.duration)});
+audio.addEventListener('ended',nextTrack);
+audio.addEventListener('play',()=>{state.isPlaying=true;qs('eqBars').style.display='flex';updatePlayBtn()});
+audio.addEventListener('pause',()=>{state.isPlaying=false;qs('eqBars').style.display='none';updatePlayBtn()});
+
+async function loadPlaylists(){
+  if(!state.user){ state.playlists=[]; state.currentPlaylist=null; renderPlaylistsSection(); return; }
+  const data=await api('/api/playlists').catch(()=>({playlists:[]}));
+  state.playlists=Array.isArray(data.playlists)?data.playlists:[];
+  renderPlaylistsSection();
+  renderHomePlaylists();
+}
+function renderPlaylistsSection(){
+  const grid=qs('playlistsGrid');
+  if(!grid)return;
+  if(!state.user){grid.innerHTML='<div class="empty-state"><p>Войди в аккаунт, чтобы создавать свои плейлисты.</p></div>';return;}
+  if(!state.playlists.length){grid.innerHTML='<div class="empty-state"><p>Плейлистов пока нет. Нажми «Создать плейлист».</p></div>';return;}
+  grid.innerHTML=state.playlists.map(pl=>`
+    <div class="playlist-card" onclick="openPlaylist(${pl.id})">
+      <div class="playlist-cover">${pl.coverUrl?`<img src="${pl.coverUrl}" alt="">`:'♫'}</div>
+      <div style="min-width:0;flex:1">
+        <div class="album-card-name">${esc(pl.name)}</div>
+        <div class="album-card-desc">${pl.trackCount||0} треков</div>
+      </div>
+      <button class="btn-sm" onclick="event.stopPropagation();openPlaylistEditModal(${pl.id})">Редактировать</button>
+    </div>`).join('');
+}
+function openPlaylistEditModal(id=null){
+  if(!state.user){showLogin();return;}
+  const pl=id?state.playlists.find(x=>Number(x.id)===Number(id))||state.currentPlaylist?.playlist:null;
+  qs('playlistEditId').value=pl?.id||'';
+  qs('playlistEditName').value=pl?.name||'';
+  qs('playlistCoverFile').value='';
+  qs('playlistEditTitle').textContent=pl?'Редактировать плейлист':'Создать плейлист';
+  qs('playlistEditModal').classList.add('open');
+}
+function closePlaylistEditModal(){qs('playlistEditModal').classList.remove('open')}
+async function savePlaylist(){
+  if(!state.user)return showLogin();
+  const id=qs('playlistEditId').value;
+  const name=qs('playlistEditName').value.trim();
+  const cover=qs('playlistCoverFile').files[0];
+  if(!name)return toast('Введи название плейлиста','err');
+  const url=id?`/api/playlists/${id}`:'/api/playlists';
+  const method=id?'PUT':'POST';
+  try{
+    let r;
+    if(cover){
+      const fd=new FormData();
+      fd.append('name',name);
+      fd.append('playlist_cover',cover);
+      r=await fetch(url,{method,body:fd,credentials:'include'});
+    }else{
+      // Без обложки отправляем обычный JSON: так создание плейлиста работает стабильнее
+      // и не зависит от multipart/FormData в браузере.
+      r=await fetch(url,{method,credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({name})});
+    }
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(data.error||'Не удалось сохранить плейлист');
+    if(data.playlist && id && state.currentPlaylist?.playlist?.id==Number(id)){
+      state.currentPlaylist.playlist=data.playlist;
+      state.currentPlaylist.tracks=data.tracks||state.currentPlaylist.tracks||[];
+    }
+    await loadPlaylists();
+    closePlaylistEditModal();
+    if(id&&state.currentPlaylist?.playlist?.id==Number(id)) await openPlaylist(id);
+    else if(!id) renderPlaylistsSection();
+    renderHomePlaylists();
+    toast(id?'Плейлист обновлён':'Плейлист создан','ok');
+  }catch(e){
+    console.error('savePlaylist error', e);
+    toast(e.message||'Не удалось сохранить плейлист','err');
+  }
+}
+async function deletePlaylist(id=null){
+  const playlistId=id||state.currentPlaylist?.playlist?.id;
+  if(!playlistId)return;
+  if(!confirm('Удалить плейлист?'))return;
+  try{
+    await api('/api/playlists/'+playlistId,{method:'DELETE'});
+    await loadPlaylists();
+    state.currentPlaylist=null;
+    showSection('playlists', document.querySelector(".nav-item[onclick*=\"playlists\"]"));
+    toast('Плейлист удалён','ok');
+  }catch(e){toast(e.message||'Не удалось удалить плейлист','err')}
+}
+async function openPlaylist(id){
+  if(!state.user)return showLogin();
+  try{
+    const data=await api('/api/playlists/'+id);
+    state.currentPlaylist=data;
+    clearSearch(false);
+    state.activeSection='playlistProfile';
+    hideAllMainViews();
+    qs('playlistProfileView').style.display='block';
+    const pl=data.playlist;
+    qs('playlistProfileView').innerHTML=`
+      <div class="artist-profile-hero">
+        <div class="artist-photo-wrap"><div class="artist-photo" style="border-radius:var(--r2)">${pl.coverUrl?`<img src="${pl.coverUrl}" alt="">`:'♫'}</div></div>
+        <div class="artist-meta">
+          <div class="artist-badge">Плейлист</div>
+          <div class="artist-name">${esc(pl.name)}</div>
+          <div class="artist-stats"><div class="artist-stat"><div class="artist-stat-val">${data.tracks.length}</div><div class="artist-stat-label">Треков</div></div></div>
+          <div class="profile-actions">
+            <button class="btn-primary" onclick="playPlaylistTop()"><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><polygon points="4,3 17,10 4,17"/></svg>Слушать</button>
+            <button class="btn-ghost" onclick="openPlaylistEditModal(${pl.id})">Редактировать имя/обложку</button>
+            <button class="btn-ghost" style="color:var(--red);border-color:rgba(224,82,82,0.25)" onclick="deletePlaylist(${pl.id})">Удалить плейлист</button>
+            <button class="btn-ghost" onclick="showSection('playlists', document.querySelector('.nav-item[onclick*=\\'playlists\\']'))">← Плейлисты</button>
+          </div>
+        </div>
+      </div>
+      <div class="mb-section">
+        <div class="section-head"><div class="section-title">Треки плейлиста</div><span style="font-size:12px;color:var(--muted)">Порядок можно менять стрелками</span></div>
+        <div class="tracks-header"><div class="tracks-col" style="text-align:center">#</div><div></div><div class="tracks-col">Название</div><div class="tracks-col">Альбом</div><div class="tracks-col">Прослушивания</div><div></div></div>
+        <div class="tracks-list" id="playlistTracksList"></div>
+      </div>`;
+    renderTracks(data.tracks,'playlistTracksList');
+  }catch(e){toast(e.message||'Не удалось открыть плейлист','err')}
+}
+function playPlaylistTop(){const tracks=state.currentPlaylist?.tracks||[];if(tracks.length)playTrackObject(tracks[0],0,tracks);else toast('В плейлисте пока нет треков','err')}
+function openAddToPlaylistModal(trackId){
+  if(!state.user){showLogin();toast('Войди в аккаунт, чтобы добавлять в плейлисты','err');return;}
+  qs('addPlaylistTrackId').value=trackId;
+  renderAddToPlaylistModal();
+  qs('addToPlaylistModal').classList.add('open');
+}
+function closeAddToPlaylistModal(){qs('addToPlaylistModal').classList.remove('open')}
+function renderAddToPlaylistModal(){
+  const box=qs('addPlaylistList');
+  if(!state.playlists.length){box.innerHTML='<div class="empty-state"><p>Плейлистов пока нет. Сначала создай плейлист.</p></div>';return;}
+  box.innerHTML=state.playlists.map(pl=>`<div class="add-playlist-row"><span>${esc(pl.name)} · ${pl.trackCount||0} треков</span><button class="btn-sm btn-accent" onclick="addTrackToPlaylist(${pl.id})">Добавить</button></div>`).join('');
+}
+async function addTrackToPlaylist(playlistId){
+  const trackId=Number(qs('addPlaylistTrackId').value);
+  try{
+    await api(`/api/playlists/${playlistId}/tracks`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({trackId})});
+    await loadPlaylists();
+    if(state.currentPlaylist?.playlist?.id==playlistId) await openPlaylist(playlistId);
+    closeAddToPlaylistModal();
+    toast('Трек добавлен в плейлист','ok');
+  }catch(e){toast(e.message||'Не удалось добавить трек','err')}
+}
+async function removeTrackFromPlaylist(trackId){
+  const pl=state.currentPlaylist?.playlist;
+  if(!pl)return;
+  try{
+    const data=await api(`/api/playlists/${pl.id}/tracks/${trackId}`,{method:'DELETE'});
+    state.currentPlaylist=data;
+    await loadPlaylists();
+    renderTracks(state.currentPlaylist.tracks,'playlistTracksList');
+    toast('Трек удалён из плейлиста','ok');
+  }catch(e){toast(e.message||'Не удалось удалить трек','err')}
+}
+async function movePlaylistTrack(trackId,dir){
+  const pl=state.currentPlaylist?.playlist;
+  const tracks=state.currentPlaylist?.tracks||[];
+  const idx=tracks.findIndex(t=>Number(t.id)===Number(trackId));
+  if(!pl||idx<0)return;
+  const next=idx+dir;
+  if(next<0||next>=tracks.length)return;
+  const ordered=[...tracks];
+  [ordered[idx],ordered[next]]=[ordered[next],ordered[idx]];
+  try{
+    const data=await api(`/api/playlists/${pl.id}/reorder`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({trackIds:ordered.map(t=>t.id)})});
+    state.currentPlaylist=data;
+    renderTracks(state.currentPlaylist.tracks,'playlistTracksList');
+    toast('Порядок обновлён','ok');
+  }catch(e){toast(e.message||'Не удалось изменить порядок','err')}
+}
+
+async function toggleFav(id){
+  id=Number(id);
+  if(!id)return;
+  if(!state.user)return toast('Войди в аккаунт, чтобы сохранять треки в избранное','err');
+  try{
+    const data=await api(`/api/tracks/${id}/favorite`,{method:'POST'});
+    state.favorites=new Set((data.favoriteTrackIds||[]).map(Number));
+    state.favoriteTracks=Array.isArray(data.favorites)?data.favorites:[];
+    renderTracks(state.filtered,'tracksList');
+    if(state.currentArtist)renderTracks(state.currentArtist.tracks,'artistTracksList');
+    renderTracks(state.subscribedTracks,'subscribedTracksList');
+    renderFavoritesSection();
+    if(state.currentPlaylist)renderTracks(state.currentPlaylist.tracks,'playlistTracksList');
+    if(state.searchQuery)renderSearchResults(state.searchQuery);
+    updatePlayerMeta();
+    toast(data.favorited?'Трек добавлен в избранное':'Трек удалён из избранного', data.favorited?'ok':'');
+  }catch(e){toast(e.message||'Не удалось обновить избранное','err')}
+}
+function toggleFavCurrent(){if(state.currentTrack)toggleFav(state.currentTrack.id)}
+
+async function deleteTrack(id){
+  if(!state.isAdmin)return toast('Удаление доступно только админу','err');
+  if(!confirm('Удалить этот трек для всех?'))return;
+  await api('/api/tracks/'+id,{method:'DELETE'}).then(async()=>{toast('Трек удалён');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id)}).catch(e=>toast(e.message||'Не удалось удалить трек','err'));
+}
+
+function openUpload(){if(!state.isAdmin)return toast('Загрузка доступна только админу','err');qs('uploadModal').classList.add('open')}
+function closeUpload(){qs('uploadModal').classList.remove('open')}
+function handleAudio(e){const f=e.target.files[0];if(f){qs('uploadTitle').value=f.name.replace(/\.[^.]+$/,'');qs('audioDrop').querySelector('.drop-text').innerHTML=`<span class="file-name">${esc(f.name)}</span>`;qs('audioDrop').classList.add('has-file')}}
+async function submitUpload(){
+  if(!state.isAdmin)return;
+  const fd=new FormData();
+  const title=qs('uploadTitle').value.trim(),artist=qs('uploadArtist').value.trim(),album=qs('uploadAlbum').value.trim(),genre=qs('uploadGenre').value.trim(),audioFile=qs('audioFile').files[0],cover=qs('coverFile').files[0];
+  if(!title)return toast('Введи название','err');if(!artist)return toast('Введи артиста','err');if(!audioFile)return toast('Выбери аудио','err');
+  fd.append('audio',audioFile);fd.append('title',title);fd.append('artist',artist);
+  if(album)fd.append('album',album);if(genre)fd.append('genre',genre);if(cover)fd.append('cover',cover);
+  try{
+    const r=await fetch('/api/tracks/upload',{method:'POST',body:fd,credentials:'include'});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(data.error||'Ошибка загрузки');
+    toast('Трек загружен','ok');closeUpload();
+    ['audioFile','coverFile','uploadTitle','uploadArtist','uploadAlbum','uploadGenre'].forEach(id=>qs(id).value='');
+    qs('audioDrop').querySelector('.drop-text').innerHTML='Нажми или перетащи <span>MP3, WAV, FLAC</span>';
+    qs('audioDrop').classList.remove('has-file');
+    await loadTracks();await loadArtists();
+  }catch(e){toast(e.message||'Ошибка загрузки','err')}
+}
+
+async function registerListen(trackId){
+  try{
+    const data=await api('/api/tracks/'+trackId+'/listen',{method:'POST'});
+    const nextCount=Number(data.playCount||0);
+    for(const item of state.tracks) if(item.id===trackId) item.playCount=nextCount;
+    for(const item of state.filtered) if(item.id===trackId) item.playCount=nextCount;
+    if(state.currentArtist?.tracks){
+      for(const item of state.currentArtist.tracks) if(item.id===trackId) item.playCount=nextCount;
+      state.currentArtist.tracks.sort((a,b)=>(Number(b.playCount)||0)-(Number(a.playCount)||0) || (Number(b.id)||0)-(Number(a.id)||0));
+      if(qs('artistTracksList')) renderTracks(state.currentArtist.tracks,'artistTracksList');
+    }
+    if(state.subscribedTracks?.length){
+      for(const item of state.subscribedTracks) if(item.id===trackId) item.playCount=nextCount;
+      state.subscribedTracks.sort((a,b)=>(Number(b.playCount)||0)-(Number(a.playCount)||0) || (Number(b.id)||0)-(Number(a.id)||0));
+      renderTracks(state.subscribedTracks,'subscribedTracksList');
+    }
+    state.tracks=sortByPopularity(state.tracks);
+    state.filtered=getChartTracks(state.filtered.length ? state.filtered : state.tracks);
+    renderTracks(state.filtered,'tracksList');
+    if(state.searchQuery)renderSearchResults(state.searchQuery);
+  }catch{}
+}
+
+async function openArtistProfile(id){
+  if(!id)return toast('Профиль артиста не найден','err');
+  try{
+    const data=await api('/api/artists/'+id);
+    state.currentArtist=data;
+    clearSearch(false);
+    state.activeSection='artistProfile';
+    hideAllMainViews();
+    qs('artistProfileView').style.display='block';
+    const a=data.artist;
+    qs('artistProfileView').innerHTML=`
+      <div class="artist-profile-hero">
+        <div class="artist-profile-deco"></div>
+        <div class="artist-photo-wrap">
+          <div class="artist-photo">${a.photoUrl?`<img src="${a.photoUrl}" alt="">`:esc((a.name||'?')[0])}</div>
+          <div class="artist-verified"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>
+        </div>
+        <div class="artist-meta">
+          <div class="artist-badge">Профиль артиста</div>
+          <div class="artist-name">${esc(a.name)}</div>
+          <div class="artist-stats">
+            <div class="artist-stat"><div class="artist-stat-val">${data.tracks.length}</div><div class="artist-stat-label">Треков</div></div>
+            <div class="artist-stat"><div class="artist-stat-val">${data.albums.length}</div><div class="artist-stat-label">Альбомов</div></div>
+          </div>
+          <div class="artist-bio">${esc(a.bio||'Биография пока не добавлена.')}</div>
+          <div class="profile-actions">
+            ${state.user?`<button class="btn-sm ${a.isSubscribed?'':'btn-accent'}" id="artistProfileSubscribeBtn" onclick="toggleArtistSubscription(${a.id})">${a.isSubscribed?'Отписаться':'Подписаться'}</button>`:''}
+            <button class="btn-primary" onclick="playArtistTop()"><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><polygon points="4,3 17,10 4,17"/></svg>Слушать</button>
+            ${state.isAdmin?`<button class="btn-ghost" onclick="openArtistEdit(${a.id})">Редактировать</button><button class="btn-ghost" onclick="openArtistTrackModal(${a.id})">+ Трек</button><button class="btn-ghost" onclick="openAlbumModal(${a.id})">+ Альбом</button><button class="btn-ghost" style="color:var(--red);border-color:rgba(224,82,82,0.2)" onclick="deleteArtist(${a.id})">Удалить</button>`:''}<button class="btn-ghost" onclick="backHome()">← Назад</button>
+          </div>
+        </div>
+      </div>
+      ${data.albums.length?`
+      <div class="mb-section">
+        <div class="section-head"><div class="section-title">Альбомы</div><span style="font-size:12px;color:var(--muted)">${data.albums.length}</span></div>
+        <div class="albums-grid">
+          ${data.albums.map(al=>`
+            <div class="album-card" onclick="openAlbumProfile(${al.id})">
+              <div class="album-cover">${al.coverUrl?`<img src="${al.coverUrl}" alt="">`:'<div class="album-cover-placeholder"><svg width="32" height="32" viewBox="0 0 20 20" fill="currentColor" style="color:var(--muted);opacity:.4"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg></div>'}</div>
+              <div><div class="album-card-name">${esc(al.name)}</div>${al.description?`<div class="album-card-desc">${esc(al.description)}</div>`:''}</div>
+              ${state.isAdmin?`<div class="album-card-actions"><div class="icon-btn" onclick="event.stopPropagation();editAlbum(${al.id})"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/></svg></div><div class="icon-btn danger" onclick="event.stopPropagation();deleteAlbum(${al.id})"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/></svg></div></div>`:''}
+            </div>`).join('')}
+        </div>
+      </div>`:''}
+      <div class="mb-section">
+        <div class="section-head">
+          <div class="section-title">Популярные треки</div>
+          <span style="font-size:12px;color:var(--muted)">${data.tracks.length} треков</span>
+        </div>
+        <div class="tracks-header">
+          <div class="tracks-col" style="text-align:center">#</div>
+          <div></div>
+          <div class="tracks-col">Название</div>
+          <div class="tracks-col">Альбом</div>
+          <div class="tracks-col">Прослушивания</div>
+          <div></div>
+        </div>
+        <div class="tracks-list" id="artistTracksList"></div>
+      </div>`;
+    const initialName=a.name;
+    const firstChar=esc((a.name||'?')[0].toUpperCase());
+    qs('artistProfileView').querySelector('.artist-photo').innerHTML=a.photoUrl?`<img src="${a.photoUrl}" alt="">`:`<span style="font-family:'Instrument Serif',serif;font-size:40px;color:var(--accent)">${firstChar}</span>`;
+    renderTracks(data.tracks,'artistTracksList');
+  }catch(e){toast(e.message||'Не удалось открыть профиль','err')}
+}
+
+function playArtistTop(){if(!state.currentArtist?.tracks?.length)return toast('У артиста пока нет треков','err');playTrackObject(state.currentArtist.tracks[0],0,state.currentArtist.tracks)}
+function filterArtistAlbum(name){if(!state.currentArtist)return;renderTracks(state.currentArtist.tracks.filter(t=>t.album===name),'artistTracksList')}
+
+async function openAlbumProfile(albumId){
+  if(!albumId)return toast('Альбом не найден','err');
+  try{
+    const data=await api('/api/albums/'+albumId);
+    state.currentAlbum=data;
+    clearSearch(false);
+    state.activeSection='albumProfile';
+    hideAllMainViews();
+    qs('albumProfileView').style.display='block';
+    const album=data.album;
+    const artist=data.artist;
+    qs('albumProfileView').innerHTML=`
+      <div class="artist-profile-hero">
+        <div class="artist-profile-deco"></div>
+        <div class="artist-photo-wrap">
+          <div class="artist-photo" style="border-radius:24px;width:140px;height:140px;font-size:54px">${album.coverUrl?`<img src="${album.coverUrl}" alt="">`:esc((album.name||'?')[0])}</div>
+        </div>
+        <div class="artist-meta">
+          <div class="artist-badge">Профиль альбома</div>
+          <div class="artist-name">${esc(album.name)}</div>
+          <div class="artist-stats">
+            <div class="artist-stat"><div class="artist-stat-val">${data.tracks.length}</div><div class="artist-stat-label">Треков</div></div>
+            <div class="artist-stat"><div class="artist-stat-val">${(data.totalPlays||0).toLocaleString('ru-RU')}</div><div class="artist-stat-label">Прослушиваний</div></div>
+          </div>
+          <div class="artist-bio">${esc(album.description||'Описание альбома пока не добавлено.')}</div>
+          <div class="profile-actions">
+            <button class="btn-primary" onclick="playAlbumTop()"><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><polygon points="4,3 17,10 4,17"/></svg>Слушать альбом</button>
+            ${artist?.id?`<button class="btn-ghost" onclick="openArtistProfile(${artist.id})">Открыть артиста</button>`:''}
+            <button class="btn-ghost" onclick="backFromAlbum()">← Назад</button>
+          </div>
+        </div>
+      </div>
+      <div class="mb-section">
+        <div class="section-head">
+          <div class="section-title">Треки альбома</div>
+          <span style="font-size:12px;color:var(--muted)">${data.tracks.length} треков</span>
+        </div>
+        <div class="tracks-header">
+          <div class="tracks-col" style="text-align:center">#</div>
+          <div></div>
+          <div class="tracks-col">Название</div>
+          <div class="tracks-col">Альбом</div>
+          <div class="tracks-col">Прослушивания</div>
+          <div></div>
+        </div>
+        <div class="tracks-list" id="albumTracksList"></div>
+      </div>`;
+    renderTracks(data.tracks,'albumTracksList');
+  }catch(e){toast(e.message||'Не удалось открыть альбом','err')}
+}
+function playAlbumTop(){if(!state.currentAlbum?.tracks?.length)return toast('В альбоме пока нет треков','err');playTrackObject(state.currentAlbum.tracks[0],0,state.currentAlbum.tracks)}
+function backFromAlbum(){
+  if(state.currentArtist?.artist?.id===state.currentAlbum?.artist?.id) return openArtistProfile(state.currentArtist.artist.id);
+  state.currentAlbum=null;
+  if(state.searchQuery) return renderSearchResults(state.searchQuery);
+  if(state.activeSection==='albumProfile') return backHome();
+  backHome();
+}
+function backHome(){state.activeSection='home';clearSearch(false);hideAllMainViews();qs('homeView').style.display='block';state.filtered=getChartTracks();renderTracks(state.filtered,'tracksList')}
+
+function openArtistEdit(id=null){
+  if(!state.isAdmin)return toast('Только для админа','err');
+  qs('artistEditId').value=id||'';
+  qs('artistEditTitle').textContent=id?'Редактировать артиста':'Новый артист';
+  qs('artistEditName').value='';qs('artistEditBio').value='';qs('artistPhotoFile').value='';
+  if(id&&state.currentArtist){qs('artistEditName').value=state.currentArtist.artist.name||'';qs('artistEditBio').value=state.currentArtist.artist.bio||''}
+  qs('artistEditModal').classList.add('open');
+}
+function closeArtistEdit(){qs('artistEditModal').classList.remove('open')}
+async function saveArtistProfile(){
+  const id=qs('artistEditId').value,name=qs('artistEditName').value.trim(),bio=qs('artistEditBio').value.trim(),photo=qs('artistPhotoFile').files[0];
+  if(!name)return toast('Введи имя артиста','err');
+  const fd=new FormData();fd.append('name',name);fd.append('bio',bio);if(photo)fd.append('photo',photo);
+  try{
+    const url=id?'/api/artists/'+id:'/api/artists',method=id?'PUT':'POST';
+    const r=await fetch(url,{method,body:fd,credentials:'include'});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(data.error||'Ошибка сохранения');
+    toast('Профиль сохранён','ok');closeArtistEdit();await loadArtists();await loadTracks();if(id)openArtistProfile(id);
+  }catch(e){toast(e.message||'Не удалось сохранить','err')}
+}
+async function deleteArtist(id){
+  if(!state.isAdmin)return;
+  if(!confirm('Удалить профиль артиста и все его треки/альбомы?'))return;
+  try{await api('/api/artists/'+id,{method:'DELETE'});toast('Профиль артиста удалён');backHome();await loadTracks();await loadArtists()}
+  catch(e){toast(e.message||'Не удалось удалить профиль','err')}
+}
+
+function openArtistTrackModal(id){
+  if(!state.isAdmin)return;
+  qs('artistTrackArtistId').value=id;
+  ['artistAudioFile','artistCoverFile','artistTrackTitle','artistTrackAlbum','artistTrackGenre','artistTrackFeatured'].forEach(x=>qs(x).value='');
+  qs('artistTrackModal').classList.add('open');
+}
+function closeArtistTrackModal(){qs('artistTrackModal').classList.remove('open')}
+function handleArtistAudio(e){const f=e.target.files[0];if(f)qs('artistTrackTitle').value=f.name.replace(/\.[^.]+$/,'')}
+async function submitArtistTrack(){
+  const id=qs('artistTrackArtistId').value,title=qs('artistTrackTitle').value.trim(),audioFile=qs('artistAudioFile').files[0];
+  if(!title)return toast('Введи название','err');if(!audioFile)return toast('Выбери аудио','err');
+  const fd=new FormData();fd.append('audio',audioFile);fd.append('title',title);fd.append('album',qs('artistTrackAlbum').value.trim());fd.append('genre',qs('artistTrackGenre').value.trim());fd.append('featured_artists',qs('artistTrackFeatured').value.trim());
+  const cover=qs('artistCoverFile').files[0];if(cover)fd.append('cover',cover);
+  try{
+    const r=await fetch('/api/artists/'+id+'/tracks/upload',{method:'POST',body:fd,credentials:'include'});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(data.error||'Ошибка');
+    toast('Трек добавлен','ok');closeArtistTrackModal();await loadTracks();await loadArtists();openArtistProfile(id);
+  }catch(e){toast(e.message||'Не удалось добавить трек','err')}
+}
+
+function openAlbumModal(artistId=null){
+  if(!state.isAdmin)return toast('Только для админа','err');
+  state.albumFiles=[];renderAlbumTracksMeta();renderArtistSelect();
+  if(artistId)qs('albumArtistSelect').value=String(artistId);
+  ['albumName','albumDescription','albumCoverFile','albumAudioFiles'].forEach(id=>qs(id).value='');
+  qs('albumModal').classList.add('open');
+}
+function closeAlbumModal(){qs('albumModal').classList.remove('open')}
+function handleAlbumFiles(e){state.albumFiles=[...e.target.files];renderAlbumTracksMeta()}
+function renderAlbumTracksMeta(){
+  const box=qs('albumTracksMeta');if(!state.albumFiles.length){box.innerHTML='';return}
+  box.innerHTML='<div class="form-label" style="margin:16px 0 10px">Метаданные треков</div>'+
+    state.albumFiles.map((f,i)=>`<div style="background:var(--ink3);border:1px solid var(--wire);border-radius:var(--r);padding:12px;margin-bottom:8px">
+      <div style="font-size:12px;color:var(--muted2);margin-bottom:8px;font-weight:600">${esc(f.name)}</div>
+      <div class="form-row"><input class="form-input album-track-title" data-index="${i}" placeholder="Название трека" value="${esc(f.name.replace(/\.[^.]+$/,''))}"><input class="form-input album-track-genre" data-index="${i}" placeholder="Жанр"></div>
+      <input class="form-input album-track-artists" data-index="${i}" placeholder="Фиты через запятую" style="margin-top:8px;width:100%">
+    </div>`).join('');
+}
+async function submitAlbum(){
+  if(!state.isAdmin)return;
+  const artistId=qs('albumArtistSelect').value,name=qs('albumName').value.trim(),description=qs('albumDescription').value.trim();
+  if(!artistId)return toast('Выбери артиста','err');if(!name)return toast('Введи название альбома','err');if(!state.albumFiles.length)return toast('Добавь треки','err');
+  const fd=new FormData();fd.append('name',name);fd.append('description',description);
+  const cover=qs('albumCoverFile').files[0];if(cover)fd.append('album_cover',cover);
+  state.albumFiles.forEach(f=>fd.append('audios',f));
+  const titles=[...document.querySelectorAll('.album-track-title')].map((el,i)=>({title:el.value.trim()||state.albumFiles[i].name.replace(/\.[^.]+$/,''),genre:(document.querySelectorAll('.album-track-genre')[i]?.value||'').trim(),artists:(document.querySelectorAll('.album-track-artists')[i]?.value||'').trim()}));
+  fd.append('tracks_meta',JSON.stringify(titles));
+  try{
+    const r=await fetch('/api/artists/'+artistId+'/albums/create',{method:'POST',body:fd,credentials:'include'});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(data.error||'Не удалось создать альбом');
+    toast('Альбом создан','ok');closeAlbumModal();await loadTracks();await loadArtists();openArtistProfile(Number(artistId));
+  }catch(e){toast(e.message||'Не удалось создать альбом','err')}
+}
+
+async function editTrack(id){
+  const t=state.tracks.find(x=>x.id===id)||(state.currentArtist?.tracks||[]).find(x=>x.id===id);if(!t)return;
+  const title=prompt('Название трека',t.title);if(title===null)return;
+  const artist=prompt('Артисты через запятую',t.artist||'');if(artist===null)return;
+  const album=prompt('Альбом',t.album||'');if(album===null)return;
+  const genre=prompt('Жанр',t.genre||'');if(genre===null)return;
+  try{
+    await api('/api/tracks/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,artist,album,genre})});
+    toast('Трек обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);
+  }catch(e){toast(e.message||'Не удалось обновить трек','err')}
+}
+async function editAlbum(id){
+  const al=state.currentArtist?.albums?.find(x=>x.id===id);if(!al)return;
+  const name=prompt('Название альбома',al.name);if(name===null)return;
+  const description=prompt('Описание альбома',al.description||'');if(description===null)return;
+  const fd=new FormData();fd.append('name',name);fd.append('description',description);
+  try{
+    const r=await fetch('/api/albums/'+id,{method:'PUT',body:fd,credentials:'include'});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(data.error||'Не удалось обновить альбом');
+    toast('Альбом обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);
+  }catch(e){toast(e.message||'Не удалось обновить альбом','err')}
+}
+async function deleteAlbum(id){
+  if(!confirm('Удалить альбом? Треки останутся, но без альбома.'))return;
+  try{
+    await api('/api/albums/'+id,{method:'DELETE'});
+    toast('Альбом удалён');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);
+  }catch(e){toast(e.message||'Не удалось удалить альбом','err')}
+}
+
+
+function syncProfileModal(){
+  if(!state.user)return;
+  qs('profileName').value=state.user.name||'';
+  qs('profileAvatarPreview').innerHTML=avatarMarkup(state.user);
+  qs('profileNickNote').textContent=state.isAdmin ? 'Администратор может менять ник без ограничений.' : formatCooldown(state.user.nicknameCanChangeAt, 'Ник');
+  qs('profileAvatarNote').textContent=state.isAdmin ? 'Администратор может менять аватар без ограничений.' : formatCooldown(state.user.avatarCanChangeAt, 'Аватар');
+  const colorGroup=qs('profileColorGroup');
+  const colorInput=qs('profileNicknameColor');
+  const colorPreview=qs('profileColorPreview');
+  colorGroup.style.display=state.isAdmin?'block':'none';
+  colorInput.value=state.user.nicknameColor || '#c8a96e';
+  colorPreview.style.background=colorInput.value;
+}
+function handleProfileAvatarPreview(e){
+  const file=e.target.files?.[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{qs('profileAvatarPreview').innerHTML=`<img src="${reader.result}" alt="avatar">`;};
+  reader.readAsDataURL(file);
+}
+function openProfileModal(){ if(!state.user){showLogin(); return;} syncProfileModal(); qs('profileModal').classList.add('open'); }
+function closeProfileModal(){ qs('profileModal').classList.remove('open'); }
+function handleProfileButtonClick(){ if(state.user) openProfileModal(); else showLogin(); }
+async function saveProfile(){
+  if(!state.user)return showLogin();
+  const fd=new FormData();
+  fd.append('name', qs('profileName').value.trim());
+  const avatar=qs('profileAvatarFile').files[0];
+  if(avatar) fd.append('avatar', avatar);
+  if(state.isAdmin) fd.append('nicknameColor', qs('profileNicknameColor').value || '');
+  try{
+    const res=await fetch('/api/profile',{method:'PUT',body:fd,credentials:'include'});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.error||'Не удалось обновить профиль');
+    state.user=data.user||state.user;
+    state.isAdmin=!!state.user?.isAdmin;
+    updateUserUI();
+    syncProfileModal();
+    renderArtists();
+    if(state.searchQuery) renderSearchResults(state.searchQuery);
+    toast('Профиль обновлён','ok');
+    qs('profileAvatarFile').value='';
+  }catch(e){toast(e.message||'Не удалось обновить профиль','err')}
+}
+async function logoutFromProfile(){ closeProfileModal(); await logout(); }
+function showLogin(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));qs('loginPage').classList.add('active')}
+function showRegister(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));qs('registerPage').classList.add('active')}
+function showApp(){
+  if(!state.user){ showLogin(); return; }
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  qs('app').classList.add('active');
+}
+function markBrowserSessionActive(){sessionStorage.setItem('venyl_active_session','1')}
+function clearBrowserSessionActive(){sessionStorage.removeItem('venyl_active_session')}
+async function forceFreshOpenLogout(){
+  clearBrowserSessionActive();
+  try{await api('/api/auth/logout',{method:'POST'})}catch{}
+  state.user=null;state.isAdmin=false;
+}
+async function doLogin(){
+  try{
+    await api('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:qs('loginEmail').value.trim(),password:qs('loginPass').value})});
+    markBrowserSessionActive();
+    await loadSession();
+    await Promise.all([loadTracks(),loadArtists(),loadPlaylists()]);
+    renderHomeAll();
+    showApp();toast(t('welcome'),'ok')
+  }
+  catch(e){toast(e.message||'Неверный email или пароль','err')}
+}
+async function doRegister(){
+  try{
+    const data=await api('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:qs('registerName').value.trim(),email:qs('registerEmail').value.trim(),password:qs('registerPass').value})});
+    markBrowserSessionActive();
+    await loadSession();
+    await Promise.all([loadTracks(),loadArtists(),loadPlaylists()]);
+    showApp();
+    toast(data.message||t('accountCreated'),'ok')
+  }
+  catch(e){toast(e.message||'Не удалось зарегистрироваться','err')}
+}
+async function logout(){
+  try{await api('/api/auth/logout',{method:'POST'})}catch{}
+  clearBrowserSessionActive();
+  state.user=null;state.isAdmin=false;state.subscribedArtists=[];state.subscribedTracks=[];state.favorites=new Set();state.favoriteTracks=[];state.adminUsers=[];state.playlists=[];state.currentPlaylist=null;
+  updateUserUI();renderArtists();renderSubscribedArtistsSection();renderFavoritesSection();updatePlayerMeta();showLogin();toast(t('logout'))
+}
+function handleSidebarUserClick(){if(state.user)openProfileModal();else showLogin()}
+
+
+async function loadAdminUsers(){
+  if(!state.isAdmin)return;
+  try{
+    const data=await api('/api/admin/users');
+    state.adminUsers=Array.isArray(data.users)?data.users:[];
+    renderAdminPanel();
+  }catch(e){toast(e.message||'Не удалось загрузить пользователей','err')}
+}
+function renderAdminPanel(){
+  const box=qs('adminUsersList');
+  if(!box)return;
+  if(!state.isAdmin){box.innerHTML='<div class="empty-state"><p>Доступно только администратору.</p></div>';return;}
+  if(!state.adminUsers.length){box.innerHTML='<div class="empty-state"><p>Пользователей пока нет.</p></div>';return;}
+  box.innerHTML=`<table class="admin-users-table"><thead><tr><th>ID</th><th>Имя</th><th>Почта</th><th>Роль</th><th>Регистрация</th><th>Цвет ника</th><th>Пароль</th><th></th></tr></thead><tbody>${state.adminUsers.map(u=>`<tr>
+    <td>${u.id}</td>
+    <td style="${u.nicknameColor?`color:${esc(u.nicknameColor)}`:''}">${esc(u.name)}</td>
+    <td>${esc(u.email)}</td>
+    <td><span class="role-pill ${u.role==='admin'?'admin':''}">${esc(u.role)}</span></td>
+    <td>${esc(u.createdAt||'—')}</td>
+    <td><span class="admin-color-dot" style="background:${u.nicknameColor||'var(--ink4)'}"></span> ${esc(u.nicknameColor||'—')}</td>
+    <td style="color:var(--muted)">${esc(u.password||'Скрыт')}</td>
+    <td><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn-sm btn-accent" onclick="openAdminUserModal(${u.id})">Изменить</button><button class="btn-sm" style="border-color:rgba(224,82,82,.45);color:var(--red)" onclick="deleteAdminUser(${u.id})">Удалить</button></div></td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function openAdminUserModal(id){
+  const u=state.adminUsers.find(x=>Number(x.id)===Number(id));
+  if(!u)return;
+  qs('adminEditUserId').value=u.id;
+  qs('adminEditName').value=u.name||'';
+  qs('adminEditEmail').value=u.email||'';
+  qs('adminEditRole').value=u.role||'user';
+  qs('adminEditColor').value=/^#[0-9a-fA-F]{6}$/.test(u.nicknameColor||'')?u.nicknameColor:'#c8a96e';
+  qs('adminEditPassword').value='';
+  qs('adminUserModal').classList.add('open');
+}
+function closeAdminUserModal(){qs('adminUserModal').classList.remove('open')}
+async function saveAdminUser(){
+  const id=Number(qs('adminEditUserId').value);
+  const payload={name:qs('adminEditName').value.trim(),email:qs('adminEditEmail').value.trim(),role:qs('adminEditRole').value,nicknameColor:qs('adminEditColor').value};
+  const pass=qs('adminEditPassword').value;
+  if(pass)payload.password=pass;
+  try{
+    const data=await api('/api/admin/users/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    state.adminUsers=Array.isArray(data.users)?data.users:state.adminUsers;
+    if(data.currentUser){state.user=data.currentUser;state.isAdmin=!!data.currentUser.isAdmin;updateUserUI();}
+    renderAdminPanel();
+    closeAdminUserModal();
+    toast('Пользователь обновлён','ok');
+  }catch(e){toast(e.message||'Не удалось сохранить пользователя','err')}
+}
+
+async function deleteAdminUser(id){
+  id=Number(id||qs('adminEditUserId').value);
+  const u=state.adminUsers.find(x=>Number(x.id)===id);
+  if(!u)return;
+  if(state.user&&Number(state.user.id)===id){toast('Нельзя удалить свой аккаунт из админ-панели','err');return;}
+  if(!confirm(`Удалить аккаунт ${u.name || u.email}? Это действие нельзя отменить.`))return;
+  try{
+    const data=await api('/api/admin/users/'+id,{method:'DELETE'});
+    state.adminUsers=Array.isArray(data.users)?data.users:state.adminUsers.filter(x=>Number(x.id)!==id);
+    renderAdminPanel();
+    closeAdminUserModal();
+    toast('Аккаунт пользователя удалён','ok');
+  }catch(e){toast(e.message||'Не удалось удалить пользователя','err')}
+}
+
+function showSection(s,el){
+  if(!state.user){ showLogin(); return; }
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+  clearSearch(false);
+  state.activeSection=s;
+  hideAllMainViews();
+  if(s==='admin'){
+    if(!state.isAdmin){qs('homeView').style.display='block';toast('Админ-панель доступна только администратору','err');return;}
+    qs('adminPanelView').style.display='block';
+    loadAdminUsers();
+    return;
+  }
+  if(s==='favorites'){
+    qs('favoritesView').style.display='block';
+    renderFavoritesSection();
+    return;
+  }
+  if(s==='playlists'){
+    qs('playlistsView').style.display='block';
+    renderPlaylistsSection();
+    return;
+  }
+  if(s==='artists'){
+    qs('artistsView').style.display='block';
+    renderSubscribedArtistsSection();
+    return;
+  }
+  qs('homeView').style.display='block';
+  state.filtered=getChartTracks();
+  renderTracks(state.filtered,'tracksList');
+}
+
+function resetSearchInput(force=false){
+  const input=qs('searchInput');
+  if(!input)return;
+  const v=String(input.value||'').trim();
+  const looksLikeEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const ownEmail=state.user && String(state.user.email||'').toLowerCase();
+  const shouldClear=force || !v || looksLikeEmail || (ownEmail && v.toLowerCase()===ownEmail);
+  input.setAttribute('autocomplete','new-password');
+  input.setAttribute('name','venyl_search_'+Date.now());
+  input.setAttribute('data-lpignore','true');
+  input.setAttribute('data-1p-ignore','true');
+  input.setAttribute('data-form-type','other');
+  input.setAttribute('value','');
+  if(shouldClear){
+    input.value='';
+    input.defaultValue='';
+    if(typeof closeSearchView==='function') closeSearchView();
+  }
+}
+function protectSearchFromEmailAutofill(){
+  const input=qs('searchInput');
+  if(!input)return;
+  resetSearchInput(true);
+  input.addEventListener('focus',()=>{ input.removeAttribute('readonly'); resetSearchInput(); });
+  input.addEventListener('blur',()=>resetSearchInput());
+  let tries=0;
+  const timer=setInterval(()=>{
+    resetSearchInput();
+    tries++;
+    if(tries>30)clearInterval(timer);
+  },100);
+}
+
+
+/* ===== HOME PAGE NEW SECTIONS ===== */
+function renderHomeStats(){
+  const totalPlays=state.tracks.reduce((s,t)=>s+(Number(t.playCount)||0),0);
+  const el=id=>document.getElementById(id);
+  if(el('statTrackCount'))el('statTrackCount').textContent=state.tracks.length;
+  if(el('statArtistCount'))el('statArtistCount').textContent=state.artists.length;
+  if(el('statPlayCount'))el('statPlayCount').textContent=totalPlays>=1000?(totalPlays/1000).toFixed(1)+'K':totalPlays;
+}
+
+function renderFeaturedArtists(){
+  const box=document.getElementById('featuredArtistsList');
+  if(!box)return;
+
+  const cleanName=name=>String(name||'').trim();
+  const isRealArtistName=name=>{
+    const n=cleanName(name);
+    // Не показываем технические/сборные имена из фитов: "Artist, Artist".
+    return n && !n.includes(',') && !n.includes('&') && !/\s+x\s+/i.test(n);
+  };
+  const tracksForArtist=a=>state.tracks.filter(t=>Number(t.artistId)===Number(a.id) || cleanName(t.artist).toLowerCase()===cleanName(a.name).toLowerCase());
+  const bestImageForArtist=a=>{
+    if(a.photoUrl)return a.photoUrl;
+    const tracks=tracksForArtist(a).sort((x,y)=>(Number(y.playCount)||Number(y.plays)||0)-(Number(x.playCount)||Number(x.plays)||0));
+    const withCover=tracks.find(t=>t.coverUrl||t.cover_path||t.cover);
+    return withCover ? (withCover.coverUrl||withCover.cover_path||withCover.cover) : '';
+  };
+
+  let list=[...state.artists]
+    .filter(a=>isRealArtistName(a.name))
+    .map(a=>{
+      const tr=tracksForArtist(a);
+      return {
+        ...a,
+        photoUrl: bestImageForArtist(a),
+        trackCount: Number(a.trackCount)||tr.length,
+        totalPlays: tr.reduce((sum,t)=>sum+(Number(t.playCount)||Number(t.plays)||0),0)
+      };
+    })
+    .sort((a,b)=>(Number(b.totalPlays||0)-Number(a.totalPlays||0)) || (Number(b.trackCount||0)-Number(a.trackCount||0)) || cleanName(a.name).localeCompare(cleanName(b.name)))
+    .slice(0,6);
+
+  if(!list.length && state.tracks.length){
+    const byName=new Map();
+    state.tracks.forEach(t=>{
+      const name=cleanName(t.artist);
+      if(!isRealArtistName(name))return;
+      if(!byName.has(name))byName.set(name,{id:t.artistId||0,name,photoUrl:t.artistPhotoUrl||t.coverUrl||t.cover_path||t.cover||'',trackCount:0,totalPlays:0});
+      const a=byName.get(name);
+      a.trackCount++;
+      a.totalPlays+=Number(t.playCount)||Number(t.plays)||0;
+      if(!a.photoUrl && (t.coverUrl||t.cover_path||t.cover))a.photoUrl=t.coverUrl||t.cover_path||t.cover;
+    });
+    list=[...byName.values()].sort((a,b)=>b.totalPlays-a.totalPlays || b.trackCount-a.trackCount).slice(0,6);
+  }
+
+  if(!list.length){box.innerHTML='<div class="empty-state" style="padding:24px 0"><p>Артистов пока нет</p></div>';return;}
+  box.innerHTML=list.map(a=>{
+    const isFollowing=state.subscribedArtists.some(s=>Number(s.id)===Number(a.id));
+    const canOpen=Number(a.id)>0;
+    const img=a.photoUrl?`<img src="${a.photoUrl}" alt="${esc(a.name)}">`:`<div class="featured-artist-placeholder">${esc((a.name||'?')[0].toUpperCase())}</div>`;
+    return `<div class="featured-artist-card" ${canOpen?`onclick="openArtistProfile(${a.id})"`:'style="cursor:default"'}>
+      <div class="featured-artist-bg">${img}</div>
+      ${state.user&&canOpen?`<button class="fa-follow-btn ${isFollowing?'following':''}" onclick="event.stopPropagation();toggleArtistSubscription(${a.id})">${isFollowing?'Отписаться':'Подписаться'}</button>`:''}
+      <div class="fa-info">
+        <div class="fa-name">${esc(a.name)}</div>
+        <div class="fa-tracks">${a.trackCount||0} треков</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderNewReleases(){
+  const box=document.getElementById('newReleasesGrid');
+  if(!box)return;
+  // Get albums by building album index
+  const albums=buildAlbumIndex().slice(0,4);
+  if(!albums.length){
+    box.innerHTML='<div style="grid-column:span 2;padding:24px;text-align:center;color:var(--muted);font-size:13px">Релизов пока нет</div>';
+    return;
+  }
+  box.innerHTML=albums.map(al=>{
+    const tracks=state.tracks.filter(t=>t.album===al.name&&Number(t.artistId)===Number(al.artistId));
+    const firstTrack=tracks[0];
+    return `<div class="release-card" onclick="${al.id?`openAlbumProfile(${al.id})`:`openArtistProfile(${al.artistId})`}">
+      ${al.coverUrl
+        ?`<img src="${al.coverUrl}" alt="${esc(al.name)}">`
+        :`<div class="release-card-overlay-empty"><svg width="28" height="28" viewBox="0 0 20 20" fill="currentColor" style="color:var(--muted);opacity:.4"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg></div>`
+      }
+      <div class="release-play-btn" onclick="event.stopPropagation();${firstTrack?`playTrackObject(state.tracks.find(t=>t.id===${firstTrack.id}),0,${JSON.stringify([]).replace(/"/g,'&quot;')})`:''}" >
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><polygon points="4,3 17,10 4,17"/></svg>
+      </div>
+      <div class="release-card-overlay">
+        <div class="release-name">${esc(al.name)}</div>
+        <div class="release-artist">${esc(al.artist)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // play button handler fix
+  box.querySelectorAll('.release-play-btn').forEach((btn,i)=>{
+    const al=albums[i];
+    if(!al)return;
+    const tracks=state.tracks.filter(t=>t.album===al.name&&Number(t.artistId)===Number(al.artistId));
+    if(tracks[0]){
+      btn.onclick=(e)=>{e.stopPropagation();playTrackObject(tracks[0],0,tracks);};
+    }
+  });
+}
+
+function renderHomePlaylists(){
+  const box=document.getElementById('homePlaylistsGrid');
+  if(!box)return;
+  if(!state.user||!state.playlists.length){
+    box.innerHTML=`<div class="hpc-empty">${state.user?'Плейлистов пока нет. Создай первый!':'Войди, чтобы видеть свои плейлисты.'}</div>`;
+    return;
+  }
+  const list=state.playlists.slice(0,4);
+  box.innerHTML=list.map(pl=>`
+    <div class="home-playlist-card" onclick="openPlaylist(${pl.id})">
+      <div class="hpc-cover">${pl.coverUrl?`<img src="${pl.coverUrl}" alt="">`:'♫'}</div>
+      <div style="min-width:0">
+        <div class="hpc-name">${esc(pl.name)}</div>
+        <div class="hpc-count">${pl.trackCount||0} треков</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderHomeAll(){
+  renderHomeStats();
+  renderFeaturedArtists();
+  renderNewReleases();
+  renderHomePlaylists();
+}
+
+/* ===== LANGUAGE SYSTEM ===== */
+const LANG_KEY='venyl_language';
+const TRANSLATIONS={
+  ru:{
+    search:'Треки, артисты, альбомы…', upload:'Загрузить', albumBtn:'+ Альбом',
+    navMain:'Главное', navHome:'Главная', navArtists:'Артисты', navFavorites:'Избранное', navPlaylists:'Плейлисты', navManage:'Управление', navUpload:'Загрузить трек', navNewArtist:'Новый артист', navCreateAlbum:'Создать альбом', navAdmin:'Админ-панель',
+    loginEyebrow:'Добро пожаловать', loginTitle:'С возвращением', loginSub:'Войди, чтобы слушать и управлять музыкой', email:'Email', password:'Пароль', loginBtn:'Войти', noAccount:'Нет аккаунта?', registerLink:'Зарегистрироваться', backMusic:'← Вернуться к музыке',
+    registerEyebrow:'Новый аккаунт', registerTitle:'Присоединяйся', registerSub:'Создай аккаунт и начни слушать', name:'Имя', registerBtn:'Создать аккаунт', haveAccount:'Уже есть аккаунт?',
+    heroTitle:'Музыка, которая<br><em>живёт в моменте</em>', heroSub:'Платформа для артистов и слушателей. Загружай треки, открывай новое и создавай своё звучание.', listenAll:'Слушать всё', openArtists:'Открыть артистов',
+    tracks:'Треков', artistsCount:'Артиста', plays:'Прослушиваний', listeners:'Слушателей сегодня', genres:'Жанры', allGenres:'Все жанры →', featured:'Рекомендуемые артисты', allArtists:'Все артисты →', releases:'Новые релизы', allReleases:'Все релизы →', playlistsForYou:'Плейлисты для вас', allPlaylists:'Все плейлисты →', chart:'Чарт',
+    chooseTrack:'Выберите трек', none:'—', logout:'Ты вышел из аккаунта', welcome:'Добро пожаловать!', accountCreated:'Аккаунт создан'
+  },
+  en:{
+    search:'Tracks, artists, albums…', upload:'Upload', albumBtn:'+ Album',
+    navMain:'Main', navHome:'Home', navArtists:'Artists', navFavorites:'Favorites', navPlaylists:'Playlists', navManage:'Manage', navUpload:'Upload track', navNewArtist:'New artist', navCreateAlbum:'Create album', navAdmin:'Admin panel',
+    loginEyebrow:'Welcome', loginTitle:'Welcome back', loginSub:'Sign in to listen and manage music', email:'Email', password:'Password', loginBtn:'Sign in', noAccount:'No account?', registerLink:'Create account', backMusic:'← Back to music',
+    registerEyebrow:'New account', registerTitle:'Join Venyl', registerSub:'Create an account and start listening', name:'Name', registerBtn:'Create account', haveAccount:'Already have an account?',
+    heroTitle:'Music that<br><em>lives in the moment</em>', heroSub:'A platform for artists and listeners. Upload tracks, discover new music, and shape your own sound.', listenAll:'Play all', openArtists:'Open artists',
+    tracks:'Tracks', artistsCount:'Artists', plays:'Plays', listeners:'Listeners today', genres:'Genres', allGenres:'All genres →', featured:'Recommended artists', allArtists:'All artists →', releases:'New releases', allReleases:'All releases →', playlistsForYou:'Playlists for you', allPlaylists:'All playlists →', chart:'Chart',
+    chooseTrack:'Choose a track', none:'—', logout:'You signed out', welcome:'Welcome!', accountCreated:'Account created'
+  },
+  sv:{
+    search:'Låtar, artister, album…', upload:'Ladda upp', albumBtn:'+ Album',
+    navMain:'Huvudmeny', navHome:'Hem', navArtists:'Artister', navFavorites:'Favoriter', navPlaylists:'Spellistor', navManage:'Hantera', navUpload:'Ladda upp låt', navNewArtist:'Ny artist', navCreateAlbum:'Skapa album', navAdmin:'Adminpanel',
+    loginEyebrow:'Välkommen', loginTitle:'Välkommen tillbaka', loginSub:'Logga in för att lyssna och hantera musik', email:'E-post', password:'Lösenord', loginBtn:'Logga in', noAccount:'Inget konto?', registerLink:'Registrera dig', backMusic:'← Tillbaka till musiken',
+    registerEyebrow:'Nytt konto', registerTitle:'Gå med i Venyl', registerSub:'Skapa ett konto och börja lyssna', name:'Namn', registerBtn:'Skapa konto', haveAccount:'Har du redan ett konto?',
+    heroTitle:'Musik som<br><em>lever i stunden</em>', heroSub:'En plattform för artister och lyssnare. Ladda upp låtar, upptäck nytt och skapa ditt eget sound.', listenAll:'Spela allt', openArtists:'Öppna artister',
+    tracks:'Låtar', artistsCount:'Artister', plays:'Spelningar', listeners:'Lyssnare idag', genres:'Genrer', allGenres:'Alla genrer →', featured:'Rekommenderade artister', allArtists:'Alla artister →', releases:'Nya släpp', allReleases:'Alla släpp →', playlistsForYou:'Spellistor för dig', allPlaylists:'Alla spellistor →', chart:'Topplista',
+    chooseTrack:'Välj en låt', none:'—', logout:'Du har loggats ut', welcome:'Välkommen!', accountCreated:'Kontot har skapats'
+  },
+  uk:{
+    search:'Треки, артисти, альбоми…', upload:'Завантажити', albumBtn:'+ Альбом',
+    navMain:'Головне', navHome:'Головна', navArtists:'Артисти', navFavorites:'Обране', navPlaylists:'Плейлисти', navManage:'Керування', navUpload:'Завантажити трек', navNewArtist:'Новий артист', navCreateAlbum:'Створити альбом', navAdmin:'Адмін-панель',
+    loginEyebrow:'Ласкаво просимо', loginTitle:'З поверненням', loginSub:'Увійди, щоб слухати й керувати музикою', email:'Email', password:'Пароль', loginBtn:'Увійти', noAccount:'Немає акаунта?', registerLink:'Зареєструватися', backMusic:'← Повернутися до музики',
+    registerEyebrow:'Новий акаунт', registerTitle:'Приєднуйся', registerSub:'Створи акаунт і почни слухати', name:"Ім'я", registerBtn:'Створити акаунт', haveAccount:'Вже є акаунт?',
+    heroTitle:'Музика, яка<br><em>живе в моменті</em>', heroSub:'Платформа для артистів і слухачів. Завантажуй треки, відкривай нове й створюй власне звучання.', listenAll:'Слухати все', openArtists:'Відкрити артистів',
+    tracks:'Треків', artistsCount:'Артистів', plays:'Прослуховувань', listeners:'Слухачів сьогодні', genres:'Жанри', allGenres:'Усі жанри →', featured:'Рекомендовані артисти', allArtists:'Усі артисти →', releases:'Нові релізи', allReleases:'Усі релізи →', playlistsForYou:'Плейлисти для тебе', allPlaylists:'Усі плейлисти →', chart:'Чарт',
+    chooseTrack:'Виберіть трек', none:'—', logout:'Ти вийшов з акаунта', welcome:'Ласкаво просимо!', accountCreated:'Акаунт створено'
+  }
+};
+function getLanguage(){return localStorage.getItem(LANG_KEY)||'ru'}
+function t(key){const lang=getLanguage();return (TRANSLATIONS[lang]&&TRANSLATIONS[lang][key])||TRANSLATIONS.ru[key]||key}
+function setLanguage(lang){
+  if(!TRANSLATIONS[lang]) lang='ru';
+  localStorage.setItem(LANG_KEY,lang);
+  applyLanguage();
+}
+function setText(el,val){if(el)el.textContent=val}
+function setHTML(el,val){if(el)el.innerHTML=val}
+function applyLanguage(){
+  const lang=getLanguage();
+  ['appLangSelect','loginLangSelect','registerLangSelect'].forEach(id=>{const el=qs(id); if(el)el.value=lang;});
+  const search=qs('searchInput'); if(search)search.placeholder=t('search');
+  const navLabels=document.querySelectorAll('.nav-label');
+  setText(navLabels[0],t('navMain')); setText(navLabels[1],t('navManage'));
+  const navs=document.querySelectorAll('.nav-section .nav-item');
+  const navKeys=['navHome','navArtists','navFavorites','navPlaylists','navUpload','navNewArtist','navCreateAlbum','navAdmin'];
+  navs.forEach((el,i)=>{const icon=el.querySelector('.nav-icon'); el.innerHTML=(icon?icon.outerHTML:'')+t(navKeys[i]||'');});
+  const topBtns=document.querySelectorAll('.topbar-actions .btn-sm');
+  if(topBtns[0]) topBtns[0].lastChild.textContent=' '+t('upload');
+  if(topBtns[1]) topBtns[1].textContent=t('albumBtn');
+  const loginCard=qs('loginPage');
+  if(loginCard){
+    setText(loginCard.querySelector('.auth-eyebrow'),t('loginEyebrow'));
+    setText(loginCard.querySelector('.auth-title'),t('loginTitle'));
+    setText(loginCard.querySelector('.auth-sub'),t('loginSub'));
+    const labels=loginCard.querySelectorAll('.form-label'); setText(labels[0],t('email')); setText(labels[1],t('password'));
+    setText(loginCard.querySelector('.auth-btn-full'),t('loginBtn'));
+    const links=loginCard.querySelectorAll('.auth-link');
+    if(links[0]) links[0].innerHTML=`${t('noAccount')} <a onclick="showRegister()">${t('registerLink')}</a>`;
+    if(links[1]) links[1].innerHTML=`<a onclick="showApp()" style="color:var(--muted)">${t('backMusic')}</a>`;
+  }
+  const regCard=qs('registerPage');
+  if(regCard){
+    setText(regCard.querySelector('.auth-eyebrow'),t('registerEyebrow'));
+    setText(regCard.querySelector('.auth-title'),t('registerTitle'));
+    setText(regCard.querySelector('.auth-sub'),t('registerSub'));
+    const labels=regCard.querySelectorAll('.form-label'); setText(labels[0],t('name')); setText(labels[1],t('email')); setText(labels[2],t('password'));
+    setText(regCard.querySelector('.auth-btn-full'),t('registerBtn'));
+    const link=regCard.querySelector('.auth-link'); if(link)link.innerHTML=`${t('haveAccount')} <a onclick="showLogin()">${t('loginBtn')}</a>`;
+  }
+  setHTML(document.querySelector('.hero-v2-title'),t('heroTitle'));
+  setText(document.querySelector('.hero-v2-sub'),t('heroSub'));
+  const heroBtns=document.querySelectorAll('.hero-actions button');
+  if(heroBtns[0]) heroBtns[0].lastChild.textContent=' '+t('listenAll');
+  if(heroBtns[1]) heroBtns[1].textContent=t('openArtists');
+  const statLabels=document.querySelectorAll('.stats-bar-label');
+  [t('tracks'),t('artistsCount'),t('plays'),t('listeners')].forEach((v,i)=>setText(statLabels[i],v));
+  const sectionTitles=document.querySelectorAll('#homeView .section-title');
+  [t('genres'),t('featured'),t('releases'),t('playlistsForYou'),t('chart')].forEach((v,i)=>setText(sectionTitles[i],v));
+  const sectionLinks=document.querySelectorAll('#homeView .section-link');
+  [t('allGenres'),t('allArtists'),t('allReleases'),t('allPlaylists')].forEach((v,i)=>setText(sectionLinks[i],v));
+  const npTitle=qs('npTitle'); if(npTitle && (!state.currentTrack)) setText(npTitle,t('chooseTrack'));
+  const npArtist=qs('npArtist'); if(npArtist && (!state.currentTrack)) setText(npArtist,t('none'));
+  renderHomeAll?.();
+}
+
+
+document.addEventListener('DOMContentLoaded',async()=>{
+  applyLanguage();
+  protectSearchFromEmailAutofill();
+  setTimeout(()=>resetSearchInput(true),50);
+  setVolume(qs('volSlider').value);
+  qs('profileNicknameColor')?.addEventListener('input',e=>{qs('profileColorPreview').style.background=e.target.value});
+
+  const hasActiveBrowserSession=sessionStorage.getItem('venyl_active_session')==='1';
+  if(!hasActiveBrowserSession){
+    await forceFreshOpenLogout();
+    updateUserUI();
+    showLogin();
+    return;
+  }
+
+  await loadSession();
+  resetSearchInput(true);
+  if(!state.user){
+    clearBrowserSessionActive();
+    showLogin();
+    return;
+  }
+  await Promise.all([loadTracks(),loadArtists()]);
+  renderHomeAll();
+  showApp();
+});
+window.addEventListener('pageshow',()=>{ setTimeout(()=>resetSearchInput(true),0); setTimeout(()=>resetSearchInput(true),300); });
+window.addEventListener('load',()=>{ setTimeout(()=>resetSearchInput(true),0); setTimeout(()=>resetSearchInput(true),500); });
+</script>
+</body>
+</html>

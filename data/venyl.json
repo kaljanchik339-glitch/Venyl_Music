@@ -1,0 +1,2434 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Venyl",
+      "email": "nikolast785@gmail.com",
+      "password_hash": "$2a$10$kYYAqm0wwEveeDzkPIFnOOapNlKquervigqbd9kV4jYsoDvDpQZby",
+      "is_verified": 0,
+      "verification_token": "9ef662f71b8d0ebb7d86bbb69f25f638c891db15170a34404a7bc1c516d22967",
+      "created_at": "2026-04-16 11:14:39",
+      "token_version": 0,
+      "avatar_path": "",
+      "nickname_color": "#ffffff",
+      "last_nick_change_at": null,
+      "last_avatar_change_at": null,
+      "role": "user"
+    },
+    {
+      "id": 2,
+      "name": "Kolya",
+      "email": "kaljanchik339@gmail.com",
+      "password_hash": "$2a$10$1yb3K3vhdVh9MQ1yRhhfne2hz0uK5GHIRIQ/GKDc42IqvzkSknsYa",
+      "is_verified": 1,
+      "verification_token": null,
+      "created_at": "2026-04-16 11:35:20",
+      "token_version": 0,
+      "avatar_path": "",
+      "nickname_color": "",
+      "last_nick_change_at": null,
+      "last_avatar_change_at": null,
+      "role": "user"
+    },
+    {
+      "id": 3,
+      "name": "Velyn",
+      "email": "agakolja@gmail.com",
+      "password_hash": "$2a$10$QTgStb.QrnCwh4JU2yhwl.6TvakNtsWxgAsa.dHNUyoU5HXt9S0Na",
+      "is_verified": 1,
+      "verification_token": null,
+      "created_at": "2026-04-16 11:46:15",
+      "token_version": 0,
+      "avatar_path": "",
+      "nickname_color": "",
+      "last_nick_change_at": null,
+      "last_avatar_change_at": null,
+      "role": "user"
+    },
+    {
+      "id": 4,
+      "name": "Venylmusic",
+      "email": "venylmusic@gmail.com",
+      "password_hash": "$2a$10$SeovlDhPPsBuuMeUUWWUqer6zYqZ69k6xO9KqlXkAlsW5o7qCYqNq",
+      "is_verified": 1,
+      "verification_token": null,
+      "created_at": "2026-04-17 11:36:04",
+      "token_version": 0,
+      "avatar_path": "1777984431232_chatgpt_image_5_1_4_n_2026_3._14_33_39.png",
+      "nickname_color": "#d9ae5c",
+      "last_nick_change_at": "2026-05-05T12:34:46.484Z",
+      "last_avatar_change_at": "2026-05-05T12:33:51.284Z",
+      "role": "admin"
+    },
+    {
+      "id": 5,
+      "name": "Kolya",
+      "email": "nepopka228@gmail.com",
+      "password_hash": "$2a$10$S5ytj1k5dIOcTJY176CpdOWef.cdzjNX26s9XIfs42ZHbQiePU/Hq",
+      "is_verified": 0,
+      "token_version": 0,
+      "created_at": "2026-05-05 11:22:32",
+      "avatar_path": "",
+      "nickname_color": "",
+      "last_nick_change_at": null,
+      "last_avatar_change_at": null,
+      "role": "user"
+    }
+  ],
+  "email_verification_tokens": [
+    {
+      "id": 1,
+      "user_id": 5,
+      "token": "3ff00c3bd5bf6ba17ffbea9ce9cfd46b3f291a4b7d3917f933f8ecbea2af20c1",
+      "expires_at": "2026-05-06T11:22:32.386Z",
+      "created_at": "2026-05-05 11:22:32"
+    }
+  ],
+  "artists": [
+    {
+      "id": 1,
+      "name": "Morgenshtern",
+      "bio": "Алишер Моргенштерн (род. 1998, Уфа) — популярный российский рэп-исполнитель, шоумен и блогер, известный эпатажным поведением и быстрыми взлетами в чартах. Получил известность в 2018 году как видеоблогер, затем перешел к музыкальной карьере. В 2024 году признан Минюстом РФ иностранным агентом, проживает за границей.",
+      "photo_path": "1777885123497_1_2_2_1_2_n.jpg",
+      "created_at": "2026-05-04 08:58:43"
+    },
+    {
+      "id": 2,
+      "name": "Yung Trappa",
+      "bio": "Yung Trappa (настоящее имя — Владислав Олегович Ширяев) — российский рэп-исполнитель, один из первопроходцев трэп-жанра в России. Он родился 14 августа 1995 года в Санкт-Петербурге и ушел из жизни 2 февраля 2023 года в возрасте 27 лет.",
+      "photo_path": "1777890266920_ab67616d00001e02c4039b36c953c0d7bede944d.jpg",
+      "created_at": "2026-05-04 10:23:48"
+    },
+    {
+      "id": 3,
+      "name": "ЛСП",
+      "bio": "Олег Вадимович Савченко, более известный как ЛСП, — популярный белорусский артист, чья карьера прошла путь от андеграундного рэпа до стадионного поп-звучания",
+      "photo_path": "1777900289985_lsp_0.jpg",
+      "created_at": "2026-05-04 13:10:43"
+    },
+    {
+      "id": 4,
+      "name": "STUFF",
+      "bio": "Святослав Быстров — российский хип-хоп исполнитель и медийная личность.",
+      "photo_path": "1777900605488_1000x1000.jpg",
+      "created_at": "2026-05-04 13:15:48"
+    },
+    {
+      "id": 5,
+      "name": "4teen",
+      "bio": "",
+      "photo_path": "1777977806132_channels4_profile.jpg",
+      "created_at": "2026-05-05 07:30:23"
+    },
+    {
+      "id": 6,
+      "name": "Ларин",
+      "bio": "",
+      "photo_path": "1777978051501_screenshot_1-7-350x350.png",
+      "created_at": "2026-05-05 07:30:23"
+    },
+    {
+      "id": 7,
+      "name": "Витя АК",
+      "bio": "",
+      "photo_path": "1777977857457_1_2_2_1_2_n_4.jpg",
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 8,
+      "name": "The Limba",
+      "bio": "",
+      "photo_path": "1777978085749_ab6761610000e5eb2f23700a34df4ccb2a67f1bf.jpg",
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 9,
+      "name": "Элджей",
+      "bio": "",
+      "photo_path": "1777977934726_1_2_2_1_2_n_5.jpg",
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 10,
+      "name": "Entype",
+      "bio": "",
+      "photo_path": "1777977978579_ab67616100005174029423e703b94a5da36f8eff.jpg",
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 11,
+      "name": "SLAVA MARLOW",
+      "bio": "",
+      "photo_path": "",
+      "created_at": "2026-05-07 06:12:11"
+    }
+  ],
+  "albums": [
+    {
+      "id": 4,
+      "artist_id": 1,
+      "name": "Alisher",
+      "cover_path": "1777893246940_alisher_mini-album_cover.jpg",
+      "description": "",
+      "created_at": "2026-05-04 11:14:07"
+    },
+    {
+      "id": 5,
+      "artist_id": 1,
+      "name": "До того как стал известным",
+      "cover_path": "1777965987460_45746959.jpg",
+      "description": "",
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 6,
+      "artist_id": 1,
+      "name": "Улыблнись дурак",
+      "cover_path": "1777966223069_47041462.jpg",
+      "description": "",
+      "created_at": "2026-05-05 07:30:23"
+    },
+    {
+      "id": 7,
+      "artist_id": 1,
+      "name": "Hate me",
+      "cover_path": "1777975667431_42123184.jpg",
+      "description": "",
+      "created_at": "2026-05-05 10:07:48"
+    },
+    {
+      "id": 8,
+      "artist_id": 1,
+      "name": "Легендарная пыль",
+      "cover_path": "1777975942731_66024370.jpg",
+      "description": "",
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 9,
+      "artist_id": 1,
+      "name": "MILLION DOLLAR: HAPPINESS",
+      "cover_path": "1777976215377_60715064.jpg",
+      "description": "",
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 10,
+      "artist_id": 1,
+      "name": "MILLION DOLLAR: BUSINESS",
+      "cover_path": "1777976470884_60844797.jpg",
+      "description": "",
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 11,
+      "artist_id": 1,
+      "name": "Last one",
+      "cover_path": "1777977212907_66386102.jpg",
+      "description": "",
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 12,
+      "artist_id": 1,
+      "name": "Live From The Dead Sea",
+      "cover_path": "1777977720878_77334707.jpg",
+      "description": "",
+      "created_at": "2026-05-05 10:42:01"
+    },
+    {
+      "id": 13,
+      "artist_id": 1,
+      "name": "Golden Hits",
+      "cover_path": "1778134330036_cover.jpg",
+      "description": "",
+      "created_at": "2026-05-07 06:12:11"
+    }
+  ],
+  "tracks": [
+    {
+      "id": 1,
+      "title": "Селяви",
+      "artist": "Morgenshtern",
+      "album": "",
+      "genre": "лирический русский хип-хоп",
+      "cover_path": "1776426128219_morgenshtern-selyavi.jpg",
+      "audio_path": "1776426127857_morgenshtern_-_n_2.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-04-17 11:42:08",
+      "artist_id": 1,
+      "album_id": null,
+      "play_count": 1
+    },
+    {
+      "id": 7,
+      "title": "Я хороший",
+      "artist": "Yung Trappa",
+      "album": "",
+      "genre": "трэп",
+      "cover_path": "1777890228968_c0485ef9a081dcf960ce4e5d4b904c46.1000x1000x1.png",
+      "audio_path": "1777890228797_yung_trappa-_n_3_4n_3_4n_1.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 10:23:48",
+      "artist_id": 2,
+      "album_id": null,
+      "play_count": 4
+    },
+    {
+      "id": 9,
+      "title": "Пустой Вокзал",
+      "artist": "Morgenshtern",
+      "album": "Alisher",
+      "genre": "поп-рок",
+      "cover_path": "1777893246940_alisher_mini-album_cover.jpg",
+      "audio_path": "1777893246949_morgenshtern_-_n_n_n_3_4_1_3_4_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 11:14:07",
+      "artist_id": 1,
+      "album_id": 4,
+      "play_count": 1
+    },
+    {
+      "id": 10,
+      "title": "Антидепрессанты",
+      "artist": "Morgenshtern",
+      "album": "Alisher",
+      "genre": "поп-рок",
+      "cover_path": "1777893246940_alisher_mini-album_cover.jpg",
+      "audio_path": "1777893247158_morgenshtern_-_1_2n_n_n_n_1_2n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 11:14:07",
+      "artist_id": 1,
+      "album_id": 4,
+      "play_count": 2
+    },
+    {
+      "id": 11,
+      "title": "Повод",
+      "artist": "Morgenshtern",
+      "album": "Alisher",
+      "genre": "поп-рок",
+      "cover_path": "1777893246940_alisher_mini-album_cover.jpg",
+      "audio_path": "1777893247285_morgenshtern_-_3_4_2_3_4.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 11:14:07",
+      "artist_id": 1,
+      "album_id": 4,
+      "play_count": 0
+    },
+    {
+      "id": 12,
+      "title": "Дом",
+      "artist": "Morgenshtern",
+      "album": "Alisher",
+      "genre": "поп-рок",
+      "cover_path": "1777893246940_alisher_mini-album_cover.jpg",
+      "audio_path": "1777893247412_morgenshtern_-_3_4_1_4.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 11:14:07",
+      "artist_id": 1,
+      "album_id": 4,
+      "play_count": 0
+    },
+    {
+      "id": 13,
+      "title": "Красный Флаг",
+      "artist": "Morgenshtern",
+      "album": "Alisher",
+      "genre": "поп-рок",
+      "cover_path": "1777893246940_alisher_mini-album_cover.jpg",
+      "audio_path": "1777893247519_morgenshtern_-_n_n_1_2n_1_3.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 11:14:07",
+      "artist_id": 1,
+      "album_id": 4,
+      "play_count": 1
+    },
+    {
+      "id": 14,
+      "title": "Family",
+      "artist": "Morgenshtern, Yung Trappa",
+      "album": "",
+      "genre": "русский хип-хоп",
+      "cover_path": "1777893461690_family_n_1_2n.jpg",
+      "audio_path": "1777893461390_morgenshtern_-_family.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 11:17:41",
+      "artist_id": 1,
+      "album_id": null,
+      "play_count": 11
+    },
+    {
+      "id": 15,
+      "title": "Kill Em All",
+      "artist": "Yung Trappa",
+      "artist_id": 2,
+      "album": "",
+      "album_id": null,
+      "genre": "трэп",
+      "cover_path": "1777900093735_ab67616d0000b2732a25cdc68f546f250a4c9651.jpg",
+      "audio_path": "1777900093618_yung_trappa-kill_em_all.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 13:08:13",
+      "play_count": 4
+    },
+    {
+      "id": 16,
+      "title": "DoggyStyle",
+      "artist": "Yung Trappa, ЛСП",
+      "artist_id": 2,
+      "album": "",
+      "album_id": null,
+      "genre": "поп",
+      "cover_path": "1777900243269_c0485ef9a081dcf960ce4e5d4b904c46.1000x1000x1.png",
+      "audio_path": "1777900242925_yung_trappa_feat._-doggystyle_1.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 13:10:43",
+      "play_count": 4
+    },
+    {
+      "id": 17,
+      "title": "Позвони мне",
+      "artist": "Yung Trappa",
+      "artist_id": 2,
+      "album": "",
+      "album_id": null,
+      "genre": "трэп",
+      "cover_path": "1777900398242_1_2_2_1_2_n_1.jpg",
+      "audio_path": "1777900397928_yung_trappa-_3_4_2_3_4_1_2_1_4_1_2.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 13:13:18",
+      "play_count": 8
+    },
+    {
+      "id": 18,
+      "title": "ПРОШЛОЙ НОЧЬЮ",
+      "artist": "Yung Trappa, STUFF",
+      "artist_id": 2,
+      "album": "",
+      "album_id": null,
+      "genre": "трэп",
+      "cover_path": "1777900548375_ab67616d0000b273fd8e6b20da8dff3f312a1388.jpg",
+      "audio_path": "1777900548110_yung_trappa_feat._stuff-.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 13:15:48",
+      "play_count": 1
+    },
+    {
+      "id": 19,
+      "title": "Тайная агентка",
+      "artist": "Yung Trappa",
+      "artist_id": 2,
+      "album": "",
+      "album_id": null,
+      "genre": "трэп",
+      "cover_path": "1777900698486_9ebaca8b842878df21745542f48c2e16.598x598x1.jpg",
+      "audio_path": "1777900698242_yung_trappa-_1_1_2_n_3_1_2n_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 13:18:18",
+      "play_count": 1
+    },
+    {
+      "id": 20,
+      "title": "Oh wow wow",
+      "artist": "Yung Trappa",
+      "artist_id": 2,
+      "album": "",
+      "album_id": null,
+      "genre": "трэп",
+      "cover_path": "1777900802510_ab67616d0000b2732a25cdc68f546f250a4c9651.jpg",
+      "audio_path": "1777900802196_yung_trappa-oh_wow_wow.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 13:20:02",
+      "play_count": 3
+    },
+    {
+      "id": 21,
+      "title": "Ульяна",
+      "artist": "Yung Trappa",
+      "artist_id": 2,
+      "album": "",
+      "album_id": null,
+      "genre": "трэп",
+      "cover_path": "1777900878622_1_2_2_1_2_n_2.jpg",
+      "audio_path": "1777900878423_yung-trappa_-_ulyana.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 13:21:18",
+      "play_count": 9
+    },
+    {
+      "id": 22,
+      "title": "Розовое Вино 2",
+      "artist": "Morgenshtern, Yung Trappa",
+      "artist_id": 1,
+      "album": "",
+      "album_id": null,
+      "genre": "поп",
+      "cover_path": "1777900993354_1_2_2_1_2_n_3.jpg",
+      "audio_path": "1777900993051_yung-trappa_-_rozovoe-vino-2.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-04 13:23:13",
+      "play_count": 18
+    },
+    {
+      "id": 23,
+      "title": "Братосын",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965987465_morgenshtern-_n_n_3_4n_n_1_2.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 24,
+      "title": "Если я спал с тобои",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965987716_morgenshtern-_n_-n_-n_-n_-n_3_4_3_4.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 25,
+      "title": "Кисоньке",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965987855_morgenshtern-_o_n_3_4_1_2n_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 26,
+      "title": "Когда буду умирать",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965987955_morgenshtern-_o_3_4_3_-_n_n_-n_1_4_n_n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 27,
+      "title": "Молодость",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965988097_morgenshtern-_1_4_3_4_3_4_3_4n_n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 28,
+      "title": "Мы так молоды",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965988166_morgenshtern-_1_4n_-n_o-_1_4_3_4_3_4_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 29,
+      "title": "Пиво и скеитборд",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965988250_morgenshtern-_2_3_4-_-n_o_n_3_4n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 30,
+      "title": "Привет я Алишер",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965988417_morgenshtern-_n_2_n_-n_-_n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 31,
+      "title": "Сон",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965988618_morgenshtern-n_3_4_1_2.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 32,
+      "title": "Танцуи",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965988734_morgenshtern-n_1_2n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 33,
+      "title": "Я бы хотел",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965989017_morgenshtern-n_-_n_-n_3_4n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 34,
+      "title": "Я пиздатый",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965989228_morgenshtern-n_-_n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 35,
+      "title": "Я хорошии",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "До того как стал известным",
+      "album_id": 5,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777965987460_45746959.jpg",
+      "audio_path": "1777965989428_morgenshtern-n_-n_3_4n_3_4n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:26:29"
+    },
+    {
+      "id": 36,
+      "title": "So high",
+      "artist": "Morgenshtern, 4teen",
+      "artist_id": 1,
+      "album": "Улыблнись дурак",
+      "album_id": 6,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777966223069_47041462.jpg",
+      "audio_path": "1777966223069_morgenshtern-so-high-ft-4teen.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:30:23"
+    },
+    {
+      "id": 37,
+      "title": "Буду твоей пальмой",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Улыблнись дурак",
+      "album_id": 6,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777966223069_47041462.jpg",
+      "audio_path": "1777966223179_morgenshtern-_n_n_-n_2_3_4_-_n_1_4_3_4.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:30:23"
+    },
+    {
+      "id": 38,
+      "title": "Вечный сон",
+      "artist": "Morgenshtern, Ларин",
+      "artist_id": 1,
+      "album": "Улыблнись дурак",
+      "album_id": 6,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777966223069_47041462.jpg",
+      "audio_path": "1777966223299_morgenshtern-_2_n_1_2n_-n_3_4_1_2-ft-_n_1_2.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:30:23"
+    },
+    {
+      "id": 39,
+      "title": "Зеленоглазые деффки",
+      "artist": "Morgenshtern, ЛСП",
+      "artist_id": 1,
+      "album": "Улыблнись дурак",
+      "album_id": 6,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777966223069_47041462.jpg",
+      "audio_path": "1777966223431_morgenshtern-_1_2_3_4_3_n_-_n_n_o_-ft-_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:30:23"
+    },
+    {
+      "id": 40,
+      "title": "Пам пам пам",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Улыблнись дурак",
+      "album_id": 6,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777966223069_47041462.jpg",
+      "audio_path": "1777966223564_morgenshtern-_1_4-_1_4-_1_4.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:30:23"
+    },
+    {
+      "id": 41,
+      "title": "Первый раз",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Улыблнись дурак",
+      "album_id": 6,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777966223069_47041462.jpg",
+      "audio_path": "1777966223659_morgenshtern-_n_2n_-n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:30:23"
+    },
+    {
+      "id": 42,
+      "title": "Улыбнись дурак",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Улыблнись дурак",
+      "album_id": 6,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777966223069_47041462.jpg",
+      "audio_path": "1777966223837_morgenshtern-n_n_1_2_n_n_-_n_n_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 07:30:23"
+    },
+    {
+      "id": 43,
+      "title": "Fuck em all",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Hate me",
+      "album_id": 7,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1777975667431_42123184.jpg",
+      "audio_path": "1777975667434_morgenshtern-fuck-em-all.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:07:48"
+    },
+    {
+      "id": 44,
+      "title": "Hermit",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Hate me",
+      "album_id": 7,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1777975667431_42123184.jpg",
+      "audio_path": "1777975667617_morgenshtern-hermit.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:07:48"
+    },
+    {
+      "id": 45,
+      "title": "Insomnia",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Hate me",
+      "album_id": 7,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1777975667431_42123184.jpg",
+      "audio_path": "1777975667677_morgenshtern-insomnia.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:07:48"
+    },
+    {
+      "id": 46,
+      "title": "Виски на завтрак",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Hate me",
+      "album_id": 7,
+      "genre": "",
+      "play_count": 1,
+      "cover_path": "1777975667431_42123184.jpg",
+      "audio_path": "1777975667751_morgenshtern-_2_n_o_-_1_2_-_2n_n_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:07:48"
+    },
+    {
+      "id": 47,
+      "title": "Дикии",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Hate me",
+      "album_id": 7,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1777975667431_42123184.jpg",
+      "audio_path": "1777975667861_morgenshtern-_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:07:48"
+    },
+    {
+      "id": 48,
+      "title": "Уфф деньги",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Hate me",
+      "album_id": 7,
+      "genre": "",
+      "play_count": 1,
+      "cover_path": "1777975667431_42123184.jpg",
+      "audio_path": "1777975667898_morgenshtern-n_n_n_-_1_2n_3.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:07:48"
+    },
+    {
+      "id": 49,
+      "title": "Домофон чича",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Легендарная пыль",
+      "album_id": 8,
+      "genre": "",
+      "play_count": 1,
+      "cover_path": "1777975942731_66024370.jpg",
+      "audio_path": "1777975942733_morgenshtern-_3_4_1_4_3_4n_3_4_1_2-n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 50,
+      "title": "Ебанная",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Легендарная пыль",
+      "album_id": 8,
+      "genre": "",
+      "play_count": 1,
+      "cover_path": "1777975942731_66024370.jpg",
+      "audio_path": "1777975942880_morgenshtern-_-_1_2_1_2_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 51,
+      "title": "Красное вино фристаил",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Легендарная пыль",
+      "album_id": 8,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777975942731_66024370.jpg",
+      "audio_path": "1777975943027_morgenshtern-_on_n_1_2_3_4_-_2_1_2_3_4-n_n_n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 52,
+      "title": "Она оно",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Легендарная пыль",
+      "album_id": 8,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777975942731_66024370.jpg",
+      "audio_path": "1777975943122_morgenshtern-_3_4_1_2_-_3_4_1_2_3_4.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 53,
+      "title": "Опа",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Легендарная пыль",
+      "album_id": 8,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777975942731_66024370.jpg",
+      "audio_path": "1777975943165_morgenshtern-_3_4.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 54,
+      "title": "Последняя",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Легендарная пыль",
+      "album_id": 8,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777975942731_66024370.jpg",
+      "audio_path": "1777975943221_morgenshtern-_3_4n_1_2n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 55,
+      "title": "Ратататата",
+      "artist": "Morgenshtern, Витя АК",
+      "artist_id": 1,
+      "album": "Легендарная пыль",
+      "album_id": 8,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777975942731_66024370.jpg",
+      "audio_path": "1777975943313_morgenshtern-n_n_n_n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 56,
+      "title": "Съел деда",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Легендарная пыль",
+      "album_id": 8,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777975942731_66024370.jpg",
+      "audio_path": "1777975943377_morgenshtern-n_n_-.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 57,
+      "title": "Четыре украинки",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Легендарная пыль",
+      "album_id": 8,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777975942731_66024370.jpg",
+      "audio_path": "1777975943440_morgenshtern-n_n_n_n_-n_on_1_2_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 58,
+      "title": "Я пыль",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Легендарная пыль",
+      "album_id": 8,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777975942731_66024370.jpg",
+      "audio_path": "1777975943497_morgenshtern-n_-_n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:12:23"
+    },
+    {
+      "id": 59,
+      "title": "No mo luv",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 3,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976215377_morgenshtern-no-mo-luv.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 60,
+      "title": "Pablo",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976215533_morgenshtern-pablo.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 61,
+      "title": "Show",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976215609_morgenshtern-show.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 62,
+      "title": "Бебебе",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976215665_morgenshtern-.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 63,
+      "title": "Искусство за 90900 скит",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976215756_morgenshtern-_n_on_n_n_n_2_3_4-_-90900-n_o_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 64,
+      "title": "Можно сфоткаться",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976215806_morgenshtern-_1_4_3_4_1_2_3_4-n_n_3_4n_o_n_n_n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 65,
+      "title": "Последнии бит от славы",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976215856_morgenshtern-_3_4n_1_2_-_n_-_3_4n_-n_2n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 66,
+      "title": "morgenshtern ретро реив",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976215898_morgenshtern-n_n_n_3_4-n_2.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 67,
+      "title": "Скит заблокирован слив в телеге",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976216007_morgenshtern-n_o_n_-_3_4_o_n_3_4_2_1_2-n_2-_2-n_3.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 68,
+      "title": "Скит от славы",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976216020_morgenshtern-n_o_n_-_3_4n_-n_2n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 69,
+      "title": "Слава вернись interlude",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976216058_morgenshtern-n_2_-_2_n_1_2_n_n_-interlude.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 70,
+      "title": "Ты ослеп",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976216144_morgenshtern-n_n_-_3_4n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 71,
+      "title": "Черный бумер",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: HAPPINESS",
+      "album_id": 9,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976215377_60715064.jpg",
+      "audio_path": "1777976216235_morgenshtern-n_n_1_2n_-_n_1_4_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:16:56"
+    },
+    {
+      "id": 72,
+      "title": "Aristocrat",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976470884_morgenshtern-aristocrat.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 73,
+      "title": "Dinero",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471083_morgenshtern-dinero.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 74,
+      "title": "Gta",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471190_morgenshtern-gta.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 75,
+      "title": "Hublot",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471277_morgenshtern-hublot.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 76,
+      "title": "Nominalo",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471366_morgenshtern-nominalo.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 77,
+      "title": "Olala",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471449_morgenshtern-olala.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 78,
+      "title": "Pull up",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471547_morgenshtern-pull-up.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 79,
+      "title": "Когда нас отпустит",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471632_morgenshtern-_o_3_4_3_-_1_2_n_-_3_4n_n_n_n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 80,
+      "title": "Мания",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471748_morgenshtern-_1_4_1_2_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 81,
+      "title": "Папин танк",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471830_morgenshtern-_1_2-n_1_2_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 82,
+      "title": "Скит от vsbattlevideo",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471920_morgenshtern-n_o_n_-_3_4n_-vsbattlevideo.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 83,
+      "title": "Я когда нибудь уйду",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976471960_morgenshtern-n_-_o_3_4_3_-_1_2_n_n_-n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 84,
+      "title": "Я на таблах",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "MILLION DOLLAR: BUSINESS",
+      "album_id": 10,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777976470884_60844797.jpg",
+      "audio_path": "1777976472073_morgenshtern-n_-_1_2_-n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:21:12"
+    },
+    {
+      "id": 85,
+      "title": "*",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977212908_morgenshtern.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 86,
+      "title": "Teaser",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977212938_morgenshtern-teaser.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 87,
+      "title": "Bestie",
+      "artist": "Morgenshtern, The Limba",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 2,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213074_morgenshtern-the-limba-bestie.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 88,
+      "title": "Tatu",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213166_morgenshtern-tatu.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 89,
+      "title": "Герои skit",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213277_morgenshtern-_3_n_3_4_-skit.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 90,
+      "title": "Cctv",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213297_morgenshtern-cctv.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 91,
+      "title": "Ugu",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 4,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213399_morgenshtern-ugu.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 92,
+      "title": "Sheikh",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213501_morgenshtern-sheikh.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 93,
+      "title": "Дор блю",
+      "artist": "Morgenshtern, ЛСП",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213587_morgenshtern-_n_-_3_4n_-_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 94,
+      "title": "Guf diss",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213698_morgenshtern-guf-diss.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 95,
+      "title": "B",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 0,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213787_morgenshtern-b.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 96,
+      "title": "Вернуть прошлое skit",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213900_morgenshtern-_2_n_1_2n_n_n_-_n_3_4n_3_4_-skit.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 97,
+      "title": "Balance",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977213917_morgenshtern-balance.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 98,
+      "title": "Ночь такси заметки",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977214042_morgenshtern-_1_2_3_4n_n_-n_on_-_1_4_n_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 99,
+      "title": "Я понял skit",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977214156_morgenshtern-n_-_3_4_1_2n_-skit.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 100,
+      "title": "Еeee",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 4,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977214207_morgenshtern-eeee.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 101,
+      "title": "Katrina",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 4,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977214308_morgenshtern-katrina.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 102,
+      "title": "Location",
+      "artist": "Morgenshtern, Элджей",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 4,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977214448_morgenshtern-allj-location.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 103,
+      "title": "10 секунд тишины перед последним треком",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 3,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977214550_morgenshtern-10-n_on_1_2_-n_n_1_2n_-_n_-_3_4n_1_2_1_4-n_n_o_3_4_1_4-skit.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 104,
+      "title": "Вставал падал",
+      "artist": "Morgenshtern, Entype",
+      "artist_id": 1,
+      "album": "Last one",
+      "album_id": 11,
+      "genre": "русский рэп",
+      "play_count": 3,
+      "cover_path": "1777977212907_66386102.jpg",
+      "audio_path": "1777977214557_morgenshtern-entype-_2n_n_2_-.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:33:34"
+    },
+    {
+      "id": 105,
+      "title": "Антидепрессанты",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Live From The Dead Sea",
+      "album_id": 12,
+      "genre": "русский рэп",
+      "play_count": 3,
+      "cover_path": "1777977720878_77334707.jpg",
+      "audio_path": "1777977720880_morgenshtern-_1_2n_n_n_n_1_2n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:42:01"
+    },
+    {
+      "id": 106,
+      "title": "Дом (лондон прага ницца)",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Live From The Dead Sea",
+      "album_id": 12,
+      "genre": "русский рэп",
+      "play_count": 3,
+      "cover_path": "1777977720878_77334707.jpg",
+      "audio_path": "1777977721063_morgenshtern-_3_4_1_4-_3_4_1_2_3_4_1_2-_n_3_-_1_2_n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:42:01"
+    },
+    {
+      "id": 107,
+      "title": "Красный флаг",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Live From The Dead Sea",
+      "album_id": 12,
+      "genre": "русский рэп",
+      "play_count": 6,
+      "cover_path": "1777977720878_77334707.jpg",
+      "audio_path": "1777977721176_morgenshtern-_on_n_1_2n_-n_3.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:42:01"
+    },
+    {
+      "id": 108,
+      "title": "Новый мерин",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Live From The Dead Sea",
+      "album_id": 12,
+      "genre": "русский рэп",
+      "play_count": 64,
+      "cover_path": "1777977720878_77334707.jpg",
+      "audio_path": "1777977721288_morgenshtern-_1_2_3_4_2n_-_1_4_n_1_2.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:42:01"
+    },
+    {
+      "id": 109,
+      "title": "Повод",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Live From The Dead Sea",
+      "album_id": 12,
+      "genre": "русский рэп",
+      "play_count": 1,
+      "cover_path": "1777977720878_77334707.jpg",
+      "audio_path": "1777977721395_morgenshtern-_3_4_2_3_4.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:42:01"
+    },
+    {
+      "id": 110,
+      "title": "Последняя любовь",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Live From The Dead Sea",
+      "album_id": 12,
+      "genre": "русский рэп",
+      "play_count": 2,
+      "cover_path": "1777977720878_77334707.jpg",
+      "audio_path": "1777977721513_morgenshtern-_3_4n_1_2n_n_-_n_3_4_2n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:42:01"
+    },
+    {
+      "id": 111,
+      "title": "Пустои вокзал",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Live From The Dead Sea",
+      "album_id": 12,
+      "genre": "русский рэп",
+      "play_count": 2,
+      "cover_path": "1777977720878_77334707.jpg",
+      "audio_path": "1777977721614_morgenshtern-_n_n_n_3_4_-_2_3_4_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:42:01"
+    },
+    {
+      "id": 112,
+      "title": "Цветок",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Live From The Dead Sea",
+      "album_id": 12,
+      "genre": "русский рэп",
+      "play_count": 20,
+      "cover_path": "1777977720878_77334707.jpg",
+      "audio_path": "1777977721749_morgenshtern-n_2_n_3_4_o.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-05 10:42:01"
+    },
+    {
+      "id": 113,
+      "title": "НОВЫЙ МЕРИН",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Golden Hits",
+      "album_id": 13,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1778134330036_cover.jpg",
+      "audio_path": "1778134330068_01..mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-07 06:12:11"
+    },
+    {
+      "id": 114,
+      "title": "РАТАТАТА",
+      "artist": "Morgenshtern, Витя АК",
+      "artist_id": 1,
+      "album": "Golden Hits",
+      "album_id": 13,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1778134330036_cover.jpg",
+      "audio_path": "1778134330283_02._feat._n_n.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-07 06:12:11"
+    },
+    {
+      "id": 115,
+      "title": "ОНА - ОНО",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Golden Hits",
+      "album_id": 13,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1778134330036_cover.jpg",
+      "audio_path": "1778134330373_03._-.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-07 06:12:11"
+    },
+    {
+      "id": 116,
+      "title": "ПОСОСИ",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Golden Hits",
+      "album_id": 13,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1778134330036_cover.jpg",
+      "audio_path": "1778134330439_04..mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-07 06:12:11"
+    },
+    {
+      "id": 117,
+      "title": "ICE",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Golden Hits",
+      "album_id": 13,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1778134330036_cover.jpg",
+      "audio_path": "1778134330526_05._ice_feat._morgenshtern.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-07 06:12:11"
+    },
+    {
+      "id": 118,
+      "title": "Я ПЫЛЬ",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Golden Hits",
+      "album_id": 13,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1778134330036_cover.jpg",
+      "audio_path": "1778134330616_06..mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-07 06:12:11"
+    },
+    {
+      "id": 119,
+      "title": "ЁБАННАЯ",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Golden Hits",
+      "album_id": 13,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1778134330036_cover.jpg",
+      "audio_path": "1778134330692_07..mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-07 06:12:11"
+    },
+    {
+      "id": 120,
+      "title": "СЪЕЛ ДЕДА",
+      "artist": "Morgenshtern, SLAVA MARLOW",
+      "artist_id": 1,
+      "album": "Golden Hits",
+      "album_id": 13,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1778134330036_cover.jpg",
+      "audio_path": "1778134330787_08._a_feat._slava_marlow.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-07 06:12:11"
+    },
+    {
+      "id": 121,
+      "title": "ОПА",
+      "artist": "Morgenshtern",
+      "artist_id": 1,
+      "album": "Golden Hits",
+      "album_id": 13,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1778134330036_cover.jpg",
+      "audio_path": "1778134330860_09..mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-07 06:12:11"
+    },
+    {
+      "id": 122,
+      "title": "CADILLAC",
+      "artist": "Morgenshtern, Элджей",
+      "artist_id": 1,
+      "album": "Golden Hits",
+      "album_id": 13,
+      "genre": "",
+      "play_count": 0,
+      "cover_path": "1778134330036_cover.jpg",
+      "audio_path": "1778134330948_10._cadillac_feat._1.mp3",
+      "uploaded_by_user_id": 4,
+      "created_at": "2026-05-07 06:12:11"
+    }
+  ],
+  "track_artists": [
+    {
+      "track_id": 1,
+      "artist_id": 1
+    },
+    {
+      "track_id": 7,
+      "artist_id": 2
+    },
+    {
+      "track_id": 9,
+      "artist_id": 1
+    },
+    {
+      "track_id": 10,
+      "artist_id": 1
+    },
+    {
+      "track_id": 11,
+      "artist_id": 1
+    },
+    {
+      "track_id": 12,
+      "artist_id": 1
+    },
+    {
+      "track_id": 13,
+      "artist_id": 1
+    },
+    {
+      "track_id": 14,
+      "artist_id": 1
+    },
+    {
+      "track_id": 14,
+      "artist_id": 2
+    },
+    {
+      "track_id": 15,
+      "artist_id": 2
+    },
+    {
+      "track_id": 16,
+      "artist_id": 2
+    },
+    {
+      "track_id": 16,
+      "artist_id": 3
+    },
+    {
+      "track_id": 17,
+      "artist_id": 2
+    },
+    {
+      "track_id": 18,
+      "artist_id": 2
+    },
+    {
+      "track_id": 18,
+      "artist_id": 4
+    },
+    {
+      "track_id": 19,
+      "artist_id": 2
+    },
+    {
+      "track_id": 20,
+      "artist_id": 2
+    },
+    {
+      "track_id": 21,
+      "artist_id": 2
+    },
+    {
+      "track_id": 22,
+      "artist_id": 1
+    },
+    {
+      "track_id": 22,
+      "artist_id": 2
+    },
+    {
+      "track_id": 23,
+      "artist_id": 1
+    },
+    {
+      "track_id": 24,
+      "artist_id": 1
+    },
+    {
+      "track_id": 25,
+      "artist_id": 1
+    },
+    {
+      "track_id": 26,
+      "artist_id": 1
+    },
+    {
+      "track_id": 27,
+      "artist_id": 1
+    },
+    {
+      "track_id": 28,
+      "artist_id": 1
+    },
+    {
+      "track_id": 29,
+      "artist_id": 1
+    },
+    {
+      "track_id": 30,
+      "artist_id": 1
+    },
+    {
+      "track_id": 31,
+      "artist_id": 1
+    },
+    {
+      "track_id": 32,
+      "artist_id": 1
+    },
+    {
+      "track_id": 33,
+      "artist_id": 1
+    },
+    {
+      "track_id": 34,
+      "artist_id": 1
+    },
+    {
+      "track_id": 35,
+      "artist_id": 1
+    },
+    {
+      "track_id": 36,
+      "artist_id": 1
+    },
+    {
+      "track_id": 36,
+      "artist_id": 5
+    },
+    {
+      "track_id": 37,
+      "artist_id": 1
+    },
+    {
+      "track_id": 38,
+      "artist_id": 1
+    },
+    {
+      "track_id": 38,
+      "artist_id": 6
+    },
+    {
+      "track_id": 39,
+      "artist_id": 1
+    },
+    {
+      "track_id": 39,
+      "artist_id": 3
+    },
+    {
+      "track_id": 40,
+      "artist_id": 1
+    },
+    {
+      "track_id": 41,
+      "artist_id": 1
+    },
+    {
+      "track_id": 42,
+      "artist_id": 1
+    },
+    {
+      "track_id": 43,
+      "artist_id": 1
+    },
+    {
+      "track_id": 44,
+      "artist_id": 1
+    },
+    {
+      "track_id": 45,
+      "artist_id": 1
+    },
+    {
+      "track_id": 46,
+      "artist_id": 1
+    },
+    {
+      "track_id": 47,
+      "artist_id": 1
+    },
+    {
+      "track_id": 48,
+      "artist_id": 1
+    },
+    {
+      "track_id": 49,
+      "artist_id": 1
+    },
+    {
+      "track_id": 50,
+      "artist_id": 1
+    },
+    {
+      "track_id": 51,
+      "artist_id": 1
+    },
+    {
+      "track_id": 52,
+      "artist_id": 1
+    },
+    {
+      "track_id": 53,
+      "artist_id": 1
+    },
+    {
+      "track_id": 54,
+      "artist_id": 1
+    },
+    {
+      "track_id": 55,
+      "artist_id": 1
+    },
+    {
+      "track_id": 55,
+      "artist_id": 7
+    },
+    {
+      "track_id": 56,
+      "artist_id": 1
+    },
+    {
+      "track_id": 57,
+      "artist_id": 1
+    },
+    {
+      "track_id": 58,
+      "artist_id": 1
+    },
+    {
+      "track_id": 59,
+      "artist_id": 1
+    },
+    {
+      "track_id": 60,
+      "artist_id": 1
+    },
+    {
+      "track_id": 61,
+      "artist_id": 1
+    },
+    {
+      "track_id": 62,
+      "artist_id": 1
+    },
+    {
+      "track_id": 63,
+      "artist_id": 1
+    },
+    {
+      "track_id": 64,
+      "artist_id": 1
+    },
+    {
+      "track_id": 65,
+      "artist_id": 1
+    },
+    {
+      "track_id": 66,
+      "artist_id": 1
+    },
+    {
+      "track_id": 67,
+      "artist_id": 1
+    },
+    {
+      "track_id": 68,
+      "artist_id": 1
+    },
+    {
+      "track_id": 69,
+      "artist_id": 1
+    },
+    {
+      "track_id": 70,
+      "artist_id": 1
+    },
+    {
+      "track_id": 71,
+      "artist_id": 1
+    },
+    {
+      "track_id": 72,
+      "artist_id": 1
+    },
+    {
+      "track_id": 73,
+      "artist_id": 1
+    },
+    {
+      "track_id": 74,
+      "artist_id": 1
+    },
+    {
+      "track_id": 75,
+      "artist_id": 1
+    },
+    {
+      "track_id": 76,
+      "artist_id": 1
+    },
+    {
+      "track_id": 77,
+      "artist_id": 1
+    },
+    {
+      "track_id": 78,
+      "artist_id": 1
+    },
+    {
+      "track_id": 79,
+      "artist_id": 1
+    },
+    {
+      "track_id": 80,
+      "artist_id": 1
+    },
+    {
+      "track_id": 81,
+      "artist_id": 1
+    },
+    {
+      "track_id": 82,
+      "artist_id": 1
+    },
+    {
+      "track_id": 83,
+      "artist_id": 1
+    },
+    {
+      "track_id": 84,
+      "artist_id": 1
+    },
+    {
+      "track_id": 85,
+      "artist_id": 1
+    },
+    {
+      "track_id": 86,
+      "artist_id": 1
+    },
+    {
+      "track_id": 87,
+      "artist_id": 1
+    },
+    {
+      "track_id": 87,
+      "artist_id": 8
+    },
+    {
+      "track_id": 88,
+      "artist_id": 1
+    },
+    {
+      "track_id": 89,
+      "artist_id": 1
+    },
+    {
+      "track_id": 90,
+      "artist_id": 1
+    },
+    {
+      "track_id": 91,
+      "artist_id": 1
+    },
+    {
+      "track_id": 92,
+      "artist_id": 1
+    },
+    {
+      "track_id": 93,
+      "artist_id": 1
+    },
+    {
+      "track_id": 93,
+      "artist_id": 3
+    },
+    {
+      "track_id": 94,
+      "artist_id": 1
+    },
+    {
+      "track_id": 95,
+      "artist_id": 1
+    },
+    {
+      "track_id": 96,
+      "artist_id": 1
+    },
+    {
+      "track_id": 97,
+      "artist_id": 1
+    },
+    {
+      "track_id": 98,
+      "artist_id": 1
+    },
+    {
+      "track_id": 99,
+      "artist_id": 1
+    },
+    {
+      "track_id": 100,
+      "artist_id": 1
+    },
+    {
+      "track_id": 101,
+      "artist_id": 1
+    },
+    {
+      "track_id": 102,
+      "artist_id": 1
+    },
+    {
+      "track_id": 102,
+      "artist_id": 9
+    },
+    {
+      "track_id": 103,
+      "artist_id": 1
+    },
+    {
+      "track_id": 104,
+      "artist_id": 1
+    },
+    {
+      "track_id": 104,
+      "artist_id": 10
+    },
+    {
+      "track_id": 105,
+      "artist_id": 1
+    },
+    {
+      "track_id": 106,
+      "artist_id": 1
+    },
+    {
+      "track_id": 107,
+      "artist_id": 1
+    },
+    {
+      "track_id": 108,
+      "artist_id": 1
+    },
+    {
+      "track_id": 109,
+      "artist_id": 1
+    },
+    {
+      "track_id": 110,
+      "artist_id": 1
+    },
+    {
+      "track_id": 111,
+      "artist_id": 1
+    },
+    {
+      "track_id": 112,
+      "artist_id": 1
+    },
+    {
+      "track_id": 113,
+      "artist_id": 1
+    },
+    {
+      "track_id": 114,
+      "artist_id": 1
+    },
+    {
+      "track_id": 114,
+      "artist_id": 7
+    },
+    {
+      "track_id": 115,
+      "artist_id": 1
+    },
+    {
+      "track_id": 116,
+      "artist_id": 1
+    },
+    {
+      "track_id": 117,
+      "artist_id": 1
+    },
+    {
+      "track_id": 118,
+      "artist_id": 1
+    },
+    {
+      "track_id": 119,
+      "artist_id": 1
+    },
+    {
+      "track_id": 120,
+      "artist_id": 1
+    },
+    {
+      "track_id": 120,
+      "artist_id": 11
+    },
+    {
+      "track_id": 121,
+      "artist_id": 1
+    },
+    {
+      "track_id": 122,
+      "artist_id": 1
+    },
+    {
+      "track_id": 122,
+      "artist_id": 9
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": 3,
+      "user_id": 4,
+      "artist_id": 1,
+      "created_at": "2026-05-05 10:36:18"
+    },
+    {
+      "id": 4,
+      "user_id": 4,
+      "artist_id": 2,
+      "created_at": "2026-05-05 10:36:29"
+    },
+    {
+      "id": 5,
+      "user_id": 2,
+      "artist_id": 1,
+      "created_at": "2026-05-05 10:49:22"
+    }
+  ],
+  "favorite_tracks": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "track_id": 21,
+      "created_at": "2026-05-05 12:09:31"
+    },
+    {
+      "id": 2,
+      "user_id": 4,
+      "track_id": 21,
+      "created_at": "2026-05-05 12:09:48"
+    }
+  ]
+}
