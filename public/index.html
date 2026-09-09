@@ -4026,5 +4026,24 @@ async function stopChatWhenLeaving(s){if(s!=='chat')stopChatPolling()}
 
 
 <div class="modal-overlay" id="chatTrackPickerModal" onclick="if(event.target===this)closeChatTrackPicker()"><div class="modal"><div class="modal-header"><div><div class="modal-title">Отправить трек</div><div class="section-meta">Выбери трек из каталога Venyl</div></div><button class="modal-close" onclick="closeChatTrackPicker()"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293 4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button></div><input class="form-input" id="chatTrackPickerSearch" placeholder="Найти трек…" autocomplete="off" oninput="renderChatTrackPicker(this.value)" style="margin-bottom:12px"><div class="chat-track-picker-list" id="chatTrackPickerList"></div></div></div>
+<script id="venylAdminSidebarFix">
+    (() => {
+      const apply = () => {
+        const sections = [...document.querySelectorAll('.nav-section')];
+        const target = sections.find(el => /Управление|Manage|Hantera|Керування/i.test(el.innerText || ''));
+        if (!target) return;
+        target.style.display = 'none';
+        fetch('/api/auth/me', { credentials: 'same-origin' })
+          .then(r => r.ok ? r.json() : { user: null })
+          .then(({ user }) => {
+            const admin = user && (user.isAdmin === true || String(user.role || '').toLowerCase() === 'admin');
+            if (admin) target.style.display = '';
+          })
+          .catch(() => {});
+      };
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply, { once: true });
+      else apply();
+    })();
+    </script>
 </body>
 </html>
