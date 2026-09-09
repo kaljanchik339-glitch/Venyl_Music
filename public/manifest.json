@@ -1,0 +1,9 @@
+{
+  "name": "Venyl Music",
+  "short_name": "Venyl",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08080c",
+  "theme_color": "#08080c",
+  "icons": []
+}

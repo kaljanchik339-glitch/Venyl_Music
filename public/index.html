@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/manifest.json" rel="manifest"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Venyl — музыка течёт</title>
-<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;700;800;900&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@300;400;500;700;800;900&amp;family=Instrument+Serif:ital@0;1&amp;family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet"/>
 <style>
 :root {
   --ink: #08080C;
@@ -1411,701 +1413,775 @@ select.form-input{cursor:pointer}
 .auth-language-row .language-select{min-width:190px;text-align:center}
 @media(max-width:820px){.language-select{padding:7px 10px;font-size:12px}.auth-language-row{margin:-12px 0 18px}}
 
+
+/* ===================== MY MUSIC V2 ===================== */
+.home-personal-section{margin-top:6px}
+.home-personal-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.continue-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.continue-grid.large{grid-template-columns:repeat(3,minmax(0,1fr))}
+.mini-track-card{background:var(--ink3);border:1px solid var(--wire2);border-radius:16px;padding:10px;display:flex;align-items:center;gap:11px;min-width:0;cursor:pointer;transition:.18s;position:relative}
+.mini-track-card:hover{background:var(--ink4);border-color:var(--accent-border);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.mini-track-cover{width:52px;height:52px;border-radius:11px;overflow:hidden;background:linear-gradient(135deg,#201040,#10101b);flex:none;display:grid;place-items:center;color:var(--accent);position:relative}
+.mini-track-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.mini-progress{position:absolute;left:5px;right:5px;bottom:4px;height:3px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden}.mini-progress i{display:block;height:100%;background:var(--accent)}
+.mini-track-info{min-width:0;display:flex;flex-direction:column;gap:2px}.mini-track-info b,.mini-track-info span,.mini-track-info small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mini-track-info b{font-size:13px;color:var(--cream)}.mini-track-info span{font-size:11px;color:var(--muted2)}.mini-track-info small{font-size:10px;color:var(--muted)}
+.personal-empty{min-height:92px;border:1px dashed var(--wire3);border-radius:16px;padding:18px;display:flex;align-items:center;gap:13px;color:var(--muted);background:rgba(255,255,255,.012)}.personal-empty b{display:block;color:var(--cream2);font-size:13px}.personal-empty span{display:block;margin-top:3px;font-size:11px}.personal-empty.compact{min-height:70px}.personal-empty-icon{width:36px;height:36px;border-radius:12px;background:var(--accent-dim);border:1px solid var(--accent-border);color:var(--accent);display:grid;place-items:center;font-weight:900;flex:none}
+.my-music-hero{background:linear-gradient(135deg,rgba(200,169,110,.08),rgba(255,255,255,.015));border:1px solid var(--wire2);border-radius:24px;padding:32px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:18px}.my-music-title{font-family:'Instrument Serif',serif;font-size:44px;font-weight:400;margin-top:12px;color:var(--cream)}.my-music-sub{font-size:13px;color:var(--muted2);margin-top:7px;max-width:620px}.my-music-actions{display:flex;gap:9px;flex-wrap:wrap}.my-music-tabs{display:flex;gap:7px;overflow:auto;margin-bottom:16px;padding-bottom:2px}.my-music-tab{border:1px solid var(--wire2);background:var(--ink3);color:var(--muted2);border-radius:50px;padding:9px 15px;cursor:pointer;font:600 12px 'Cabinet Grotesk';white-space:nowrap}.my-music-tab:hover{color:var(--cream);background:var(--ink4)}.my-music-tab.active{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent2)}
+.my-overview-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.my-card{background:var(--ink2);border:1px solid var(--wire2);border-radius:20px;padding:18px;min-width:0}.my-card-wide{min-width:0}.my-card.full{width:100%}.my-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:15px}.my-card-head h3{font-size:17px;color:var(--cream)}.my-card-head p{font-size:11px;color:var(--muted);margin-top:3px}.text-link{border:0;background:none;color:var(--accent);font:600 11px 'Cabinet Grotesk';cursor:pointer;white-space:nowrap}.stats-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stats-mini-grid>div,.big-stat-grid>div{background:var(--ink3);border:1px solid var(--wire);border-radius:14px;padding:13px}.stats-mini-grid b,.big-stat-grid b{display:block;font-size:23px;color:var(--cream)}.stats-mini-grid span,.big-stat-grid span{display:block;color:var(--muted);font-size:10px;margin-top:3px}.queue-preview{display:grid;gap:5px}.queue-preview button{border:0;background:transparent;color:inherit;display:grid;grid-template-columns:25px 1fr;gap:2px 9px;text-align:left;padding:7px 8px;border-radius:9px;cursor:pointer}.queue-preview button:hover{background:var(--ink3)}.queue-preview span{grid-row:1/3;color:var(--muted);font-size:11px}.queue-preview b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.queue-preview small{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.my-track-list{display:grid;gap:6px}.my-list-row{width:100%;display:flex;align-items:center;gap:11px;background:var(--ink3);border:1px solid var(--wire);border-radius:12px;padding:8px 10px;color:inherit;text-align:left;cursor:pointer}.my-list-row:hover{background:var(--ink4);border-color:var(--wire2)}.my-list-num{width:22px;text-align:center;font-size:11px;color:var(--muted)}.my-list-cover{width:44px;height:44px;border-radius:9px;overflow:hidden;background:var(--ink4);display:grid;place-items:center;color:var(--accent);flex:none}.my-list-cover img{width:100%;height:100%;object-fit:cover}.my-list-main{min-width:0;flex:1}.my-list-main b,.my-list-main span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.my-list-main b{font-size:12.5px}.my-list-main span{font-size:10.5px;color:var(--muted2);margin-top:2px}.my-list-row small{font-size:10px;color:var(--muted);white-space:nowrap}.queue-row>button{margin-left:auto}.queue-actions{display:flex;gap:6px;flex-wrap:wrap}.big-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.big-stat-grid b{font-size:30px}.genre-bars{margin-top:22px}.genre-bars h4{font-size:13px;margin-bottom:12px}.genre-bar-row{display:grid;grid-template-columns:120px 1fr 34px;align-items:center;gap:10px;margin:9px 0}.genre-bar-row>span{font-size:11px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.genre-bar-row>div{height:6px;background:var(--ink4);border-radius:4px;overflow:hidden}.genre-bar-row i{display:block;height:100%;background:var(--accent);border-radius:4px}.genre-bar-row>b{font-size:10px;color:var(--muted);text-align:right}.page-loading{min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);gap:10px}.loading-dot{width:22px;height:22px;border:2px solid var(--wire3);border-top-color:var(--accent);border-radius:50%;animation:venylSpin .8s linear infinite}@keyframes venylSpin{to{transform:rotate(360deg)}}
+@media(max-width:1100px){.continue-grid{grid-template-columns:repeat(2,1fr)}.my-overview-grid{grid-template-columns:1fr}.continue-grid.large{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.my-music-hero{padding:22px;align-items:flex-start;flex-direction:column}.my-music-title{font-size:36px}.continue-grid,.continue-grid.large{grid-template-columns:1fr}.stats-mini-grid,.big-stat-grid{grid-template-columns:1fr 1fr}.genre-bar-row{grid-template-columns:92px 1fr 28px}.my-card{padding:15px}}
+
 </style>
-<script>
-(function(){
-const og=document.getElementById.bind(document);
-document.getElementById=function(id){
-return og(id)||{style:{},classList:{add(){},remove(){},toggle(){}},innerHTML:'',textContent:'',value:'',appendChild(){},querySelector(){return null},querySelectorAll(){return[]},addEventListener(){},remove(){},src:'',onclick:null};
-};
-})();
-</script>
+<style id="socialChatCss">
+
+.venyl-pro-section{margin-top:8px}.venyl-pro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.venyl-pro-card{appearance:none;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:16px;padding:18px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-height:92px}.venyl-pro-card:hover{border-color:var(--accent)}.venyl-pro-card span{color:var(--muted);font-size:12px}.venyl-hub{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:2500;display:none;align-items:flex-end;justify-content:center}.venyl-hub.open{display:flex}.venyl-hub-panel{width:min(920px,100%);max-height:88vh;overflow:auto;background:var(--bg);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:22px}.venyl-hub-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.venyl-hub-tabs{display:flex;gap:8px;overflow:auto;margin-bottom:16px}.venyl-hub-tabs button{white-space:nowrap}.hub-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.hub-stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}.hub-stat b{font-size:22px;display:block;margin-bottom:4px}.hub-list{display:grid;gap:8px}.hub-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px}.hub-row img{width:44px;height:44px;border-radius:8px;object-fit:cover}.hub-row-main{min-width:0;flex:1}.hub-row-main b,.hub-row-main span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hub-row-main span{color:var(--muted);font-size:12px;margin-top:3px}.hub-empty{padding:30px;text-align:center;color:var(--muted)}
+@media(max-width:820px){.venyl-pro-grid{grid-template-columns:repeat(2,1fr)}.venyl-hub-panel{max-height:92vh;padding:16px;border-radius:20px 20px 0 0}.hub-stat-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.venyl-pro-grid{gap:8px}.venyl-pro-card{padding:14px;min-height:82px}.hub-stat-grid{grid-template-columns:1fr}}
+
+</style><style id="venylSocialPerfectCSS">
+.nav-badge{margin-left:auto;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;font:800 9px 'Cabinet Grotesk';line-height:1}
+.users-toolbar{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}.users-search-box{flex:1;min-width:240px}.users-search-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}.users-search-input{width:100%;height:46px;border-radius:13px}.users-rule{font-size:11px;color:var(--muted2);padding:10px 12px;border:1px solid var(--wire);background:rgba(255,255,255,.018);border-radius:12px}
+.users-section-card{background:linear-gradient(145deg,rgba(255,255,255,.028),rgba(255,255,255,.012));border:1px solid var(--wire2);border-radius:20px;padding:18px;box-shadow:var(--shadow-sm);margin-bottom:16px}.users-section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.users-section-title{font-size:16px;font-weight:900}.users-section-sub{font-size:11px;color:var(--muted2);margin-top:3px}.users-found-meta{font-size:11px;color:var(--muted)}
+.incoming-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}.incoming-card{display:flex;align-items:center;gap:11px;min-width:0;padding:12px;border:1px solid var(--wire);background:var(--ink3);border-radius:15px}.incoming-card:hover{border-color:var(--wire2)}.incoming-main{display:flex;align-items:center;gap:10px;min-width:0;flex:1;cursor:pointer}.incoming-copy{min-width:0}.incoming-name{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.incoming-meta{font-size:10px;color:var(--muted2);margin-top:3px}.incoming-actions{display:flex;gap:6px;flex:none}.incoming-dismiss{width:34px;height:34px;border-radius:10px;border:1px solid var(--wire2);background:var(--ink4);color:var(--muted2);cursor:pointer;font-size:18px;line-height:1}.incoming-dismiss:hover{color:var(--cream);border-color:var(--wire3)}
+.users-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}.user-card-wrap{display:flex;align-items:center;gap:12px;min-width:0;padding:13px;border:1px solid var(--wire);background:var(--ink3);border-radius:16px;transition:.18s}.user-card-wrap:hover{border-color:var(--wire2);transform:translateY(-1px)}.user-card-main{display:flex;align-items:center;gap:12px;min-width:0;flex:1;cursor:pointer}.user-card-avatar{width:52px;height:52px;border-radius:50%;overflow:hidden;display:grid;place-items:center;flex:none;background:radial-gradient(circle at 35% 30%,#332711,#17131b);border:1px solid var(--wire2);color:var(--accent);font-weight:900}.user-card-avatar img{width:100%;height:100%;object-fit:cover}.user-card-copy{min-width:0}.user-card-name{font-size:13px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.user-card-meta{font-size:10px;color:var(--muted2);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.user-card-actions{display:flex;gap:6px;align-items:center;flex:none}.user-card-actions .btn-sm{white-space:nowrap}
+.public-profile-shell{display:grid;gap:16px}.public-profile-hero{display:flex;align-items:center;gap:20px;padding:24px;border:1px solid var(--wire2);border-radius:22px;background:radial-gradient(circle at 90% 20%,rgba(200,169,110,.09),transparent 40%),linear-gradient(145deg,var(--ink3),var(--ink2));box-shadow:var(--shadow-md)}.public-profile-avatar{width:100px;height:100px;border-radius:50%;overflow:hidden;display:grid;place-items:center;flex:none;background:#17131b;border:2px solid rgba(200,169,110,.25);color:var(--accent);font-size:30px;font-weight:900}.public-profile-avatar img{width:100%;height:100%;object-fit:cover}.public-profile-main{min-width:0;flex:1}.public-profile-name{font-size:30px;font-weight:900;letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.public-profile-meta{margin-top:5px;color:var(--muted2);font-size:11px}.public-profile-stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:11px}.public-profile-stats strong{color:var(--cream);font-size:14px}.public-profile-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:15px}.public-profile-actions .btn-sm{min-height:36px}.public-profile-panel{background:var(--ink2);border:1px solid var(--wire);border-radius:18px;padding:17px}.public-profile-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.public-profile-panel-title{font-size:15px;font-weight:900}.public-profile-note{font-size:11px;color:var(--muted2);line-height:1.65;padding:12px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid var(--wire)}
+.followers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}.social-empty{padding:28px 18px;text-align:center;color:var(--muted2);border:1px dashed var(--wire2);border-radius:14px;line-height:1.6}.social-empty strong{color:var(--cream)}
+.chat-layout{display:grid;grid-template-columns:300px minmax(0,1fr);height:min(690px,calc(100vh - 180px));min-height:500px;border:1px solid var(--wire2);border-radius:20px;overflow:hidden;background:var(--ink2);box-shadow:var(--shadow-md)}.chat-sidebar{min-width:0;border-right:1px solid var(--wire);display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 35%)}.chat-sidebar-head{display:flex;align-items:center;padding:15px 16px;border-bottom:1px solid var(--wire);min-height:58px}.chat-conversations{padding:8px;overflow:auto;display:flex;flex-direction:column;gap:5px}.chat-person{width:100%;display:flex;align-items:center;gap:10px;padding:9px;border-radius:13px;border:1px solid transparent;background:transparent;color:var(--cream);text-align:left;cursor:pointer}.chat-person:hover{background:var(--ink3);border-color:var(--wire)}.chat-person.active{background:var(--accent-dim);border-color:var(--accent-border)}.chat-person-main{min-width:0;flex:1}.chat-person-name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-person-meta{font-size:10px;color:var(--muted2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-unread{min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--accent);color:var(--ink);display:flex;align-items:center;justify-content:center;font:800 9px 'Cabinet Grotesk';flex:none}.chat-main{min-width:0;display:flex;flex-direction:column;background:radial-gradient(circle at 100% 0,rgba(200,169,110,.06),transparent 45%)}.chat-main-head{display:flex;align-items:center;gap:10px;min-height:64px;padding:10px 14px;border-bottom:1px solid var(--wire);background:rgba(10,10,15,.7);backdrop-filter:blur(14px)}.chat-head-user{display:flex;align-items:center;gap:10px;min-width:0;flex:1}.chat-messages{flex:1;overflow:auto;padding:18px 16px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}.chat-bubble{align-self:flex-start;max-width:min(74%,620px);padding:10px 12px;border-radius:16px 16px 16px 5px;background:var(--ink3);border:1px solid var(--wire);box-shadow:var(--shadow-sm)}.chat-bubble.mine{align-self:flex-end;border-radius:16px 16px 5px 16px;background:linear-gradient(145deg,rgba(200,169,110,.16),rgba(200,169,110,.07));border-color:var(--accent-border)}.chat-bubble-text{font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}.chat-time{font-size:9px;color:var(--muted);margin-top:6px;text-align:right}.chat-track-card{display:flex;align-items:center;gap:9px;margin-top:7px;padding:8px;border-radius:12px;background:rgba(0,0,0,.18);border:1px solid var(--wire2);cursor:pointer;min-width:0}.chat-track-card img{width:44px;height:44px;border-radius:9px;object-fit:cover;background:var(--ink4);flex:none}.chat-track-card>div{min-width:0}.chat-compose{display:flex;align-items:flex-end;gap:8px;padding:11px;border-top:1px solid var(--wire);background:rgba(10,10,15,.75);backdrop-filter:blur(14px)}.chat-compose textarea{min-height:42px;max-height:120px;resize:none;flex:1}.chat-compose-tools{display:flex;gap:6px}.chat-empty{display:grid;place-items:center;min-height:100%;padding:30px;text-align:center;color:var(--muted2);font-size:12px;line-height:1.6}.chat-mobile-back{display:none}.chat-track-picker-list{display:grid;gap:7px;max-height:52vh;overflow:auto;padding-right:4px}.chat-track-picker-row{display:flex;align-items:center;gap:10px;padding:9px;border:1px solid var(--wire);background:var(--ink3);border-radius:12px;color:var(--cream);text-align:left;cursor:pointer}.chat-track-picker-row:hover{border-color:var(--accent-border);background:var(--ink4)}.chat-track-picker-cover{width:44px;height:44px;border-radius:8px;overflow:hidden;background:var(--ink4);display:grid;place-items:center;color:var(--accent);flex:none}.chat-track-picker-cover img{width:100%;height:100%;object-fit:cover}.chat-track-picker-copy{min-width:0}.chat-track-picker-copy b,.chat-track-picker-copy span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-track-picker-copy span{font-size:10px;color:var(--muted2);margin-top:2px}
+@media(max-width:980px){.chat-layout{grid-template-columns:250px minmax(0,1fr)}.users-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:820px){.chat-layout{display:block;height:calc(100vh - 230px);min-height:460px}.chat-sidebar{height:100%;border-right:0}.chat-main{height:100%}.chat-has-active .chat-sidebar{display:none}.chat-has-active .chat-main{display:flex}.chat-mobile-back{display:inline-flex}.chat-main-head{min-height:58px}.public-profile-hero{align-items:flex-start}.public-profile-avatar{width:82px;height:82px}.public-profile-name{font-size:24px}.incoming-grid,.followers-grid,.users-grid{grid-template-columns:1fr}.users-toolbar{align-items:stretch}.users-rule{width:100%}}
+@media(max-width:520px){.users-search-box{min-width:0}.users-section-card{padding:14px}.public-profile-hero{padding:18px;gap:14px}.public-profile-avatar{width:68px;height:68px;font-size:22px}.public-profile-name{font-size:20px}.public-profile-stats{gap:11px}.public-profile-actions{margin-top:12px}.chat-layout{height:calc(100vh - 210px);min-height:420px;border-radius:16px}.chat-bubble{max-width:86%}.chat-compose{gap:6px}.chat-compose .btn-sm{padding:9px 10px}.chat-compose-tools .btn-sm{padding:9px 10px}}
+
+/* Separate top-level application views: only the active view is shown by JS. */
+#homeView,#myMusicView,#artistsView,#favoritesView,#playlistsView,#playlistProfileView,#artistProfileView,#albumProfileView,#searchView,#usersView,#publicUserProfileView,#chatView,#adminPanelView{box-sizing:border-box;}
+</style>
 </head>
 <body>
-
 <!-- MAIN APP -->
-<div id="app" class="page active">
+<div class="page active" id="app">
 <div class="shell">
-
 <!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="logo-wrap">
-    <div class="logo-mark">
-      <div class="logo-disc"></div>
-      <div>
-        <div class="logo-text">Venyl</div>
-        <div class="logo-sub">музыка течёт</div>
-      </div>
-    </div>
-  </div>
-  <div class="nav-section">
-    <div class="nav-label">Главное</div>
-    <a class="nav-item active" onclick="showSection('home',this)">
-      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2L2 8v10h6v-5h4v5h6V8L10 2z"/></svg></span>Главная
+<div class="logo-wrap">
+<div class="logo-mark">
+<div class="logo-disc"></div>
+<div>
+<div class="logo-text">Venyl</div>
+<div class="logo-sub">музыка течёт</div>
+</div>
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-label">Главное</div>
+<a class="nav-item active" data-section="home" onclick="showSection('home',this)">
+<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M10 2L2 8v10h6v-5h4v5h6V8L10 2z"></path></svg></span>Главная
     </a>
-    <a class="nav-item" onclick="showSection('artists',this)">
-      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg></span>Артисты
+<a class="nav-item" data-section="myMusic" onclick="showSection('myMusic',this)">
+<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M11 3a1 1 0 00-2 0v9.126A3.5 3.5 0 0010 19a3.5 3.5 0 003.5-3.5A3.49 3.49 0 0011 12.126V6.618l5.553 1.851A1 1 0 0018 7.52V4a1 1 0 00-.684-.949l-6-2A1 1 0 0010 2v1h1v0zm0 12.5A1.5 1.5 0 1110 14a1.5 1.5 0 011 1.5z"></path></svg></span>Моя музыка
+    </a><a class="nav-item" data-section="users" onclick="showSection('users',this)">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm6-1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM1.5 17a5.5 5.5 0 0 1 11 0v1h-11v-1Zm10.5 1v-1.1a6.7 6.7 0 0 0-1.1-3.7A4.5 4.5 0 0 1 18.5 17v1H12Z"/></svg></span>Пользователи <span class="nav-badge" id="usersNavBadge" style="display:none"></span>
     </a>
-    <a class="nav-item" onclick="showSection('favorites',this)">
-      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg></span>Избранное
+    <a class="nav-item" data-section="chat" onclick="showSection('chat',this)">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 3.5A2.5 2.5 0 0 1 5.5 1h9A2.5 2.5 0 0 1 17 3.5v6A2.5 2.5 0 0 1 14.5 12H9l-4.2 3.2c-.8.6-1.8.1-1.8-.9V12A2.5 2.5 0 0 1 1 9.5v-6h2Zm2.5-.5A.5.5 0 0 0 5 3.5v6c0 .28.22.5.5.5h8.9a.5.5 0 0 0 .6-.5v-6a.5.5 0 0 0-.5-.5h-9Z"/></svg></span>Чаты <span class="nav-badge" id="chatNavBadge" style="display:none"></span>
     </a>
-    <a class="nav-item" onclick="showSection('playlists',this)">
-      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12.5a1 1 0 01-1.55.83L10 14.36l-4.45 2.97A1 1 0 014 16.5V4z"/></svg></span>Плейлисты
+<a class="nav-item" data-section="artists" onclick="showSection('artists',this)">
+<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"></path></svg></span>Артисты
     </a>
-  </div>
-  <div class="nav-section admin-only">
-    <div class="nav-label">Управление</div>
-    <a class="nav-item" onclick="openUpload()">
-      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V15a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"/><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/></svg></span>Загрузить трек
+<a class="nav-item" data-section="favorites" onclick="showSection('favorites',this)">
+<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path></svg></span>Избранное
     </a>
-    <a class="nav-item" onclick="openArtistEdit()">
-      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"/></svg></span>Новый артист
+<a class="nav-item" data-section="playlists" onclick="showSection('playlists',this)">
+<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12.5a1 1 0 01-1.55.83L10 14.36l-4.45 2.97A1 1 0 014 16.5V4z"></path></svg></span>Плейлисты
     </a>
-    <a class="nav-item" onclick="openAlbumModal()">
-      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg></span>Создать альбом
+<a class="nav-item nav-search-link" onclick="focusSearch()">
+<span class="nav-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 20 20"><circle cx="9" cy="9" r="6"></circle><path d="m14 14 4 4" stroke-linecap="round"></path></svg></span>Поиск
     </a>
-    <a class="nav-item" onclick="showSection('admin',this)">
-      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v2.08c0 .65-.21 1.28-.6 1.8L2.4 13.2A1 1 0 003.2 14.8h13.6a1 1 0 00.8-1.6l-1-1.32a3 3 0 01-.6-1.8V8a6 6 0 00-6-6zm-2 15a2 2 0 004 0H8z"/></svg></span>Админ-панель
+</div>
+<div class="nav-section admin-only">
+<div class="nav-label">Управление</div>
+<a class="nav-item" onclick="openUpload()">
+<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V15a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"></path><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"></path></svg></span>Загрузить трек
     </a>
-  </div>
-  <div class="sidebar-bottom">
-    <div class="sidebar-user" onclick="handleSidebarUserClick()">
-      <div class="avatar" id="avatarInitials">GU</div>
-      <div style="min-width:0">
-        <div class="user-name" id="sidebarName">Гость</div>
-        <div class="user-role" id="sidebarEmail">Нажми чтобы войти</div>
-      </div>
-    </div>
-  </div>
+<a class="nav-item" onclick="openArtistEdit()">
+<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"></path></svg></span>Новый артист
+    </a>
+<a class="nav-item" onclick="openAlbumModal()">
+<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path></svg></span>Создать альбом
+    </a>
+<a class="nav-item" onclick="showSection('admin',this)">
+<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v2.08c0 .65-.21 1.28-.6 1.8L2.4 13.2A1 1 0 003.2 14.8h13.6a1 1 0 00.8-1.6l-1-1.32a3 3 0 01-.6-1.8V8a6 6 0 00-6-6zm-2 15a2 2 0 004 0H8z"></path></svg></span>Админ-панель
+    </a>
+</div>
+<div class="sidebar-bottom">
+<div class="sidebar-user" onclick="handleSidebarUserClick()">
+<div class="avatar" id="avatarInitials">GU</div>
+<div style="min-width:0">
+<div class="user-name" id="sidebarName">Гость</div>
+<div class="user-role" id="sidebarEmail">Нажми чтобы войти</div>
+</div>
+</div>
+</div>
 </aside>
-
 <!-- TOPBAR -->
 <header class="topbar">
-  <div class="search-wrap">
-    <svg class="search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="m15 15 3 3" stroke-linecap="round"/></svg>
-    <input class="search-input" type="text" placeholder="Треки, артисты, альбомы…" id="searchInput" name="venyl_search_no_email_fill" autocomplete="new-password" data-lpignore="true" data-1p-ignore="true" data-form-type="other" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" inputmode="search" value="" readonly onfocus="this.removeAttribute('readonly')" onpointerdown="this.removeAttribute('readonly')" oninput="filterTracks()">
-  </div>
-  <select class="language-select" id="appLangSelect" onchange="setLanguage(this.value)" title="Language"><option value="sv">Svenska</option><option value="en">English</option><option value="uk">Українська</option><option value="ru">Русский</option></select>
-  <div class="topbar-actions">
-    <button class="btn-sm admin-only" onclick="openUpload()">
-      <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V15a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"/></svg>
+<div class="search-wrap">
+<svg class="search-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 20 20"><circle cx="9" cy="9" r="6"></circle><path d="m15 15 3 3" stroke-linecap="round"></path></svg>
+<input autocapitalize="off" autocomplete="off" autocorrect="off" class="search-input" enterkeyhint="search" id="searchInput" inputmode="search" name="venyl_search_no_email_fill" oninput="filterTracks()" onkeydown="if(event.key==='Enter'){filterTracks();}" placeholder="Треки, артисты, альбомы…" spellcheck="false" type="text" value=""/>
+</div>
+<select class="language-select" id="appLangSelect" onchange="setLanguage(this.value)" title="Language"><option value="sv">Svenska</option><option value="en">English</option><option value="uk">Українська</option><option value="ru">Русский</option></select>
+<div class="topbar-actions">
+<button class="btn-sm admin-only" onclick="openUpload()">
+<svg fill="currentColor" height="13" viewbox="0 0 20 20" width="13"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V15a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"></path></svg>
       Загрузить
     </button>
-    <button class="btn-sm btn-accent admin-only" onclick="openAlbumModal()">+ Альбом</button>
-    <button class="btn-icon profile-trigger" id="topProfileBtn" onclick="handleProfileButtonClick()" title="Войти / Профиль">
-      <span class="profile-btn-inner" id="topProfileInner"><svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg></span>
-    </button>
-  </div>
+<button class="btn-sm btn-accent admin-only" onclick="openAlbumModal()">+ Альбом</button>
+<button class="btn-icon profile-trigger" id="topProfileBtn" onclick="handleProfileButtonClick()" title="Войти / Профиль">
+<span class="profile-btn-inner" id="topProfileInner"><svg fill="currentColor" height="15" viewbox="0 0 20 20" width="15"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"></path></svg></span>
+</button>
+</div>
 </header>
-
 <!-- MAIN -->
 <main id="mainContent">
-
-  <!-- HOME -->
-  <div id="homeView">
-
-    <!-- HERO - cinematic full-width -->
-    <div class="hero-v2">
-      <div class="hero-v2-left">
-        <div class="hero-tag">
-          <span class="hero-tag-dot"></span>
+<!-- HOME -->
+<div id="homeView">
+<!-- HERO - cinematic full-width -->
+<div class="hero-v2">
+<div class="hero-v2-left">
+<div class="hero-tag">
+<span class="hero-tag-dot"></span>
           Venyl Music
         </div>
-        <h1 class="hero-v2-title">Музыка, которая<br><em>живёт в моменте</em></h1>
-        <p class="hero-v2-sub">Платформа для артистов и слушателей. Загружай треки, открывай новое и создавай своё звучание.</p>
-        <div class="hero-actions">
-          <button class="btn-primary" onclick="playRandom()">
-            <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><polygon points="4,3 17,10 4,17"/></svg>
+<h1 class="hero-v2-title">Музыка, которая<br/><em>живёт в моменте</em></h1>
+<p class="hero-v2-sub">Платформа для артистов и слушателей. Загружай треки, открывай новое и создавай своё звучание.</p>
+<div class="hero-actions">
+<button class="btn-primary" onclick="playRandom()">
+<svg fill="currentColor" height="13" viewbox="0 0 20 20" width="13"><polygon points="4,3 17,10 4,17"></polygon></svg>
             Слушать всё
           </button>
-          <button class="btn-ghost" onclick="showSection('artists', document.querySelector('.nav-item:nth-child(2)'))">Открыть артистов</button>
-        </div>
-      </div>
-      <div class="hero-v2-right">
-        <div class="hero-vinyl-wrap">
-          <div class="hero-vinyl-rings">
-            <div class="hvr hvr1"></div>
-            <div class="hvr hvr2"></div>
-            <div class="hvr hvr3"></div>
-          </div>
-          <svg class="vinyl-svg hero-vinyl-lg" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="vgMain" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#1E1E2C"/>
-                <stop offset="100%" stop-color="#080810"/>
-              </radialGradient>
-              <radialGradient id="vgSheen" cx="38%" cy="32%" r="55%">
-                <stop offset="0%" stop-color="#D8B87E" stop-opacity="0.18"/>
-                <stop offset="100%" stop-color="transparent"/>
-              </radialGradient>
-              <radialGradient id="vgLabel" cx="45%" cy="40%" r="55%">
-                <stop offset="0%" stop-color="#E8C880"/>
-                <stop offset="100%" stop-color="#A07830"/>
-              </radialGradient>
-              <filter id="vinylGlow">
-                <feGaussianBlur stdDeviation="3" result="blur"/>
-                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-              </filter>
-            </defs>
-            <!-- outer disc -->
-            <circle cx="180" cy="180" r="175" fill="url(#vgMain)" stroke="#1E1E2C" stroke-width="1"/>
-            <circle cx="180" cy="180" r="175" fill="url(#vgSheen)"/>
-            <!-- groove rings -->
-            <circle cx="180" cy="180" r="168" fill="none" stroke="#18181E" stroke-width="1.2"/>
-            <circle cx="180" cy="180" r="160" fill="none" stroke="#161620" stroke-width="1"/>
-            <circle cx="180" cy="180" r="152" fill="none" stroke="#14141E" stroke-width="0.8"/>
-            <circle cx="180" cy="180" r="144" fill="none" stroke="#12121C" stroke-width="0.8"/>
-            <circle cx="180" cy="180" r="136" fill="none" stroke="#14141E" stroke-width="0.7"/>
-            <circle cx="180" cy="180" r="128" fill="none" stroke="#12121C" stroke-width="0.7"/>
-            <circle cx="180" cy="180" r="120" fill="none" stroke="#10101A" stroke-width="0.6"/>
-            <circle cx="180" cy="180" r="112" fill="none" stroke="#12121C" stroke-width="0.6"/>
-            <circle cx="180" cy="180" r="104" fill="none" stroke="#10101A" stroke-width="0.6"/>
-            <circle cx="180" cy="180" r="96" fill="none" stroke="#0E0E18" stroke-width="0.5"/>
-            <!-- label -->
-            <circle cx="180" cy="180" r="52" fill="url(#vgLabel)" filter="url(#vinylGlow)"/>
-            <circle cx="180" cy="180" r="52" fill="url(#vgSheen)" opacity="0.6"/>
-            <circle cx="180" cy="180" r="36" fill="#0A0A14"/>
-            <circle cx="180" cy="180" r="36" fill="url(#vgSheen)" opacity="0.3"/>
-            <!-- spindle -->
-            <circle cx="180" cy="180" r="8" fill="rgba(200,169,110,0.3)"/>
-            <circle cx="180" cy="180" r="5" fill="#06060E"/>
-            <!-- sheen highlight -->
-            <ellipse cx="138" cy="136" rx="28" ry="14" fill="rgba(255,255,255,0.035)" transform="rotate(-35 138 136)"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- STATS BAR -->
-    <div class="stats-bar" id="statsBar">
-      <div class="stats-bar-item">
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" style="color:var(--accent)"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/></svg>
-        <div><div class="stats-bar-val" id="statTrackCount">—</div><div class="stats-bar-label">Треков</div></div>
-      </div>
-      <div class="stats-bar-divider"></div>
-      <div class="stats-bar-item">
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" style="color:var(--accent)"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
-        <div><div class="stats-bar-val" id="statArtistCount">—</div><div class="stats-bar-label">Артиста</div></div>
-      </div>
-      <div class="stats-bar-divider"></div>
-      <div class="stats-bar-item">
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" style="color:var(--accent)"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0 4 4 0 010 5.656 1 1 0 01-1.414-1.414 2 2 0 000-2.828 1 1 0 010-1.414z"/><path d="M14.657 4.343a1 1 0 011.414 0 8 8 0 010 11.314 1 1 0 01-1.414-1.414 6 6 0 000-8.486 1 1 0 010-1.414z"/></svg>
-        <div><div class="stats-bar-val" id="statPlayCount">—</div><div class="stats-bar-label">Прослушиваний</div></div>
-      </div>
-      <div class="stats-bar-divider"></div>
-      <div class="stats-bar-item">
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" style="color:var(--accent)"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/></svg>
-        <div><div class="stats-bar-val" id="statListeners">2.4K</div><div class="stats-bar-label">Слушателей сегодня</div></div>
-      </div>
-    </div>
-
-    <!-- GENRES -->
-    <div class="mb-section">
-      <div class="section-head">
-        <div class="section-title">Жанры</div>
-        <a class="section-link">Все жанры →</a>
-      </div>
-      <div class="genre-grid" id="genreGrid"></div>
-    </div>
-
-    <!-- THREE-COLUMN DISCOVERY -->
-    <div class="discovery-grid">
-      <!-- FEATURED ARTISTS -->
-      <div class="discovery-col">
-        <div class="section-head">
-          <div class="section-title">Рекомендуемые артисты</div>
-          <a class="section-link" onclick="showSection('artists', document.querySelector('.nav-item:nth-child(2)'))">Все артисты →</a>
-        </div>
-        <div class="featured-artists-list" id="featuredArtistsList"></div>
-      </div>
-
-      <!-- NEW RELEASES -->
-      <div class="discovery-col">
-        <div class="section-head">
-          <div class="section-title">Новые релизы</div>
-          <a class="section-link" id="allReleasesLink">Все релизы →</a>
-        </div>
-        <div class="new-releases-grid" id="newReleasesGrid"></div>
-      </div>
-
-      <!-- PLAYLISTS -->
-      <div class="discovery-col">
-        <div class="section-head">
-          <div class="section-title">Плейлисты для вас</div>
-          <a class="section-link" onclick="showSection('playlists', document.querySelector('.nav-item[onclick*=playlists]'))">Все плейлисты →</a>
-        </div>
-        <div class="home-playlists-grid" id="homePlaylistsGrid"></div>
-      </div>
-    </div>
-
-    <!-- CHART (hidden title, full width) -->
-    <div class="mb-section">
-      <div class="section-head">
-        <div class="section-title">Чарт</div>
-        <span id="trackCount" style="font-size:12px;color:var(--muted);font-weight:500"></span>
-      </div>
-      <div class="tracks-header">
-        <div class="tracks-col" style="text-align:center">#</div>
-        <div></div>
-        <div class="tracks-col">Название</div>
-        <div class="tracks-col">Альбом</div>
-        <div class="tracks-col">Прослушивания</div>
-        <div></div>
-      </div>
-      <div class="tracks-list" id="tracksList"></div>
-    </div>
-  </div>
-
+<button .nav-item[data-section="artists" ]"))"="" class="btn-ghost" onclick="showSection('artists', document.querySelector(">Открыть артистов</button>
+</div>
+</div>
+<div class="hero-v2-right">
+<div class="hero-vinyl-wrap">
+<div class="hero-vinyl-rings">
+<div class="hvr hvr1"></div>
+<div class="hvr hvr2"></div>
+<div class="hvr hvr3"></div>
+</div>
+<svg class="vinyl-svg hero-vinyl-lg" viewbox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialgradient cx="50%" cy="50%" id="vgMain" r="50%">
+<stop offset="0%" stop-color="#1E1E2C"></stop>
+<stop offset="100%" stop-color="#080810"></stop>
+</radialgradient>
+<radialgradient cx="38%" cy="32%" id="vgSheen" r="55%">
+<stop offset="0%" stop-color="#D8B87E" stop-opacity="0.18"></stop>
+<stop offset="100%" stop-color="transparent"></stop>
+</radialgradient>
+<radialgradient cx="45%" cy="40%" id="vgLabel" r="55%">
+<stop offset="0%" stop-color="#E8C880"></stop>
+<stop offset="100%" stop-color="#A07830"></stop>
+</radialgradient>
+<filter id="vinylGlow">
+<fegaussianblur result="blur" stddeviation="3"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
+</defs>
+<!-- outer disc -->
+<circle cx="180" cy="180" fill="url(#vgMain)" r="175" stroke="#1E1E2C" stroke-width="1"></circle>
+<circle cx="180" cy="180" fill="url(#vgSheen)" r="175"></circle>
+<!-- groove rings -->
+<circle cx="180" cy="180" fill="none" r="168" stroke="#18181E" stroke-width="1.2"></circle>
+<circle cx="180" cy="180" fill="none" r="160" stroke="#161620" stroke-width="1"></circle>
+<circle cx="180" cy="180" fill="none" r="152" stroke="#14141E" stroke-width="0.8"></circle>
+<circle cx="180" cy="180" fill="none" r="144" stroke="#12121C" stroke-width="0.8"></circle>
+<circle cx="180" cy="180" fill="none" r="136" stroke="#14141E" stroke-width="0.7"></circle>
+<circle cx="180" cy="180" fill="none" r="128" stroke="#12121C" stroke-width="0.7"></circle>
+<circle cx="180" cy="180" fill="none" r="120" stroke="#10101A" stroke-width="0.6"></circle>
+<circle cx="180" cy="180" fill="none" r="112" stroke="#12121C" stroke-width="0.6"></circle>
+<circle cx="180" cy="180" fill="none" r="104" stroke="#10101A" stroke-width="0.6"></circle>
+<circle cx="180" cy="180" fill="none" r="96" stroke="#0E0E18" stroke-width="0.5"></circle>
+<!-- label -->
+<circle cx="180" cy="180" fill="url(#vgLabel)" filter="url(#vinylGlow)" r="52"></circle>
+<circle cx="180" cy="180" fill="url(#vgSheen)" opacity="0.6" r="52"></circle>
+<circle cx="180" cy="180" fill="#0A0A14" r="36"></circle>
+<circle cx="180" cy="180" fill="url(#vgSheen)" opacity="0.3" r="36"></circle>
+<!-- spindle -->
+<circle cx="180" cy="180" fill="rgba(200,169,110,0.3)" r="8"></circle>
+<circle cx="180" cy="180" fill="#06060E" r="5"></circle>
+<!-- sheen highlight -->
+<ellipse cx="138" cy="136" fill="rgba(255,255,255,0.035)" rx="28" ry="14" transform="rotate(-35 138 136)"></ellipse>
+</svg>
+</div>
+</div>
+</div>
+<!-- STATS BAR -->
+<div class="stats-bar" id="statsBar">
+<div class="stats-bar-item">
+<svg fill="currentColor" height="18" style="color:var(--accent)" viewbox="0 0 20 20" width="18"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+<div><div class="stats-bar-val" id="statTrackCount">—</div><div class="stats-bar-label">Треков</div></div>
+</div>
+<div class="stats-bar-divider"></div>
+<div class="stats-bar-item">
+<svg fill="currentColor" height="18" style="color:var(--accent)" viewbox="0 0 20 20" width="18"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"></path></svg>
+<div><div class="stats-bar-val" id="statArtistCount">—</div><div class="stats-bar-label">Артиста</div></div>
+</div>
+<div class="stats-bar-divider"></div>
+<div class="stats-bar-item">
+<svg fill="currentColor" height="18" style="color:var(--accent)" viewbox="0 0 20 20" width="18"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0 4 4 0 010 5.656 1 1 0 01-1.414-1.414 2 2 0 000-2.828 1 1 0 010-1.414z"></path><path d="M14.657 4.343a1 1 0 011.414 0 8 8 0 010 11.314 1 1 0 01-1.414-1.414 6 6 0 000-8.486 1 1 0 010-1.414z"></path></svg>
+<div><div class="stats-bar-val" id="statPlayCount">—</div><div class="stats-bar-label">Прослушиваний</div></div>
+</div>
+<div class="stats-bar-divider"></div>
+<div class="stats-bar-item">
+<svg fill="currentColor" height="18" style="color:var(--accent)" viewbox="0 0 20 20" width="18"><path clip-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" fill-rule="evenodd"></path></svg>
+<div><div class="stats-bar-val" id="statListeners">2.4K</div><div class="stats-bar-label">Слушателей сегодня</div></div>
+</div>
+</div>
+<!-- GENRES -->
+<div class="mb-section">
+<div class="section-head">
+<div class="section-title">Жанры</div>
+<a class="section-link">Все жанры →</a>
+</div>
+<div class="genre-grid" id="genreGrid"></div>
+</div>
+<!-- THREE-COLUMN DISCOVERY -->
+<div class="discovery-grid">
+<!-- FEATURED ARTISTS -->
+<div class="discovery-col">
+<div class="section-head">
+<div class="section-title">Рекомендуемые артисты</div>
+<a .nav-item[data-section="artists" ]"))"="" class="section-link" onclick="showSection('artists', document.querySelector(">Все артисты →</a>
+</div>
+<div class="featured-artists-list" id="featuredArtistsList"></div>
+</div>
+<!-- NEW RELEASES -->
+<div class="discovery-col">
+<div class="section-head">
+<div class="section-title">Новые релизы</div>
+<a class="section-link" id="allReleasesLink">Все релизы →</a>
+</div>
+<div class="new-releases-grid" id="newReleasesGrid"></div>
+</div>
+<!-- PLAYLISTS -->
+<div class="discovery-col">
+<div class="section-head">
+<div class="section-title">Плейлисты для вас</div>
+<a class="section-link" onclick="showSection('playlists', document.querySelector('.nav-item[onclick*=playlists]'))">Все плейлисты →</a>
+</div>
+<div class="home-playlists-grid" id="homePlaylistsGrid"></div>
+</div>
+</div>
+<section class="mb-section home-personal-section" id="homePersonalSection">
+<div class="section-head">
+<div><div class="section-title" id="homePersonalTitle">Продолжить слушать</div><div class="home-personal-sub" id="homePersonalSub">Твои последние треки</div></div>
+<button class="btn-sm btn-accent" onclick="showSection('myMusic',document.querySelector('.nav-item[data-section=\'myMusic\']'))">Моя музыка →</button>
+</div>
+<div class="continue-grid" id="continueListeningGrid"></div>
+</section>
+<!-- CHART (hidden title, full width) -->
+<div class="mb-section">
+<div class="section-head">
+<div class="section-title">Чарт</div>
+<span id="trackCount" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+</div>
+<div class="tracks-header">
+<div class="tracks-col" style="text-align:center">#</div>
+<div></div>
+<div class="tracks-col">Название</div>
+<div class="tracks-col">Альбом</div>
+<div class="tracks-col">Прослушивания</div>
+<div></div>
+</div>
+<div class="tracks-list" id="tracksList"></div>
+</div>
+</div>
+<!-- MY MUSIC -->
+<div id="myMusicView" style="display:none">
+<div class="my-music-hero">
+<div>
+<div class="hero-tag"><span class="hero-tag-dot"></span><span id="myMusicEyebrow">МОЯ МУЗЫКА</span></div>
+<h2 class="my-music-title" id="myMusicTitle">Твоя музыка</h2>
+<p class="my-music-sub" id="myMusicSub">История, рекомендации, очередь и статистика в одном месте.</p>
+</div>
+<div class="my-music-actions">
+<button class="btn-primary" onclick="playRandom()">▶ <span id="myMusicPlayAll">Слушать всё</span></button>
+<button class="btn-ghost" onclick="showSection('playlists',document.querySelector('.nav-item[data-section=\'playlists\']'))">Мои плейлисты</button>
+</div>
+</div>
+<div class="my-music-tabs" role="tablist">
+<button class="my-music-tab active" data-my-tab="overview">Обзор</button>
+<button class="my-music-tab" data-my-tab="history">История</button>
+<button class="my-music-tab" data-my-tab="recommendations">Для тебя</button>
+<button class="my-music-tab" data-my-tab="queue">Очередь</button>
+<button class="my-music-tab" data-my-tab="stats">Статистика</button>
+</div>
+<div id="myMusicContent"></div>
+</div>
 <!-- ARTISTS TAB -->
-  <div id="artistsView" style="display:none">
-    <div class="mb-section">
-      <div class="section-head">
-        <div class="section-title">Мои артисты</div>
-        <span id="artistsFollowMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
-      </div>
-      <div class="artist-grid" id="subscribedArtistsGrid"></div>
-    </div>
-
-    <div class="mb-section">
-      <div class="section-head">
-        <div class="section-title">Подборка треков</div>
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-          <span id="artistsFeedMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
-          <button class="btn-sm" onclick="shuffleSubscribedTracks()">Перемешать подборку</button>
-        </div>
-      </div>
-      <div class="tracks-header">
-        <div class="tracks-col" style="text-align:center">#</div>
-        <div></div>
-        <div class="tracks-col">Название</div>
-        <div class="tracks-col">Альбом</div>
-        <div class="tracks-col">Прослушивания</div>
-        <div></div>
-      </div>
-      <div class="tracks-list" id="subscribedTracksList"></div>
-    </div>
+<div id="artistsView" style="display:none">
+<div class="mb-section">
+<div class="section-head">
+<div class="section-title">Мои артисты</div>
+<span id="artistsFollowMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+</div>
+<div class="artist-grid" id="subscribedArtistsGrid"></div>
+</div>
+<div class="mb-section">
+<div class="section-head">
+<div class="section-title">Подборка треков</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span id="artistsFeedMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+<button class="btn-sm" onclick="shuffleSubscribedTracks()">Перемешать подборку</button>
+</div>
+</div>
+<div class="tracks-header">
+<div class="tracks-col" style="text-align:center">#</div>
+<div></div>
+<div class="tracks-col">Название</div>
+<div class="tracks-col">Альбом</div>
+<div class="tracks-col">Прослушивания</div>
+<div></div>
+</div>
+<div class="tracks-list" id="subscribedTracksList"></div>
+</div>
+</div>
+<!-- FAVORITES TAB -->
+<div id="favoritesView" style="display:none">
+<div class="mb-section">
+<div class="section-head">
+<div class="section-title">Избранное</div>
+<span id="favoritesMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+</div>
+<div class="tracks-header">
+<div class="tracks-col" style="text-align:center">#</div>
+<div></div>
+<div class="tracks-col">Название</div>
+<div class="tracks-col">Альбом</div>
+<div class="tracks-col">Прослушивания</div>
+<div></div>
+</div>
+<div class="tracks-list" id="favoriteTracksList"></div>
+</div>
+</div>
+<!-- PLAYLISTS TAB -->
+<div id="playlistsView" style="display:none">
+<div class="mb-section">
+<div class="section-head">
+<div class="section-title">Плейлисты</div>
+<button class="btn-sm btn-accent" onclick="openPlaylistEditModal()">Создать плейлист</button>
+</div>
+<div class="playlist-grid" id="playlistsGrid"></div>
+</div>
+</div>
+<!-- PLAYLIST PROFILE -->
+<div id="playlistProfileView" style="display:none"></div>
+<!-- ADMIN PANEL -->
+<div id="chatView" style="display:none">
+  <div class="section-head" style="margin-bottom:14px">
+    <div><div class="section-title">Чаты</div><div class="section-meta">Переписка доступна только при взаимной подписке.</div></div>
+    <button class="btn-sm" onclick="loadChatConversations()">Обновить</button>
   </div>
-
-  <!-- FAVORITES TAB -->
-  <div id="favoritesView" style="display:none">
-    <div class="mb-section">
-      <div class="section-head">
-        <div class="section-title">Избранное</div>
-        <span id="favoritesMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+  <div class="chat-layout" id="chatLayout">
+    <aside class="chat-sidebar">
+      <div class="chat-sidebar-head"><strong>Диалоги</strong><span class="section-meta" id="chatCountMeta" style="margin-left:auto"></span></div>
+      <div class="chat-conversations" id="chatConversations"></div>
+    </aside>
+    <section class="chat-main">
+      <div class="chat-main-head" id="chatMainHead"><button class="btn-ghost chat-mobile-back" onclick="closeActiveChat()">←</button><div class="chat-head-user"><div class="chat-empty" style="padding:0;justify-content:flex-start">Выбери собеседника слева.</div></div></div>
+      <div class="chat-messages" id="chatMessages"><div class="chat-empty">Открой профиль пользователя и подпишитесь друг на друга, чтобы начать переписку.</div></div>
+      <div class="chat-compose" id="chatCompose" style="display:none">
+        <div class="chat-compose-tools"><button class="btn-sm" onclick="openChatTrackPicker()" title="Отправить трек">♫</button></div>
+        <textarea class="form-input" id="chatMessageInput" maxlength="2000" onkeydown="chatInputKeydown(event)" placeholder="Напиши сообщение…" rows="1"></textarea>
+        <button class="btn-sm btn-accent" onclick="sendChatMessage()">Отправить</button>
       </div>
-      <div class="tracks-header">
-        <div class="tracks-col" style="text-align:center">#</div>
-        <div></div>
-        <div class="tracks-col">Название</div>
-        <div class="tracks-col">Альбом</div>
-        <div class="tracks-col">Прослушивания</div>
-        <div></div>
-      </div>
-      <div class="tracks-list" id="favoriteTracksList"></div>
-    </div>
+    </section>
   </div>
-
-
-  <!-- PLAYLISTS TAB -->
-  <div id="playlistsView" style="display:none">
-    <div class="mb-section">
-      <div class="section-head">
-        <div class="section-title">Плейлисты</div>
-        <button class="btn-sm btn-accent" onclick="openPlaylistEditModal()">Создать плейлист</button>
-      </div>
-      <div class="playlist-grid" id="playlistsGrid"></div>
-    </div>
+</div>
+<div id="usersView" style="display:none">
+  <div class="users-toolbar">
+    <div class="users-search-box"><div class="users-search-label">Поиск пользователей</div><input class="form-input users-search-input" id="usersSearchInput" oninput="loadPublicUsers(this.value)" placeholder="Введи ник пользователя…" autocomplete="off" spellcheck="false"/></div>
+    <div class="users-rule">Ищем только по нику. Email и ID в поиске не используются.</div>
   </div>
-
-  <!-- PLAYLIST PROFILE -->
-  <div id="playlistProfileView" style="display:none"></div>
-
-  <!-- ADMIN PANEL -->
-  <div id="adminPanelView" style="display:none">
-    <div class="mb-section">
-      <div class="section-head">
-        <div class="section-title">Админ-панель</div>
-        <button class="btn-sm" onclick="loadAdminUsers()">Обновить</button>
-      </div>
-      <div class="admin-panel-card">
-        <div id="adminUsersList"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SEARCH RESULTS -->
-  <div id="searchView" style="display:none">
-    <div class="mb-section">
-      <div class="section-head">
-        <div class="section-title">Поиск</div>
-        <span id="searchMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
-      </div>
-      <div id="searchEmpty" class="empty-state" style="display:none"><p>Ничего не найдено. Попробуй другое название, артиста, альбом или жанр.</p></div>
-    </div>
-
-    <div class="mb-section" id="searchArtistsSection">
-      <div class="section-head"><div class="section-title">Артисты</div><span id="searchArtistsMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
-      <div class="artist-grid" id="searchArtistsGrid"></div>
-    </div>
-
-    <div class="mb-section" id="searchAlbumsSection">
-      <div class="section-head"><div class="section-title">Альбомы</div><span id="searchAlbumsMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
-      <div class="albums-grid" id="searchAlbumsGrid"></div>
-    </div>
-
-    <div class="mb-section" id="searchTracksSection">
-      <div class="section-head"><div class="section-title">Треки</div><span id="searchTracksMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
-      <div class="tracks-header">
-        <div class="tracks-col" style="text-align:center">#</div>
-        <div></div>
-        <div class="tracks-col">Название</div>
-        <div class="tracks-col">Альбом</div>
-        <div class="tracks-col">Прослушивания</div>
-        <div></div>
-      </div>
-      <div class="tracks-list" id="searchTracksList"></div>
-    </div>
-  </div>
-
-
-  <!-- ARTIST PROFILE -->
-  <div id="artistProfileView" style="display:none"></div>
-  <div id="albumProfileView" style="display:none"></div>
-
+  <section class="users-section-card">
+    <div class="users-section-head"><div><div class="users-section-title">Тебе отправили подписку</div><div class="users-section-sub">Здесь появляются люди, которые недавно подписались на тебя.</div></div><div class="users-found-meta" id="incomingFollowersMeta"></div></div>
+    <div class="incoming-grid" id="incomingFollowersList"></div>
+  </section>
+  <section class="users-section-card">
+    <div class="users-section-head"><div><div class="users-section-title">Результаты поиска</div><div class="users-section-sub" id="usersSearchHint">Начни вводить ник, чтобы найти пользователя.</div></div><div class="users-found-meta" id="usersFoundMeta"></div></div>
+    <div class="users-grid" id="usersGrid"></div>
+  </section>
+</div>
+<div id="publicUserProfileView" style="display:none"></div><div id="adminPanelView" style="display:none">
+<div class="mb-section">
+<div class="section-head">
+<div class="section-title">Админ-панель</div>
+<button class="btn-sm" onclick="loadAdminUsers()">Обновить</button>
+</div>
+<div class="admin-panel-card">
+<div id="adminUsersList"></div>
+</div>
+</div>
+</div>
+<!-- SEARCH RESULTS -->
+<div id="searchView" style="display:none">
+<div class="mb-section">
+<div class="section-head">
+<div class="section-title">Поиск</div>
+<span id="searchMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span>
+</div>
+<div class="empty-state" id="searchEmpty" style="display:none"><p>Ничего не найдено. Попробуй другое название, артиста, альбом или жанр.</p></div>
+</div>
+<div class="mb-section" id="searchArtistsSection">
+<div class="section-head"><div class="section-title">Артисты</div><span id="searchArtistsMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
+<div class="artist-grid" id="searchArtistsGrid"></div>
+</div>
+<div class="mb-section" id="searchAlbumsSection">
+<div class="section-head"><div class="section-title">Альбомы</div><span id="searchAlbumsMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
+<div class="albums-grid" id="searchAlbumsGrid"></div>
+</div>
+<div class="mb-section" id="searchTracksSection">
+<div class="section-head"><div class="section-title">Треки</div><span id="searchTracksMeta" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
+<div class="tracks-header">
+<div class="tracks-col" style="text-align:center">#</div>
+<div></div>
+<div class="tracks-col">Название</div>
+<div class="tracks-col">Альбом</div>
+<div class="tracks-col">Прослушивания</div>
+<div></div>
+</div>
+<div class="tracks-list" id="searchTracksList"></div>
+</div>
+</div>
+<!-- ARTIST PROFILE -->
+<div id="artistProfileView" style="display:none"></div>
+<div id="albumProfileView" style="display:none"></div>
 </main>
-
 <!-- PLAYER -->
 <div class="player">
-  <div class="now-playing">
-    <div class="np-cover" id="npCover">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/></svg>
-    </div>
-    <div class="np-text">
-      <div class="np-title" id="npTitle">Выберите трек</div>
-      <div class="np-artist" id="npArtist">—</div>
-    </div>
-    <div class="np-fav" onclick="toggleFavCurrent()" id="favBtn">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg>
-    </div>
-  </div>
-  <div class="player-center">
-    <div class="player-controls">
-      <button class="ctrl-btn" onclick="shuffle()" title="Перемешать">
-        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg>
-      </button>
-      <button class="ctrl-btn" onclick="prevTrack()" title="Предыдущий">
-        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"/></svg>
-      </button>
-      <button class="play-btn" onclick="togglePlay()" id="playBtn">
-        <svg id="playIcon" viewBox="0 0 20 20" fill="currentColor"><polygon points="5,3 17,10 5,17"/></svg>
-      </button>
-      <button class="ctrl-btn" onclick="nextTrack()" title="Следующий">
-        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M11.555 14.832A1 1 0 0110 14v-2.798l-5.445 3.63A1 1 0 013 14V6a1 1 0 011.555-.832L10 8.798V6a1 1 0 011.555-.832l6 4a1 1 0 010 1.664l-6 4z"/></svg>
-      </button>
-      <button class="ctrl-btn" id="repeatBtn" onclick="toggleRepeat()" title="Повтор">
-        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"/></svg>
-      </button>
-    </div>
-    <div class="progress-wrap">
-      <span class="prog-time" id="curTime">0:00</span>
-      <div class="prog-bar" id="progBar" onclick="seekTo(event)">
-        <div class="prog-fill" id="progFill"></div>
-      </div>
-      <span class="prog-time" id="durTime">0:00</span>
-    </div>
-  </div>
-  <div class="player-right">
-    <div class="eq-bars" id="eqBars" style="display:none">
-      <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-    </div>
-    <div class="vol-wrap">
-      <div class="vol-icon">
-        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0 4 4 0 010 5.656 1 1 0 01-1.414-1.414 2 2 0 000-2.828 1 1 0 010-1.414z"/><path d="M14.657 4.343a1 1 0 011.414 0 8 8 0 010 11.314 1 1 0 01-1.414-1.414 6 6 0 000-8.486 1 1 0 010-1.414z"/></svg>
-      </div>
-      <input type="range" class="vol-slider" min="0" max="100" value="80" id="volSlider" oninput="setVolume(this.value)">
-    </div>
-  </div>
+<div class="now-playing">
+<div class="np-cover" id="npCover">
+<svg fill="currentColor" viewbox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
 </div>
-
+<div class="np-text">
+<div class="np-title" id="npTitle">Выберите трек</div>
+<div class="np-artist" id="npArtist">—</div>
+</div>
+<div class="np-fav" id="favBtn" onclick="toggleFavCurrent()">
+<svg fill="currentColor" viewbox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path></svg>
+</div>
+</div>
+<div class="player-center">
+<div class="player-controls">
+<button class="ctrl-btn" onclick="shuffle()" title="Перемешать">
+<svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg>
+</button>
+<button class="ctrl-btn" onclick="prevTrack()" title="Предыдущий">
+<svg fill="currentColor" viewbox="0 0 20 20"><path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"></path></svg>
+</button>
+<button class="play-btn" id="playBtn" onclick="togglePlay()">
+<svg fill="currentColor" id="playIcon" viewbox="0 0 20 20"><polygon points="5,3 17,10 5,17"></polygon></svg>
+</button>
+<button class="ctrl-btn" onclick="nextTrack()" title="Следующий">
+<svg fill="currentColor" viewbox="0 0 20 20"><path d="M11.555 14.832A1 1 0 0110 14v-2.798l-5.445 3.63A1 1 0 013 14V6a1 1 0 011.555-.832L10 8.798V6a1 1 0 011.555-.832l6 4a1 1 0 010 1.664l-6 4z"></path></svg>
+</button>
+<button class="ctrl-btn" id="repeatBtn" onclick="toggleRepeat()" title="Повтор">
+<svg fill="currentColor" viewbox="0 0 20 20"><path d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"></path></svg>
+</button>
+</div>
+<div class="progress-wrap">
+<span class="prog-time" id="curTime">0:00</span>
+<div class="prog-bar" id="progBar" onclick="seekTo(event)">
+<div class="prog-fill" id="progFill"></div>
+</div>
+<span class="prog-time" id="durTime">0:00</span>
+</div>
+</div>
+<div class="player-right">
+<div class="eq-bars" id="eqBars" style="display:none">
+<div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+</div>
+<div class="vol-wrap">
+<div class="vol-icon">
+<svg fill="currentColor" viewbox="0 0 20 20"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0 4 4 0 010 5.656 1 1 0 01-1.414-1.414 2 2 0 000-2.828 1 1 0 010-1.414z"></path><path d="M14.657 4.343a1 1 0 011.414 0 8 8 0 010 11.314 1 1 0 01-1.414-1.414 6 6 0 000-8.486 1 1 0 010-1.414z"></path></svg>
+</div>
+<input class="vol-slider" id="volSlider" max="100" min="0" oninput="setVolume(this.value)" type="range" value="80"/>
+</div>
+</div>
+</div>
+<nav aria-label="Мобильная навигация" class="mobile-bottom-nav">
+<button data-mobile-section="home" onclick="showSection('home')"><span>⌂</span><b>Главная</b></button>
+<button onclick="focusSearch()"><span>⌕</span><b>Поиск</b></button>
+<button data-mobile-section="myMusic" onclick="showSection('myMusic')"><span>♫</span><b>Моя музыка</b></button>
+<button data-mobile-section="favorites" onclick="showSection('favorites')"><span>♥</span><b>Избранное</b></button>
+<button data-mobile-section="playlists" onclick="showSection('playlists')"><span>▤</span><b>Плейлисты</b></button>
+</nav>
 </div><!-- .shell -->
 </div><!-- #app -->
-
 <!-- LOGIN PAGE -->
-<div id="loginPage" class="page">
-  <div class="auth-wrap">
-    <div class="auth-bg">
-      <div class="auth-bg-disc"></div>
-      <div class="auth-bg-disc"></div>
-      <div class="auth-bg-disc"></div>
-      <div class="auth-bg-glow"></div>
-    </div>
-    <div class="auth-card">
-      <div class="auth-logo-wrap">
-        <div class="auth-logo-disc"></div>
-        <div class="auth-logo-text">Venyl</div>
-      </div>
-      <div class="auth-language-row"><select class="language-select" id="loginLangSelect" onchange="setLanguage(this.value)"><option value="sv">Svenska</option><option value="en">English</option><option value="uk">Українська</option><option value="ru">Русский</option></select></div>
-      <div class="auth-eyebrow">Добро пожаловать</div>
-      <div class="auth-title">С возвращением</div>
-      <div class="auth-sub">Войди, чтобы слушать и управлять музыкой</div>
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="loginEmail" placeholder="you@example.com"></div>
-      <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
-      <button class="auth-btn-full" onclick="doLogin()">Войти</button>
-      <div class="auth-link" style="margin-top:18px">Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a></div>
-      <hr class="auth-divider">
-      <div class="auth-link"><a onclick="showApp()" style="color:var(--muted)">← Вернуться к музыке</a></div>
-    </div>
-  </div>
+<div class="page" id="loginPage">
+<div class="auth-wrap">
+<div class="auth-bg">
+<div class="auth-bg-disc"></div>
+<div class="auth-bg-disc"></div>
+<div class="auth-bg-disc"></div>
+<div class="auth-bg-glow"></div>
 </div>
-
+<div class="auth-card">
+<div class="auth-logo-wrap">
+<div class="auth-logo-disc"></div>
+<div class="auth-logo-text">Venyl</div>
+</div>
+<div class="auth-language-row"><select class="language-select" id="loginLangSelect" onchange="setLanguage(this.value)"><option value="sv">Svenska</option><option value="en">English</option><option value="uk">Українська</option><option value="ru">Русский</option></select></div>
+<div class="auth-eyebrow">Добро пожаловать</div>
+<div class="auth-title">С возвращением</div>
+<div class="auth-sub">Войди, чтобы слушать и управлять музыкой</div>
+<div class="form-group"><label class="form-label">Email</label><input class="form-input" id="loginEmail" placeholder="you@example.com" type="email"/></div>
+<div class="form-group"><label class="form-label">Пароль</label><input class="form-input" id="loginPass" onkeydown="if(event.key==='Enter')doLogin()" placeholder="••••••••" type="password"/></div>
+<button class="auth-btn-full" onclick="doLogin()">Войти</button>
+<div class="auth-link" style="margin-top:18px">Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a></div>
+<hr class="auth-divider"/>
+<div class="auth-link"><a onclick="showApp()" style="color:var(--muted)">← Вернуться к музыке</a></div>
+</div>
+</div>
+</div>
 <!-- REGISTER PAGE -->
-<div id="registerPage" class="page">
-  <div class="auth-wrap">
-    <div class="auth-bg">
-      <div class="auth-bg-disc"></div><div class="auth-bg-disc"></div><div class="auth-bg-disc"></div><div class="auth-bg-glow"></div>
-    </div>
-    <div class="auth-card">
-      <div class="auth-logo-wrap">
-        <div class="auth-logo-disc"></div>
-        <div class="auth-logo-text">Venyl</div>
-      </div>
-      <div class="auth-language-row"><select class="language-select" id="registerLangSelect" onchange="setLanguage(this.value)"><option value="sv">Svenska</option><option value="en">English</option><option value="uk">Українська</option><option value="ru">Русский</option></select></div>
-      <div class="auth-eyebrow">Новый аккаунт</div>
-      <div class="auth-title">Присоединяйся</div>
-      <div class="auth-sub">Создай аккаунт и начни слушать</div>
-      <div class="form-group"><label class="form-label">Имя</label><input class="form-input" type="text" id="registerName" placeholder="Твоё имя"></div>
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="registerEmail" placeholder="you@example.com"></div>
-      <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" type="password" id="registerPass" placeholder="Минимум 8 символов"></div>
-      <button class="auth-btn-full" onclick="doRegister()">Создать аккаунт</button>
-      <div class="auth-link" style="margin-top:18px">Уже есть аккаунт? <a onclick="showLogin()">Войти</a></div>
-    </div>
-  </div>
+<div class="page" id="registerPage">
+<div class="auth-wrap">
+<div class="auth-bg">
+<div class="auth-bg-disc"></div><div class="auth-bg-disc"></div><div class="auth-bg-disc"></div><div class="auth-bg-glow"></div>
 </div>
-
+<div class="auth-card">
+<div class="auth-logo-wrap">
+<div class="auth-logo-disc"></div>
+<div class="auth-logo-text">Venyl</div>
+</div>
+<div class="auth-language-row"><select class="language-select" id="registerLangSelect" onchange="setLanguage(this.value)"><option value="sv">Svenska</option><option value="en">English</option><option value="uk">Українська</option><option value="ru">Русский</option></select></div>
+<div class="auth-eyebrow">Новый аккаунт</div>
+<div class="auth-title">Присоединяйся</div>
+<div class="auth-sub">Создай аккаунт и начни слушать</div>
+<div class="form-group"><label class="form-label">Имя</label><input class="form-input" id="registerName" placeholder="Твоё имя" type="text"/></div>
+<div class="form-group"><label class="form-label">Email</label><input class="form-input" id="registerEmail" placeholder="you@example.com" type="email"/></div>
+<div class="form-group"><label class="form-label">Пароль</label><input class="form-input" id="registerPass" placeholder="Минимум 8 символов" type="password"/></div>
+<button class="auth-btn-full" onclick="doRegister()">Создать аккаунт</button>
+<div class="auth-link" style="margin-top:18px">Уже есть аккаунт? <a onclick="showLogin()">Войти</a></div>
+</div>
+</div>
+</div>
 <!-- UPLOAD MODAL -->
 <div class="modal-overlay" id="uploadModal" onclick="if(event.target===this)closeUpload()">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Загрузить трек</div>
-      <button class="modal-close" onclick="closeUpload()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Аудиофайл</label>
-      <div class="drop-zone" id="audioDrop" onclick="qs('audioFile').click()">
-        <div class="drop-text">Нажми или перетащи <span>MP3, WAV, FLAC</span></div>
-        <input type="file" id="audioFile" accept="audio/*" style="display:none" onchange="handleAudio(event)">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Обложка</label>
-      <div class="drop-zone" onclick="qs('coverFile').click()">
-        <div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
-        <input type="file" id="coverFile" accept="image/*" style="display:none">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Название</label><input class="form-input" type="text" id="uploadTitle" placeholder="Название трека"></div>
-      <div class="form-group"><label class="form-label">Исполнитель</label><input class="form-input" type="text" id="uploadArtist" placeholder="Имя артиста"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Альбом</label><input class="form-input" type="text" id="uploadAlbum" placeholder="Название альбома"></div>
-      <div class="form-group"><label class="form-label">Жанр</label><input class="form-input" type="text" id="uploadGenre" placeholder="Жанр"></div>
-    </div>
-    <button class="auth-btn-full" onclick="submitUpload()">Загрузить трек</button>
-  </div>
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title">Загрузить трек</div>
+<button class="modal-close" onclick="closeUpload()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
 </div>
-
+<div class="form-group">
+<label class="form-label">Аудиофайл</label>
+<div class="drop-zone" id="audioDrop" onclick="qs('audioFile').click()">
+<div class="drop-text">Нажми или перетащи <span>MP3, WAV, FLAC</span></div>
+<input accept="audio/*" id="audioFile" onchange="handleAudio(event)" style="display:none" type="file"/>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Обложка</label>
+<div class="drop-zone" onclick="qs('coverFile').click()">
+<div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
+<input accept="image/*" id="coverFile" style="display:none" type="file"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Название</label><input class="form-input" id="uploadTitle" placeholder="Название трека" type="text"/></div>
+<div class="form-group"><label class="form-label">Исполнитель</label><input class="form-input" id="uploadArtist" placeholder="Имя артиста" type="text"/></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Альбом</label><input class="form-input" id="uploadAlbum" placeholder="Название альбома" type="text"/></div>
+<div class="form-group"><label class="form-label">Жанр</label><input class="form-input" id="uploadGenre" placeholder="Жанр" type="text"/></div>
+</div>
+<button class="auth-btn-full" onclick="submitUpload()">Загрузить трек</button>
+</div>
+</div>
 <!-- ARTIST EDIT MODAL -->
 <div class="modal-overlay" id="artistEditModal" onclick="if(event.target===this)closeArtistEdit()">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="artistEditTitle">Профиль артиста</div>
-      <button class="modal-close" onclick="closeArtistEdit()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
-    </div>
-    <input type="hidden" id="artistEditId">
-    <div class="form-group"><label class="form-label">Имя артиста</label><input class="form-input" id="artistEditName" placeholder="Полное имя / псевдоним"></div>
-    <div class="form-group"><label class="form-label">Биография</label><textarea class="form-textarea" id="artistEditBio" placeholder="Расскажи об артисте…"></textarea></div>
-    <div class="form-group">
-      <label class="form-label">Фото профиля</label>
-      <div class="drop-zone" onclick="qs('artistPhotoFile').click()">
-        <div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
-        <input type="file" id="artistPhotoFile" accept="image/*" style="display:none">
-      </div>
-    </div>
-    <button class="auth-btn-full" onclick="saveArtistProfile()">Сохранить профиль</button>
-  </div>
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title" id="artistEditTitle">Профиль артиста</div>
+<button class="modal-close" onclick="closeArtistEdit()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
 </div>
-
+<input id="artistEditId" type="hidden"/>
+<div class="form-group"><label class="form-label">Имя артиста</label><input class="form-input" id="artistEditName" placeholder="Полное имя / псевдоним"/></div>
+<div class="form-group"><label class="form-label">Биография</label><textarea class="form-textarea" id="artistEditBio" placeholder="Расскажи об артисте…"></textarea></div>
+<div class="form-group">
+<label class="form-label">Фото профиля</label>
+<div class="drop-zone" onclick="qs('artistPhotoFile').click()">
+<div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
+<input accept="image/*" id="artistPhotoFile" style="display:none" type="file"/>
+</div>
+</div>
+<button class="auth-btn-full" onclick="saveArtistProfile()">Сохранить профиль</button>
+</div>
+</div>
 <!-- ARTIST TRACK MODAL -->
 <div class="modal-overlay" id="artistTrackModal" onclick="if(event.target===this)closeArtistTrackModal()">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Добавить трек артисту</div>
-      <button class="modal-close" onclick="closeArtistTrackModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
-    </div>
-    <input type="hidden" id="artistTrackArtistId">
-    <div class="form-group">
-      <label class="form-label">Аудиофайл</label>
-      <div class="drop-zone" onclick="qs('artistAudioFile').click()">
-        <div class="drop-text">Нажми или перетащи <span>MP3, WAV, FLAC</span></div>
-        <input type="file" id="artistAudioFile" accept="audio/*" style="display:none" onchange="handleArtistAudio(event)">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Обложка</label>
-      <div class="drop-zone" onclick="qs('artistCoverFile').click()">
-        <div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
-        <input type="file" id="artistCoverFile" accept="image/*" style="display:none">
-      </div>
-    </div>
-    <div class="form-group"><label class="form-label">Название</label><input class="form-input" id="artistTrackTitle" placeholder="Название трека"></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Альбом</label><input class="form-input" id="artistTrackAlbum" placeholder="Альбом"></div>
-      <div class="form-group"><label class="form-label">Жанр</label><input class="form-input" id="artistTrackGenre" placeholder="Жанр"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Фиты (через запятую)</label><input class="form-input" id="artistTrackFeatured" placeholder="morgenshtern, элджей"></div>
-    <button class="auth-btn-full" onclick="submitArtistTrack()">Добавить трек</button>
-  </div>
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title">Добавить трек артисту</div>
+<button class="modal-close" onclick="closeArtistTrackModal()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
 </div>
-
+<input id="artistTrackArtistId" type="hidden"/>
+<div class="form-group">
+<label class="form-label">Аудиофайл</label>
+<div class="drop-zone" onclick="qs('artistAudioFile').click()">
+<div class="drop-text">Нажми или перетащи <span>MP3, WAV, FLAC</span></div>
+<input accept="audio/*" id="artistAudioFile" onchange="handleArtistAudio(event)" style="display:none" type="file"/>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Обложка</label>
+<div class="drop-zone" onclick="qs('artistCoverFile').click()">
+<div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
+<input accept="image/*" id="artistCoverFile" style="display:none" type="file"/>
+</div>
+</div>
+<div class="form-group"><label class="form-label">Название</label><input class="form-input" id="artistTrackTitle" placeholder="Название трека"/></div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Альбом</label><input class="form-input" id="artistTrackAlbum" placeholder="Альбом"/></div>
+<div class="form-group"><label class="form-label">Жанр</label><input class="form-input" id="artistTrackGenre" placeholder="Жанр"/></div>
+</div>
+<div class="form-group"><label class="form-label">Фиты (через запятую)</label><input class="form-input" id="artistTrackFeatured" placeholder="morgenshtern, элджей"/></div>
+<button class="auth-btn-full" onclick="submitArtistTrack()">Добавить трек</button>
+</div>
+</div>
 <!-- ALBUM MODAL -->
 <div class="modal-overlay" id="albumModal" onclick="if(event.target===this)closeAlbumModal()">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Создать альбом</div>
-      <button class="modal-close" onclick="closeAlbumModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
-    </div>
-    <div class="form-group"><label class="form-label">Артист</label><select class="form-input" id="albumArtistSelect"></select></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Название альбома</label><input class="form-input" id="albumName" placeholder="Название"></div>
-      <div class="form-group"><label class="form-label">Описание</label><input class="form-input" id="albumDescription" placeholder="Краткое описание"></div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Обложка альбома</label>
-      <div class="drop-zone" onclick="qs('albumCoverFile').click()">
-        <div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
-        <input type="file" id="albumCoverFile" accept="image/*" style="display:none">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Аудиофайлы альбома</label>
-      <div class="drop-zone" onclick="qs('albumAudioFiles').click()">
-        <div class="drop-text">Выбери несколько аудиофайлов сразу</div>
-        <input type="file" id="albumAudioFiles" accept="audio/*" multiple style="display:none" onchange="handleAlbumFiles(event)">
-      </div>
-    </div>
-    <div id="albumTracksMeta"></div>
-    <button class="auth-btn-full" onclick="submitAlbum()">Создать альбом</button>
-  </div>
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title">Создать альбом</div>
+<button class="modal-close" onclick="closeAlbumModal()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
 </div>
-
-
+<div class="form-group"><label class="form-label">Артист</label><select class="form-input" id="albumArtistSelect"></select></div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Название альбома</label><input class="form-input" id="albumName" placeholder="Название"/></div>
+<div class="form-group"><label class="form-label">Описание</label><input class="form-input" id="albumDescription" placeholder="Краткое описание"/></div>
+</div>
+<div class="form-group">
+<label class="form-label">Обложка альбома</label>
+<div class="drop-zone" onclick="qs('albumCoverFile').click()">
+<div class="drop-text">Нажми для выбора <span>JPG, PNG</span></div>
+<input accept="image/*" id="albumCoverFile" style="display:none" type="file"/>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Аудиофайлы альбома</label>
+<div class="drop-zone" onclick="qs('albumAudioFiles').click()">
+<div class="drop-text">Выбери несколько аудиофайлов сразу</div>
+<input accept="audio/*" id="albumAudioFiles" multiple="" onchange="handleAlbumFiles(event)" style="display:none" type="file"/>
+</div>
+</div>
+<div id="albumTracksMeta"></div>
+<button class="auth-btn-full" onclick="submitAlbum()">Создать альбом</button>
+</div>
+</div>
 <div class="modal-overlay" id="profileModal" onclick="if(event.target===this)closeProfileModal()">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Редактировать профиль</div>
-      <button class="modal-close" onclick="closeProfileModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
-    </div>
-    <div class="profile-avatar-lg" id="profileAvatarPreview">U</div>
-    <div class="form-group">
-      <label class="form-label">Ник</label>
-      <input class="form-input" id="profileName" maxlength="40" placeholder="Твой ник">
-      <div class="profile-note" id="profileNickNote"></div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Аватар</label>
-      <div class="drop-zone" onclick="qs('profileAvatarFile').click()">
-        <div class="drop-text">Нажми для выбора <span>JPG, PNG, WEBP</span></div>
-        <input type="file" id="profileAvatarFile" accept="image/*" style="display:none" onchange="handleProfileAvatarPreview(event)">
-      </div>
-      <div class="profile-note" id="profileAvatarNote"></div>
-    </div>
-    <div class="form-group" id="profileColorGroup" style="display:none">
-      <label class="form-label">Цвет ника администратора</label>
-      <div class="color-row">
-        <input class="form-input" id="profileNicknameColor" type="color" value="#c8a96e" style="padding:6px;width:90px">
-        <div class="color-preview" id="profileColorPreview"></div>
-      </div>
-      <div class="profile-note">Этот параметр доступен только администратору.</div>
-    </div>
-    <div class="profile-actions-row">
-      <button class="auth-btn-full" onclick="saveProfile()">Сохранить профиль</button>
-      <button class="btn-ghost" onclick="logoutFromProfile()">Выйти</button>
-    </div>
-  </div>
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title">Редактировать профиль</div>
+<button class="modal-close" onclick="closeProfileModal()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
+</div>
+<div class="profile-avatar-lg" id="profileAvatarPreview">U</div>
+<div class="form-group"><label class="form-label">О себе</label><textarea class="form-textarea" id="profileBio" maxlength="500" placeholder="Расскажи немного о себе…"></textarea></div>
+<div class="form-group">
+<label class="form-label">Ник</label>
+<input class="form-input" id="profileName" maxlength="40" placeholder="Твой ник"/>
+<div class="profile-note" id="profileNickNote"></div>
+</div>
+<div class="form-group">
+<label class="form-label">Аватар</label>
+<div class="drop-zone" onclick="qs('profileAvatarFile').click()">
+<div class="drop-text">Нажми для выбора <span>JPG, PNG, WEBP</span></div>
+<input accept="image/*" id="profileAvatarFile" onchange="handleProfileAvatarPreview(event)" style="display:none" type="file"/>
+</div>
+<div class="profile-note" id="profileAvatarNote"></div>
+</div>
+<div class="form-group" id="profileColorGroup" style="display:none">
+<label class="form-label">Цвет ника администратора</label>
+<div class="color-row">
+<input class="form-input" id="profileNicknameColor" style="padding:6px;width:90px" type="color" value="#c8a96e"/>
+<div class="color-preview" id="profileColorPreview"></div>
+</div>
+<div class="profile-note">Этот параметр доступен только администратору.</div>
+</div>
+<div class="profile-actions-row">
+<button class="auth-btn-full" onclick="saveProfile()">Сохранить профиль</button>
+<button class="btn-ghost" onclick="logoutFromProfile()">Выйти</button>
+</div>
+</div>
 </div>
 <!-- ADMIN USER EDIT MODAL -->
 <div class="modal-overlay" id="adminUserModal" onclick="if(event.target===this)closeAdminUserModal()">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Редактировать пользователя</div>
-      <button class="modal-close" onclick="closeAdminUserModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
-    </div>
-    <input type="hidden" id="adminEditUserId">
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Имя</label><input class="form-input" id="adminEditName"></div>
-      <div class="form-group"><label class="form-label">Почта</label><input class="form-input" id="adminEditEmail" type="email"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Роль</label><select class="form-input" id="adminEditRole"><option value="user">user</option><option value="admin">admin</option></select></div>
-      <div class="form-group"><label class="form-label">Цвет ника</label><input class="form-input" id="adminEditColor" type="color" value="#c8a96e" style="padding:6px;width:96px"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Новый пароль</label><input class="form-input" id="adminEditPassword" type="text" placeholder="Оставь пустым, если не менять"></div>
-    <div class="profile-note">Текущий пароль не показывается. Админ может задать новый пароль пользователю.</div>
-    <button class="auth-btn-full" onclick="saveAdminUser()">Сохранить изменения</button>
-    <button class="btn-ghost" style="margin-top:10px;border-color:rgba(224,82,82,.45);color:var(--red);width:100%" onclick="deleteAdminUser()">Удалить аккаунт пользователя</button>
-  </div>
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title">Редактировать пользователя</div>
+<button class="modal-close" onclick="closeAdminUserModal()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
 </div>
-
-
+<input id="adminEditUserId" type="hidden"/>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Имя</label><input class="form-input" id="adminEditName"/></div>
+<div class="form-group"><label class="form-label">Почта</label><input class="form-input" id="adminEditEmail" type="email"/></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Роль</label><select class="form-input" id="adminEditRole"><option value="user">user</option><option value="admin">admin</option></select></div>
+<div class="form-group"><label class="form-label">Цвет ника</label><input class="form-input" id="adminEditColor" style="padding:6px;width:96px" type="color" value="#c8a96e"/></div>
+</div>
+<div class="form-group"><label class="form-label">Новый пароль</label><input class="form-input" id="adminEditPassword" placeholder="Оставь пустым, если не менять" type="text"/></div>
+<div class="profile-note">Текущий пароль не показывается. Админ может задать новый пароль пользователю.</div>
+<button class="auth-btn-full" onclick="saveAdminUser()">Сохранить изменения</button>
+<button class="btn-ghost" onclick="deleteAdminUser()" style="margin-top:10px;border-color:rgba(224,82,82,.45);color:var(--red);width:100%">Удалить аккаунт пользователя</button>
+</div>
+</div>
 <div class="modal-overlay" id="playlistEditModal" onclick="if(event.target===this)closePlaylistEditModal()">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="playlistEditTitle">Плейлист</div>
-      <button class="modal-close" onclick="closePlaylistEditModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
-    </div>
-    <input type="hidden" id="playlistEditId">
-    <div class="form-group"><label class="form-label">Название</label><input class="form-input" id="playlistEditName" placeholder="Мой плейлист"></div>
-    <div class="form-group">
-      <label class="form-label">Обложка</label>
-      <div class="drop-zone" onclick="qs('playlistCoverFile').click()">
-        <div class="drop-text">Нажми для выбора <span>JPG, PNG, WEBP</span></div>
-        <input type="file" id="playlistCoverFile" accept="image/*" style="display:none">
-      </div>
-    </div>
-    <button class="auth-btn-full" onclick="savePlaylist()">Сохранить</button>
-  </div>
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title" id="playlistEditTitle">Плейлист</div>
+<button class="modal-close" onclick="closePlaylistEditModal()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
 </div>
-
+<input id="playlistEditId" type="hidden"/>
+<div class="form-group"><label class="form-label">Название</label><input class="form-input" id="playlistEditName" placeholder="Мой плейлист"/></div>
+<div class="form-group">
+<label class="form-label">Обложка</label>
+<div class="drop-zone" onclick="qs('playlistCoverFile').click()">
+<div class="drop-text">Нажми для выбора <span>JPG, PNG, WEBP</span></div>
+<input accept="image/*" id="playlistCoverFile" style="display:none" type="file"/>
+</div>
+</div>
+<button class="auth-btn-full" onclick="savePlaylist()">Сохранить</button>
+</div>
+</div>
 <div class="modal-overlay" id="addToPlaylistModal" onclick="if(event.target===this)closeAddToPlaylistModal()">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Добавить в плейлист</div>
-      <button class="modal-close" onclick="closeAddToPlaylistModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
-    </div>
-    <input type="hidden" id="addPlaylistTrackId">
-    <div class="add-playlist-list" id="addPlaylistList"></div>
-  </div>
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title">Добавить в плейлист</div>
+<button class="modal-close" onclick="closeAddToPlaylistModal()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
 </div>
-
-
+<input id="addPlaylistTrackId" type="hidden"/>
+<div class="add-playlist-list" id="addPlaylistList"></div>
+</div>
+</div>
 <!-- TRACK INFO MODAL -->
 <div class="modal-overlay" id="trackInfoModal" onclick="if(event.target===this)closeTrackInfoModal()">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Сведения о треке</div>
-      <button class="modal-close" onclick="closeTrackInfoModal()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
-    </div>
-    <div id="trackInfoContent"></div>
-  </div>
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title">Сведения о треке</div>
+<button class="modal-close" onclick="closeTrackInfoModal()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
 </div>
-
+<div id="trackInfoContent"></div>
+</div>
+</div>
 <div class="toast" id="toast"></div>
+<div aria-live="polite" class="app-notice" id="appNotice" role="status"></div>
 <audio id="audioEl"></audio>
-
 <script>
 const BASE='';
-const state={tracks:[],filtered:[],artists:[],currentArtist:null,currentAlbum:null,currentIdx:-1,currentTrack:null,isPlaying:false,favorites:new Set(),favoriteTracks:[],genres:new Set(),user:null,isAdmin:false,albumFiles:[],renderedLists:{},subscribedArtists:[],subscribedTracks:[],activeSection:'home',searchQuery:'',adminUsers:[],playlists:[],currentPlaylist:null,queue:[],excludedTracks:new Set(JSON.parse(localStorage.getItem('venyl_excluded_tracks')||'[]'))};
+const state={tracks:[],filtered:[],artists:[],currentArtist:null,currentAlbum:null,currentIdx:-1,currentTrack:null,isPlaying:false,favorites:new Set(),favoriteTracks:[],genres:new Set(),user:null,isAdmin:false,albumFiles:[],renderedLists:{},subscribedArtists:[],subscribedTracks:[],activeSection:'home',searchQuery:'',adminUsers:[],playlists:[],currentPlaylist:null,queue:[],publicUsers:[],incomingFollowers:[],chatConversations:[],currentChatUser:null,chatDraftTrackId:null,chatPoll:null,excludedTracks:new Set(JSON.parse(localStorage.getItem('venyl_excluded_tracks')||'[]'))};
+window.state=state;
 const audio=qs('audioEl');
 const CHART_LIMIT=50;
 function sortByPopularity(list){return [...(list||[])].sort((a,b)=>(Number(b.playCount)||0)-(Number(a.playCount)||0) || (Number(b.id)||0)-(Number(a.id)||0))}
@@ -2114,7 +2190,7 @@ function getChartTracks(list=state.tracks){return sortByPopularity(list).slice(0
 function qs(id){return document.getElementById(id)}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function fmtTime(s){s=Number(s||0);return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0')}
-async function api(url,options={}){const res=await fetch(BASE+url,{credentials:'include',...options});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||'Ошибка запроса');return data}
+async function api(url,options={}){let res;try{res=await fetch(BASE+url,{credentials:'include',headers:{Accept:'application/json',...(options.headers||{})},...options})}catch{throw new Error('Не удалось подключиться к Venyl. Проверь соединение.')}const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||`Ошибка запроса (${res.status})`);return data}
 
 let toastTimer;
 function toast(msg,type=''){
@@ -2176,8 +2252,29 @@ async function loadFavorites(){
   updatePlayerMeta();
 }
 
-async function loadTracks(){const data=await api('/api/tracks').catch(()=>({tracks:[]}));state.tracks=sortByPopularity(Array.isArray(data.tracks)?data.tracks:[]);state.filtered=getChartTracks();renderGenres();renderTracks(state.filtered,'tracksList');renderFavoritesSection();if(state.searchQuery)renderSearchResults(state.searchQuery);updatePlayerMeta();renderHomeAll();}
-async function loadArtists(){const data=await api('/api/artists').catch(()=>({artists:[]}));state.artists=data.artists||[];renderArtists();renderArtistSelect();renderSubscribedArtistsSection();if(state.searchQuery)renderSearchResults(state.searchQuery)}
+function renderTrackSkeleton(targetId='tracksList',count=6){const el=qs(targetId);if(el)el.innerHTML='<div class="skeleton-list">'+Array.from({length:count},()=>'<div class="skeleton-row"></div>').join('')+'</div>'}
+function renderGridSkeleton(targetId='featuredArtistsList',count=4){const el=qs(targetId);if(el)el.innerHTML='<div class="skeleton-list">'+Array.from({length:count},()=>'<div class="skeleton-card"></div>').join('')+'</div>'}
+function showNotice(msg,error=false){const el=qs('appNotice');if(!el)return;el.textContent=msg;el.className='app-notice show'+(error?' error':'');clearTimeout(window.__venylNoticeTimer);window.__venylNoticeTimer=setTimeout(()=>el.classList.remove('show'),3600)}
+async function loadTracks(){
+  renderTrackSkeleton('tracksList',7);
+  try{
+    const data=await api('/api/tracks');
+    state.tracks=sortByPopularity(Array.isArray(data.tracks)?data.tracks:[]);
+    state.filtered=getChartTracks();renderGenres();renderTracks(state.filtered,'tracksList');renderFavoritesSection();if(state.searchQuery)renderSearchResults(state.searchQuery);updatePlayerMeta();renderHomeAll();
+  }catch(e){
+    state.tracks=[];state.filtered=[];
+    const box=qs('tracksList');if(box)box.innerHTML='<div class="error-state"><b>Не удалось загрузить музыку</b><span>Проверь соединение и попробуй ещё раз.</span><br><button class="btn-sm btn-accent" onclick="loadTracks()">Повторить</button></div>';
+    showNotice(e.message||'Не удалось загрузить треки',true);
+  }
+}
+async function loadArtists(){
+  renderGridSkeleton('featuredArtistsList',4);
+  try{
+    const data=await api('/api/artists');state.artists=data.artists||[];renderArtists();renderArtistSelect();renderSubscribedArtistsSection();if(state.searchQuery)renderSearchResults(state.searchQuery);
+  }catch(e){
+    state.artists=[];renderArtists();showNotice(e.message||'Не удалось загрузить артистов',true);
+  }
+}
 
 function renderGenres(){
   state.genres.clear();
@@ -2194,7 +2291,8 @@ function artistCardMarkup(a,{showFollowButton=false}={}){
   </div>`;
 }
 function renderArtists(){
-  const grid=qs('artistGrid');
+  const grid=qs('subscribedArtistsGrid');
+  if(!grid)return;
   if(!state.artists.length){grid.innerHTML='<div style="color:var(--muted)">Артистов пока нет</div>';return}
   grid.innerHTML=state.artists.map(a=>artistCardMarkup(a,{showFollowButton:!!state.user})).join('');
   renderFeaturedArtists();
@@ -2280,6 +2378,7 @@ function filterByGenre(g,el){
   renderTracks(state.filtered,'tracksList');
 }
 
+function focusSearch(){const input=qs('searchInput');if(!input)return;input.focus();input.select();window.scrollTo({top:0,behavior:'smooth'});}
 function normSearch(s){return String(s||'').toLowerCase().trim()}
 function trackMatches(t,q){
   const hay=[t.title,t.artist,t.album,t.genre].map(normSearch).join(' ');
@@ -2315,16 +2414,20 @@ function filterTracks(){
   renderSearchResults(q);
 }
 function hideAllMainViews(){
-  ['homeView','artistsView','favoritesView','playlistsView','playlistProfileView','artistProfileView','albumProfileView','searchView','adminPanelView'].forEach(id=>{const el=qs(id);if(el)el.style.display='none'});
+  ['homeView','myMusicView','artistsView','favoritesView','playlistsView','playlistProfileView','artistProfileView','albumProfileView','searchView','usersView','publicUserProfileView','chatView','adminPanelView'].forEach(id=>{const el=qs(id);if(el)el.style.display='none'});
 }
 function hideSearchView(){
   qs('searchView').style.display='none';
   if(state.activeSection==='artists'){qs('artistsView').style.display='block';renderSubscribedArtistsSection();return}
+  if(state.activeSection==='myMusic'){qs('myMusicView').style.display='block';renderMyMusicPage('overview');return}
   if(state.activeSection==='favorites'){qs('favoritesView').style.display='block';renderFavoritesSection();return}
   if(state.activeSection==='playlists'){qs('playlistsView').style.display='block';renderPlaylistsSection();return}
   if(state.activeSection==='playlistProfile'&&state.currentPlaylist){qs('playlistProfileView').style.display='block';return}
   if(state.activeSection==='artistProfile'&&state.currentArtist){qs('artistProfileView').style.display='block';return}
   if(state.activeSection==='albumProfile'&&state.currentAlbum){qs('albumProfileView').style.display='block';return}
+  if(state.activeSection==='users'){qs('usersView').style.display='block';if(typeof loadPublicUsers==='function')loadPublicUsers(qs('usersSearchInput')?.value||'');return}
+  if(state.activeSection==='publicUserProfile'&&window.state?.currentPublicUser){qs('publicUserProfileView').style.display='block';return}
+  if(state.activeSection==='chat'){qs('chatView').style.display='block';if(typeof loadChatConversations==='function')loadChatConversations();return}
   qs('homeView').style.display='block';
   state.filtered=getChartTracks();
   renderTracks(state.filtered,'tracksList');
@@ -2434,6 +2537,7 @@ function renderTracks(list=state.filtered,targetId='tracksList'){
           <button class="track-menu-item ${(t.album&&t.albumId)?'':'disabled'}" onclick="${(t.album&&t.albumId)?`goToTrackAlbum(${t.id});closeTrackMenus()`:'event.preventDefault()'}"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 10a2 2 0 110-4 2 2 0 010 4z"/></svg><span class="menu-text">К альбому</span></button>
           <button class="track-menu-item" onclick="showTrackInfo(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M18 10A8 8 0 112 10a8 8 0 0116 0zM9 9a1 1 0 000 2v4a1 1 0 102 0v-4a1 1 0 00-1-1H9zm1-4a1.25 1.25 0 100 2.5A1.25 1.25 0 0010 5z"/></svg><span class="menu-text">Посмотреть сведения</span></button>
           <button class="track-menu-item" onclick="shareTrack(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M15 8a3 3 0 10-2.83-4H12a3 3 0 00.17 1L7.6 7.29a3 3 0 100 5.42L12.17 15A3 3 0 1013 13.83L8.43 11.54a3.04 3.04 0 000-3.08L13 6.17A3 3 0 0015 8z"/></svg><span class="menu-text">Поделиться</span></button>
+          <button class="track-menu-item" onclick="sendTrackToChat(${t.id});closeTrackMenus()"><span style="width:18px;display:inline-flex;justify-content:center">💬</span><span class="menu-text">Отправить в чат</span></button>
           ${targetId==='playlistTracksList'?`<div class="track-menu-sep"></div><button class="track-menu-item" onclick="movePlaylistTrack(${t.id},-1);closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 4l5 6H5l5-6zm0 12l-5-6h10l-5 6z"/></svg><span class="menu-text">Переместить выше</span></button><button class="track-menu-item" onclick="movePlaylistTrack(${t.id},1);closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 16l-5-6h10l-5 6zM10 4l5 6H5l5-6z"/></svg><span class="menu-text">Переместить ниже</span></button><button class="track-menu-item danger" onclick="removeTrackFromPlaylist(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M6 7a1 1 0 012 0v8a1 1 0 11-2 0V7zm6 0a1 1 0 112 0v8a1 1 0 11-2 0V7z"/><path fill-rule="evenodd" d="M4 4a1 1 0 011-1h3a1 1 0 011-1h2a1 1 0 011 1h3a1 1 0 110 2H5a1 1 0 01-1-1zm1 3a1 1 0 011-1h8a1 1 0 011 1l-.6 9.1A2 2 0 0112.4 18H7.6a2 2 0 01-2-1.9L5 7z" clip-rule="evenodd"/></svg><span class="menu-text">Удалить из плейлиста</span></button>`:''}
           ${state.isAdmin?`<div class="track-menu-sep"></div><button class="track-menu-item" onclick="editTrack(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-9.9 9.9-3.536.707.707-3.535 9.9-9.9z"/></svg><span class="menu-text">Редактировать трек</span></button><button class="track-menu-item danger" onclick="deleteTrack(${t.id});closeTrackMenus()"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 2a1 1 0 00-1 1v1H4a1 1 0 100 2h12a1 1 0 100-2h-3V3a1 1 0 00-1-1H8zM6 7a1 1 0 011 1v8a1 1 0 102 0V8a1 1 0 00-1-1H7zm5 1a1 1 0 112 0v8a1 1 0 11-2 0V8z" clip-rule="evenodd"/></svg><span class="menu-text">Удалить трек</span></button>`:''}
         </div>
@@ -2483,7 +2587,9 @@ function playTrackNext(trackId){
 function addTrackToQueue(trackId){
   const t=findTrackById(trackId);
   if(!t)return toast('Трек не найден','err');
+  if(state.queue.some(x=>Number(x.id)===Number(t.id))) return toast('Этот трек уже в очереди','err');
   state.queue.push(t);
+  try{localStorage.setItem('venyl_queue_v2',JSON.stringify(state.queue.slice(0,100)))}catch{}
   toast('Добавлено в очередь','ok');
 }
 function excludeTrack(trackId){
@@ -2522,7 +2628,7 @@ async function shareTrack(trackId){
   try{
     if(navigator.share){await navigator.share({title:text,text,url});}
     else if(navigator.clipboard){await navigator.clipboard.writeText(`${text} ${url}`);toast('Ссылка скопирована','ok');}
-    else{prompt('Скопируй ссылку:', `${text} ${url}`);}
+    else{toast('Ссылка: '+url);}
   }catch{toast('Не удалось поделиться','err')}
 }
 
@@ -2552,11 +2658,10 @@ function updatePlayerMeta(){
   qs('favBtn').classList.toggle('active', !!(t && state.favorites.has(Number(t.id))));
 }
 
-function togglePlay(){
-  if(!state.currentTrack){if(state.filtered[0])playTrackObject(state.filtered[0],0,state.filtered);return}
-  if(state.isPlaying){audio.pause();state.isPlaying=false;qs('eqBars').style.display='none'}
-  else{audio.play().catch(()=>{});state.isPlaying=true;qs('eqBars').style.display='flex'}
-  updatePlayBtn();
+async function togglePlay(){
+  if(!state.currentTrack){if(state.filtered[0])return playTrackObject(state.filtered[0],0,state.filtered);return}
+  if(state.isPlaying){audio.pause();return}
+  try{await audio.play()}catch{state.isPlaying=false;updatePlayBtn();toast('Не удалось возобновить воспроизведение','err')}
 }
 function updatePlayBtn(){
   qs('playIcon').innerHTML=state.isPlaying
@@ -2578,7 +2683,7 @@ function shuffle(){if(!state.filtered.length)return;const i=Math.floor(Math.rand
 function toggleRepeat(){audio.loop=!audio.loop;qs('repeatBtn').classList.toggle('active',audio.loop);toast(audio.loop?'Повтор включён':'Повтор выключен')}
 function playRandom(){shuffle()}
 function seekTo(e){if(!audio.duration)return;const r=qs('progBar').getBoundingClientRect();audio.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*audio.duration}
-function setVolume(v){audio.volume=Number(v)/100}
+function setVolume(v){audio.volume=Number(v)/100;localStorage.setItem('venyl_volume',String(Number(v)||0))}
 
 audio.addEventListener('timeupdate',()=>{if(!audio.duration)return;qs('progFill').style.width=(audio.currentTime/audio.duration*100)+'%';qs('curTime').textContent=fmtTime(audio.currentTime);qs('durTime').textContent=fmtTime(audio.duration)});
 audio.addEventListener('ended',nextTrack);
@@ -3034,28 +3139,27 @@ async function submitAlbum(){
   }catch(e){toast(e.message||'Не удалось создать альбом','err')}
 }
 
-async function editTrack(id){
-  const t=state.tracks.find(x=>x.id===id)||(state.currentArtist?.tracks||[]).find(x=>x.id===id);if(!t)return;
-  const title=prompt('Название трека',t.title);if(title===null)return;
-  const artist=prompt('Артисты через запятую',t.artist||'');if(artist===null)return;
-  const album=prompt('Альбом',t.album||'');if(album===null)return;
-  const genre=prompt('Жанр',t.genre||'');if(genre===null)return;
-  try{
-    await api('/api/tracks/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,artist,album,genre})});
-    toast('Трек обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);
-  }catch(e){toast(e.message||'Не удалось обновить трек','err')}
+function editTrack(id){
+  const t=state.tracks.find(x=>Number(x.id)===Number(id))||(state.currentArtist?.tracks||[]).find(x=>Number(x.id)===Number(id));if(!t)return;
+  qs('trackEditId').value=t.id;qs('trackEditTitle').value=t.title||'';qs('trackEditArtist').value=t.artist||'';qs('trackEditAlbum').value=t.album||'';qs('trackEditGenre').value=t.genre||'';qs('trackEditModal').classList.add('open');
 }
-async function editAlbum(id){
-  const al=state.currentArtist?.albums?.find(x=>x.id===id);if(!al)return;
-  const name=prompt('Название альбома',al.name);if(name===null)return;
-  const description=prompt('Описание альбома',al.description||'');if(description===null)return;
-  const fd=new FormData();fd.append('name',name);fd.append('description',description);
-  try{
-    const r=await fetch('/api/albums/'+id,{method:'PUT',body:fd,credentials:'include'});
-    const data=await r.json().catch(()=>({}));
-    if(!r.ok)throw new Error(data.error||'Не удалось обновить альбом');
-    toast('Альбом обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);
-  }catch(e){toast(e.message||'Не удалось обновить альбом','err')}
+function closeTrackEditModal(){qs('trackEditModal').classList.remove('open')}
+async function saveTrackEdit(){
+  const id=Number(qs('trackEditId').value);const title=qs('trackEditTitle').value.trim();const artist=qs('trackEditArtist').value.trim();const album=qs('trackEditAlbum').value.trim();const genre=qs('trackEditGenre').value.trim();
+  if(!title||!artist)return toast('Название и артист обязательны','err');
+  try{await api('/api/tracks/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,artist,album,genre})});closeTrackEditModal();toast('Трек обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);}
+  catch(e){toast(e.message||'Не удалось обновить трек','err')}
+}
+function editAlbum(id){
+  const al=(state.currentArtist?.albums||[]).find(x=>Number(x.id)===Number(id));if(!al)return;
+  qs('albumEditId').value=al.id;qs('albumEditName').value=al.name||'';qs('albumEditDescription').value=al.description||'';qs('albumEditModal').classList.add('open');
+}
+function closeAlbumEditModal(){qs('albumEditModal').classList.remove('open')}
+async function saveAlbumEdit(){
+  const id=Number(qs('albumEditId').value);const name=qs('albumEditName').value.trim();const description=qs('albumEditDescription').value.trim();
+  if(!name)return toast('Введи название альбома','err');const fd=new FormData();fd.append('name',name);fd.append('description',description);
+  try{const r=await fetch('/api/albums/'+id,{method:'PUT',body:fd,credentials:'include'});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'Не удалось обновить альбом');closeAlbumEditModal();toast('Альбом обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);}
+  catch(e){toast(e.message||'Не удалось обновить альбом','err')}
 }
 async function deleteAlbum(id){
   if(!confirm('Удалить альбом? Треки останутся, но без альбома.'))return;
@@ -3068,7 +3172,7 @@ async function deleteAlbum(id){
 
 function syncProfileModal(){
   if(!state.user)return;
-  qs('profileName').value=state.user.name||'';
+  qs('profileName').value=state.user.name||''; if(qs('profileBio')) qs('profileBio').value=state.user.bio||'';
   qs('profileAvatarPreview').innerHTML=avatarMarkup(state.user);
   qs('profileNickNote').textContent=state.isAdmin ? 'Администратор может менять ник без ограничений.' : formatCooldown(state.user.nicknameCanChangeAt, 'Ник');
   qs('profileAvatarNote').textContent=state.isAdmin ? 'Администратор может менять аватар без ограничений.' : formatCooldown(state.user.avatarCanChangeAt, 'Аватар');
@@ -3225,7 +3329,10 @@ async function deleteAdminUser(id){
 function showSection(s,el){
   if(!state.user){ showLogin(); return; }
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.mobile-bottom-nav button').forEach(n=>n.classList.toggle('active',n.dataset.mobileSection===s));
   if(el)el.classList.add('active');
+  else { const nav=document.querySelector(`.nav-item[data-section=\"${s}\"]`); if(nav)nav.classList.add('active'); }
+  if(typeof stopChatWhenLeaving==='function') stopChatWhenLeaving(s);
   clearSearch(false);
   state.activeSection=s;
   hideAllMainViews();
@@ -3233,6 +3340,22 @@ function showSection(s,el){
     if(!state.isAdmin){qs('homeView').style.display='block';toast('Админ-панель доступна только администратору','err');return;}
     qs('adminPanelView').style.display='block';
     loadAdminUsers();
+    return;
+  }
+  if(s==='myMusic'){
+    qs('myMusicView').style.display='block';
+    renderMyMusicPage('overview');
+    return;
+  }
+  if(s==='users'){
+    qs('usersView').style.display='block';
+    if(typeof loadPublicUsers==='function') loadPublicUsers(qs('usersSearchInput')?.value||'');
+    return;
+  }
+  if(s==='chat'){
+    qs('chatView').style.display='block';
+    if(typeof loadChatConversations==='function') loadChatConversations();
+    if(typeof startChatPolling==='function') startChatPolling();
     return;
   }
   if(s==='favorites'){
@@ -3253,33 +3376,20 @@ function showSection(s,el){
   qs('homeView').style.display='block';
   state.filtered=getChartTracks();
   renderTracks(state.filtered,'tracksList');
+  renderHomeAll();
 }
 
 function resetSearchInput(force=false){
-  const input=qs('searchInput');
-  if(!input)return;
-  const v=String(input.value||'').trim();
-  const looksLikeEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  const ownEmail=state.user && String(state.user.email||'').toLowerCase();
-  const shouldClear=force || !v || looksLikeEmail || (ownEmail && v.toLowerCase()===ownEmail);
-  input.setAttribute('autocomplete','new-password');
-  input.setAttribute('name','venyl_search_'+Date.now());
-  input.setAttribute('data-lpignore','true');
-  input.setAttribute('data-1p-ignore','true');
-  input.setAttribute('data-form-type','other');
-  input.setAttribute('value','');
-  if(shouldClear){
-    input.value='';
-    input.defaultValue='';
-    if(typeof closeSearchView==='function') closeSearchView();
-  }
+  const input=qs('searchInput'); if(!input)return;
+  input.setAttribute('autocomplete','off');
+  if(force && document.activeElement!==input){ input.value=''; state.searchQuery=''; }
 }
 function protectSearchFromEmailAutofill(){
   const input=qs('searchInput');
   if(!input)return;
   resetSearchInput(true);
   input.addEventListener('focus',()=>{ input.removeAttribute('readonly'); resetSearchInput(); });
-  input.addEventListener('blur',()=>resetSearchInput());
+  input.addEventListener('blur',()=>{ input.setAttribute('autocomplete','off'); });
   let tries=0;
   const timer=setInterval(()=>{
     resetSearchInput();
@@ -3416,11 +3526,113 @@ function renderHomePlaylists(){
     </div>`).join('');
 }
 
+function getClientHistory(){
+  try{return JSON.parse(localStorage.getItem('venyl_client_history_v2')||'[]').filter(x=>x&&x.id)}catch{return[]}
+}
+function getSavedPosition(id){
+  const n=Number(localStorage.getItem('venyl_pos_'+id));
+  return Number.isFinite(n)&&n>0?n:0;
+}
+function formatAgo(value){
+  if(!value)return '';
+  const d=new Date(String(value).replace(' ','T'));
+  if(Number.isNaN(d.getTime()))return '';
+  const diff=Math.max(0,Date.now()-d.getTime());
+  const m=Math.floor(diff/60000); if(m<1)return 'только что';
+  if(m<60)return `${m} мин назад`;
+  const h=Math.floor(m/60); if(h<24)return `${h} ч назад`;
+  const days=Math.floor(h/24); if(days<7)return `${days} дн назад`;
+  return d.toLocaleDateString(getLanguage()==='en'?'en-US':'ru-RU');
+}
+function miniTrackCard(t,extra=''){
+  const pos=getSavedPosition(t.id);
+  const progress=(pos&&t.duration&&Number(t.duration)>0)?Math.min(100,pos/Number(t.duration)*100):0;
+  return `<div class="mini-track-card" onclick="playTrackById(${Number(t.id)})">
+    <div class="mini-track-cover">${t.coverUrl?`<img src="${esc(t.coverUrl)}" alt="">`:'<span>♫</span>'}${progress>1?`<div class="mini-progress"><i style="width:${progress}%"></i></div>`:''}</div>
+    <div class="mini-track-info"><b>${esc(t.title)}</b><span>${esc(t.artist||'—')}</span>${extra?`<small>${esc(extra)}</small>`:''}</div>
+  </div>`;
+}
+async function fetchMyHistory(){
+  const local=getClientHistory();
+  if(!state.user)return local;
+  try{const d=await api('/api/history');return Array.isArray(d.history)&&d.history.length?d.history:local}catch{return local}
+}
+async function fetchMyRecommendations(){
+  if(!state.user)return [];
+  try{const d=await api('/api/recommendations');return Array.isArray(d.tracks)?d.tracks:[]}catch{return []}
+}
+async function fetchMyStats(){
+  if(!state.user)return null;
+  try{const d=await api('/api/me/stats');return d.stats||null}catch{return null}
+}
+function renderContinueListening(){
+  const box=qs('continueListeningGrid'); if(!box)return;
+  const h=getClientHistory();
+  if(!h.length){
+    box.innerHTML=`<div class="personal-empty"><div class="personal-empty-icon">▶</div><div><b>Здесь будут твои последние треки</b><span>Запусти музыку — Venyl запомнит, что ты слушал.</span></div></div>`;
+    return;
+  }
+  const byId=new Map(state.tracks.map(t=>[Number(t.id),t]));
+  const items=h.slice(0,5).map(x=>byId.get(Number(x.id))||x).filter(Boolean);
+  box.innerHTML=items.length?items.map(x=>miniTrackCard(x,formatAgo(x.at||x.playedAt))).join(''):'<div class="personal-empty">История пока пуста.</div>';
+}
+function myMusicQuickCard(icon,title,value,tab){return `<button class="my-quick-card" onclick="renderMyMusicPage('${tab}')"><span class="my-quick-icon">${icon}</span><b>${title}</b><small>${value}</small></button>`}
+async function renderMyMusicPage(tab='overview'){
+  const box=qs('myMusicContent'); if(!box)return;
+  document.querySelectorAll('.my-music-tab').forEach(b=>b.classList.toggle('active',b.dataset.myTab===tab));
+  box.innerHTML='<div class="page-loading"><div class="loading-dot"></div><span>Загрузка…</span></div>';
+  if(tab==='overview'){
+    const [history,recs,stats]=await Promise.all([fetchMyHistory(),fetchMyRecommendations(),fetchMyStats()]);
+    const byId=new Map(state.tracks.map(t=>[Number(t.id),t]));
+    const recent=history.slice(0,6).map(x=>byId.get(Number(x.id))||x).filter(Boolean);
+    const recommended=recs.slice(0,6);
+    const q=state.queue||[];
+    box.innerHTML=`<div class="my-overview-grid">
+      <section class="my-card my-card-wide"><div class="my-card-head"><div><h3>Продолжить слушать</h3><p>Последние треки</p></div><button class="text-link" onclick="renderMyMusicPage('history')">Вся история →</button></div>
+        ${recent.length?`<div class="continue-grid large">${recent.map(x=>miniTrackCard(x,formatAgo(x.playedAt||x.at))).join('')}</div>`:'<div class="personal-empty"><div class="personal-empty-icon">♪</div><div><b>История пока пуста</b><span>Послушай несколько треков — здесь появится твоя лента.</span></div></div>'}</section>
+      <section class="my-card"><div class="my-card-head"><div><h3>Твоя статистика</h3><p>По истории прослушиваний</p></div><button class="text-link" onclick="renderMyMusicPage('stats')">Подробнее →</button></div>
+        <div class="stats-mini-grid"><div><b>${stats?.plays||0}</b><span>прослушиваний</span></div><div><b>${stats?.uniqueTracks||0}</b><span>уникальных треков</span></div><div><b>${stats?.minutes||0}</b><span>минут</span></div></div></section>
+      <section class="my-card my-card-wide"><div class="my-card-head"><div><h3>Для тебя</h3><p>Подборка по твоим привычкам</p></div><button class="text-link" onclick="renderMyMusicPage('recommendations')">Больше →</button></div>
+        ${recommended.length?`<div class="continue-grid">${recommended.map(x=>miniTrackCard(x)).join('')}</div>`:'<div class="personal-empty"><div class="personal-empty-icon">✦</div><div><b>Нам нужно немного данных</b><span>Добавь любимые треки и послушай музыку, чтобы собрать рекомендации.</span></div></div>'}</section>
+      <section class="my-card"><div class="my-card-head"><div><h3>Очередь</h3><p>Сейчас в плеере</p></div><button class="text-link" onclick="renderMyMusicPage('queue')">Открыть →</button></div>
+        ${q.length?`<div class="queue-preview">${q.slice(0,4).map((x,i)=>`<button onclick="playTrackById(${Number(x.id)})"><span>${i+1}</span><b>${esc(x.title)}</b><small>${esc(x.artist||'')}</small></button>`).join('')}</div>`:'<div class="personal-empty compact"><span>Очередь пуста</span></div>'}</section>
+    </div>`;
+    return;
+  }
+  if(tab==='history'){
+    const history=await fetchMyHistory();
+    box.innerHTML=`<section class="my-card full"><div class="my-card-head"><div><h3>История прослушиваний</h3><p>${history.length} последних записей</p></div><button class="btn-sm" onclick="clearMyLocalHistory()">Очистить локальную историю</button></div>${history.length?`<div class="my-track-list">${history.map((x,i)=>`<button class="my-list-row" onclick="playTrackById(${Number(x.id)})"><span class="my-list-num">${i+1}</span><div class="my-list-cover">${x.coverUrl?`<img src="${esc(x.coverUrl)}" alt="">`:'♫'}</div><div class="my-list-main"><b>${esc(x.title)}</b><span>${esc(x.artist||'—')}</span></div><small>${formatAgo(x.playedAt||x.at)}</small><span>▶</span></button>`).join('')}</div>`:'<div class="personal-empty"><b>История пуста</b><span>Запусти любой трек, и он появится здесь.</span></div>'}</section>`;
+    return;
+  }
+  if(tab==='recommendations'){
+    let recs=await fetchMyRecommendations();
+    if(!recs.length){
+      const fav=state.favoriteTracks||[]; const genres=new Set(fav.flatMap(t=>String(t.genre||'').split(',').map(s=>s.trim()).filter(Boolean)));
+      recs=state.tracks.filter(t=>genres.has(t.genre)&&!state.favorites.has(Number(t.id))).slice(0,30);
+    }
+    box.innerHTML=`<section class="my-card full"><div class="my-card-head"><div><h3>Для тебя</h3><p>Музыка, которая подходит твоему вкусу</p></div><button class="btn-sm btn-accent" onclick="playRecommendations()">▶ Слушать подборку</button></div>${recs.length?`<div class="continue-grid large">${recs.map(x=>miniTrackCard(x)).join('')}</div>`:'<div class="personal-empty"><b>Пока мало данных</b><span>Сохрани несколько треков и послушай их — мы соберём персональную подборку.</span></div>'}</section>`;
+    return;
+  }
+  if(tab==='queue'){
+    const q=state.queue||[];
+    box.innerHTML=`<section class="my-card full"><div class="my-card-head"><div><h3>Очередь воспроизведения</h3><p>${q.length} треков</p></div><div class="queue-actions"><button class="btn-sm" onclick="shuffleQueueView()">Перемешать</button><button class="btn-sm" onclick="clearMyQueue()">Очистить</button></div></div>${q.length?`<div class="my-track-list">${q.map((x,i)=>`<div class="my-list-row queue-row"><span class="my-list-num">${i+1}</span><div class="my-list-cover">${x.coverUrl?`<img src="${esc(x.coverUrl)}" alt="">`:'♫'}</div><div class="my-list-main"><b>${esc(x.title)}</b><span>${esc(x.artist||'—')}</span></div><button class="icon-btn" onclick="playTrackById(${Number(x.id)})">▶</button></div>`).join('')}</div>`:'<div class="personal-empty"><b>Очередь пуста</b><span>Открой меню ⋯ у любого трека и выбери «Добавить в очередь».</span></div>'}</section>`;
+    return;
+  }
+  const stats=await fetchMyStats();
+  box.innerHTML=`<section class="my-card full"><div class="my-card-head"><div><h3>Твоя статистика</h3><p>Активность на основе реальных прослушиваний аккаунта</p></div></div><div class="big-stat-grid"><div><b>${stats?.plays||0}</b><span>прослушиваний</span></div><div><b>${stats?.uniqueTracks||0}</b><span>уникальных треков</span></div><div><b>${stats?.minutes||0}</b><span>${stats?.minutesEstimated?'примерно ':''}минут музыки</span></div></div><div class="genre-bars"><h4>Любимые жанры</h4>${(stats?.genres||[]).length?(stats.genres.map(g=>`<div class="genre-bar-row"><span>${esc(g.name)}</span><div><i style="width:${Math.min(100,Math.round((g.plays/Math.max(1,stats.genres[0].plays))*100))}%"></i></div><b>${g.plays}</b></div>`).join('')):'<div class="personal-empty compact">Пока недостаточно данных.</div>'}</div></section>`;
+}
+function clearMyLocalHistory(){localStorage.removeItem('venyl_client_history_v2');renderContinueListening();renderMyMusicPage('history');toast('Локальная история очищена','ok')}
+function clearMyQueue(){state.queue=[];localStorage.setItem('venyl_queue_v2','[]');renderMyMusicPage('queue');toast('Очередь очищена','ok')}
+function shuffleQueueView(){state.queue=[...(state.queue||[])].sort(()=>Math.random()-0.5);localStorage.setItem('venyl_queue_v2',JSON.stringify(state.queue));renderMyMusicPage('queue');toast('Очередь перемешана','ok')}
+function playRecommendations(){fetchMyRecommendations().then(r=>{if(!r.length)return toast('Подборка пока пуста','err');state.queue=r.slice(1);localStorage.setItem('venyl_queue_v2',JSON.stringify(state.queue));playTrackObject(r[0],0,r);toast('Запускаю подборку','ok')})}
+function bindMyMusicTabs(){document.querySelectorAll('.my-music-tab').forEach(btn=>btn.addEventListener('click',()=>renderMyMusicPage(btn.dataset.myTab)))}
+
 function renderHomeAll(){
   renderHomeStats();
   renderFeaturedArtists();
   renderNewReleases();
   renderHomePlaylists();
+  renderContinueListening();
 }
 
 /* ===== LANGUAGE SYSTEM ===== */
@@ -3428,39 +3640,39 @@ const LANG_KEY='venyl_language';
 const TRANSLATIONS={
   ru:{
     search:'Треки, артисты, альбомы…', upload:'Загрузить', albumBtn:'+ Альбом',
-    navMain:'Главное', navHome:'Главная', navArtists:'Артисты', navFavorites:'Избранное', navPlaylists:'Плейлисты', navManage:'Управление', navUpload:'Загрузить трек', navNewArtist:'Новый артист', navCreateAlbum:'Создать альбом', navAdmin:'Админ-панель',
+    navMain:'Главное', navHome:'Главная', navMyMusic:'Моя музыка', navUsers:'Пользователи', navChat:'Чаты', navArtists:'Артисты', navFavorites:'Избранное', navPlaylists:'Плейлисты', navManage:'Управление', navUpload:'Загрузить трек', navNewArtist:'Новый артист', navCreateAlbum:'Создать альбом', navAdmin:'Админ-панель',
     loginEyebrow:'Добро пожаловать', loginTitle:'С возвращением', loginSub:'Войди, чтобы слушать и управлять музыкой', email:'Email', password:'Пароль', loginBtn:'Войти', noAccount:'Нет аккаунта?', registerLink:'Зарегистрироваться', backMusic:'← Вернуться к музыке',
     registerEyebrow:'Новый аккаунт', registerTitle:'Присоединяйся', registerSub:'Создай аккаунт и начни слушать', name:'Имя', registerBtn:'Создать аккаунт', haveAccount:'Уже есть аккаунт?',
     heroTitle:'Музыка, которая<br><em>живёт в моменте</em>', heroSub:'Платформа для артистов и слушателей. Загружай треки, открывай новое и создавай своё звучание.', listenAll:'Слушать всё', openArtists:'Открыть артистов',
     tracks:'Треков', artistsCount:'Артиста', plays:'Прослушиваний', listeners:'Слушателей сегодня', genres:'Жанры', allGenres:'Все жанры →', featured:'Рекомендуемые артисты', allArtists:'Все артисты →', releases:'Новые релизы', allReleases:'Все релизы →', playlistsForYou:'Плейлисты для вас', allPlaylists:'Все плейлисты →', chart:'Чарт',
-    chooseTrack:'Выберите трек', none:'—', logout:'Ты вышел из аккаунта', welcome:'Добро пожаловать!', accountCreated:'Аккаунт создан'
+    chooseTrack:'Выберите трек', none:'—', myMusic:'Моя музыка', myMusicSub:'История, рекомендации, очередь и статистика', continueListening:'Продолжить слушать', allHistory:'Вся история →', forYou:'Для тебя', queue:'Очередь', stats:'Статистика', logout:'Ты вышел из аккаунта', welcome:'Добро пожаловать!', accountCreated:'Аккаунт создан'
   },
   en:{
     search:'Tracks, artists, albums…', upload:'Upload', albumBtn:'+ Album',
-    navMain:'Main', navHome:'Home', navArtists:'Artists', navFavorites:'Favorites', navPlaylists:'Playlists', navManage:'Manage', navUpload:'Upload track', navNewArtist:'New artist', navCreateAlbum:'Create album', navAdmin:'Admin panel',
+    navMain:'Main', navHome:'Home', navMyMusic:'My music', navUsers:'Users', navChat:'Chats', navArtists:'Artists', navFavorites:'Favorites', navPlaylists:'Playlists', navManage:'Manage', navUpload:'Upload track', navNewArtist:'New artist', navCreateAlbum:'Create album', navAdmin:'Admin panel',
     loginEyebrow:'Welcome', loginTitle:'Welcome back', loginSub:'Sign in to listen and manage music', email:'Email', password:'Password', loginBtn:'Sign in', noAccount:'No account?', registerLink:'Create account', backMusic:'← Back to music',
     registerEyebrow:'New account', registerTitle:'Join Venyl', registerSub:'Create an account and start listening', name:'Name', registerBtn:'Create account', haveAccount:'Already have an account?',
     heroTitle:'Music that<br><em>lives in the moment</em>', heroSub:'A platform for artists and listeners. Upload tracks, discover new music, and shape your own sound.', listenAll:'Play all', openArtists:'Open artists',
     tracks:'Tracks', artistsCount:'Artists', plays:'Plays', listeners:'Listeners today', genres:'Genres', allGenres:'All genres →', featured:'Recommended artists', allArtists:'All artists →', releases:'New releases', allReleases:'All releases →', playlistsForYou:'Playlists for you', allPlaylists:'All playlists →', chart:'Chart',
-    chooseTrack:'Choose a track', none:'—', logout:'You signed out', welcome:'Welcome!', accountCreated:'Account created'
+    chooseTrack:'Choose a track', none:'—', myMusic:'My music', myMusicSub:'History, recommendations, queue and stats', continueListening:'Continue listening', allHistory:'Full history →', forYou:'For you', queue:'Queue', stats:'Stats', logout:'You signed out', welcome:'Welcome!', accountCreated:'Account created'
   },
   sv:{
     search:'Låtar, artister, album…', upload:'Ladda upp', albumBtn:'+ Album',
-    navMain:'Huvudmeny', navHome:'Hem', navArtists:'Artister', navFavorites:'Favoriter', navPlaylists:'Spellistor', navManage:'Hantera', navUpload:'Ladda upp låt', navNewArtist:'Ny artist', navCreateAlbum:'Skapa album', navAdmin:'Adminpanel',
+    navMain:'Huvudmeny', navHome:'Hem', navMyMusic:'Min musik', navUsers:'Användare', navChat:'Chattar', navArtists:'Artister', navFavorites:'Favoriter', navPlaylists:'Spellistor', navManage:'Hantera', navUpload:'Ladda upp låt', navNewArtist:'Ny artist', navCreateAlbum:'Skapa album', navAdmin:'Adminpanel',
     loginEyebrow:'Välkommen', loginTitle:'Välkommen tillbaka', loginSub:'Logga in för att lyssna och hantera musik', email:'E-post', password:'Lösenord', loginBtn:'Logga in', noAccount:'Inget konto?', registerLink:'Registrera dig', backMusic:'← Tillbaka till musiken',
     registerEyebrow:'Nytt konto', registerTitle:'Gå med i Venyl', registerSub:'Skapa ett konto och börja lyssna', name:'Namn', registerBtn:'Skapa konto', haveAccount:'Har du redan ett konto?',
     heroTitle:'Musik som<br><em>lever i stunden</em>', heroSub:'En plattform för artister och lyssnare. Ladda upp låtar, upptäck nytt och skapa ditt eget sound.', listenAll:'Spela allt', openArtists:'Öppna artister',
     tracks:'Låtar', artistsCount:'Artister', plays:'Spelningar', listeners:'Lyssnare idag', genres:'Genrer', allGenres:'Alla genrer →', featured:'Rekommenderade artister', allArtists:'Alla artister →', releases:'Nya släpp', allReleases:'Alla släpp →', playlistsForYou:'Spellistor för dig', allPlaylists:'Alla spellistor →', chart:'Topplista',
-    chooseTrack:'Välj en låt', none:'—', logout:'Du har loggats ut', welcome:'Välkommen!', accountCreated:'Kontot har skapats'
+    chooseTrack:'Välj en låt', none:'—', myMusic:'Min musik', myMusicSub:'Historik, rekommendationer, kö och statistik', continueListening:'Fortsätt lyssna', allHistory:'All historik →', forYou:'För dig', queue:'Kö', stats:'Statistik', logout:'Du har loggats ut', welcome:'Välkommen!', accountCreated:'Kontot har skapats'
   },
   uk:{
     search:'Треки, артисти, альбоми…', upload:'Завантажити', albumBtn:'+ Альбом',
-    navMain:'Головне', navHome:'Головна', navArtists:'Артисти', navFavorites:'Обране', navPlaylists:'Плейлисти', navManage:'Керування', navUpload:'Завантажити трек', navNewArtist:'Новий артист', navCreateAlbum:'Створити альбом', navAdmin:'Адмін-панель',
+    navMain:'Головне', navHome:'Головна', navMyMusic:'Моя музика', navUsers:'Користувачі', navChat:'Чати', navArtists:'Артисти', navFavorites:'Обране', navPlaylists:'Плейлисти', navManage:'Керування', navUpload:'Завантажити трек', navNewArtist:'Новий артист', navCreateAlbum:'Створити альбом', navAdmin:'Адмін-панель',
     loginEyebrow:'Ласкаво просимо', loginTitle:'З поверненням', loginSub:'Увійди, щоб слухати й керувати музикою', email:'Email', password:'Пароль', loginBtn:'Увійти', noAccount:'Немає акаунта?', registerLink:'Зареєструватися', backMusic:'← Повернутися до музики',
     registerEyebrow:'Новий акаунт', registerTitle:'Приєднуйся', registerSub:'Створи акаунт і почни слухати', name:"Ім'я", registerBtn:'Створити акаунт', haveAccount:'Вже є акаунт?',
     heroTitle:'Музика, яка<br><em>живе в моменті</em>', heroSub:'Платформа для артистів і слухачів. Завантажуй треки, відкривай нове й створюй власне звучання.', listenAll:'Слухати все', openArtists:'Відкрити артистів',
     tracks:'Треків', artistsCount:'Артистів', plays:'Прослуховувань', listeners:'Слухачів сьогодні', genres:'Жанри', allGenres:'Усі жанри →', featured:'Рекомендовані артисти', allArtists:'Усі артисти →', releases:'Нові релізи', allReleases:'Усі релізи →', playlistsForYou:'Плейлисти для тебе', allPlaylists:'Усі плейлисти →', chart:'Чарт',
-    chooseTrack:'Виберіть трек', none:'—', logout:'Ти вийшов з акаунта', welcome:'Ласкаво просимо!', accountCreated:'Акаунт створено'
+    chooseTrack:'Виберіть трек', none:'—', myMusic:'Моя музика', myMusicSub:'Історія, рекомендації, черга та статистика', continueListening:'Продовжити слухати', allHistory:'Уся історія →', forYou:'Для тебе', queue:'Черга', stats:'Статистика', logout:'Ти вийшов з акаунта', welcome:'Ласкаво просимо!', accountCreated:'Акаунт створено'
   }
 };
 function getLanguage(){return localStorage.getItem(LANG_KEY)||'ru'}
@@ -3479,7 +3691,7 @@ function applyLanguage(){
   const navLabels=document.querySelectorAll('.nav-label');
   setText(navLabels[0],t('navMain')); setText(navLabels[1],t('navManage'));
   const navs=document.querySelectorAll('.nav-section .nav-item');
-  const navKeys=['navHome','navArtists','navFavorites','navPlaylists','navUpload','navNewArtist','navCreateAlbum','navAdmin'];
+  const navKeys=['navHome','navMyMusic','navUsers','navChat','navArtists','navFavorites','navPlaylists','navUpload','navNewArtist','navCreateAlbum','navAdmin'];
   navs.forEach((el,i)=>{const icon=el.querySelector('.nav-icon'); el.innerHTML=(icon?icon.outerHTML:'')+t(navKeys[i]||'');});
   const topBtns=document.querySelectorAll('.topbar-actions .btn-sm');
   if(topBtns[0]) topBtns[0].lastChild.textContent=' '+t('upload');
@@ -3515,6 +3727,10 @@ function applyLanguage(){
   [t('genres'),t('featured'),t('releases'),t('playlistsForYou'),t('chart')].forEach((v,i)=>setText(sectionTitles[i],v));
   const sectionLinks=document.querySelectorAll('#homeView .section-link');
   [t('allGenres'),t('allArtists'),t('allReleases'),t('allPlaylists')].forEach((v,i)=>setText(sectionLinks[i],v));
+  setText(qs('homePersonalTitle'),t('continueListening'));
+  setText(qs('myMusicTitle'),t('myMusic'));
+  setText(qs('myMusicSub'),t('myMusicSub'));
+  setText(qs('myMusicPlayAll'),t('listenAll'));
   const npTitle=qs('npTitle'); if(npTitle && (!state.currentTrack)) setText(npTitle,t('chooseTrack'));
   const npArtist=qs('npArtist'); if(npArtist && (!state.currentTrack)) setText(npArtist,t('none'));
   renderHomeAll?.();
@@ -3522,24 +3738,14 @@ function applyLanguage(){
 
 
 document.addEventListener('DOMContentLoaded',async()=>{
+  bindMyMusicTabs();
   applyLanguage();
-  protectSearchFromEmailAutofill();
-  setTimeout(()=>resetSearchInput(true),50);
-  setVolume(qs('volSlider').value);
+  const savedVolume=Number(localStorage.getItem('venyl_volume')); setVolume(Number.isFinite(savedVolume)&&savedVolume>=0&&savedVolume<=100?savedVolume:qs('volSlider').value); qs('volSlider').value=String(audio.volume*100);
   qs('profileNicknameColor')?.addEventListener('input',e=>{qs('profileColorPreview').style.background=e.target.value});
-
-  const hasActiveBrowserSession=sessionStorage.getItem('venyl_active_session')==='1';
-  if(!hasActiveBrowserSession){
-    await forceFreshOpenLogout();
-    updateUserUI();
-    showLogin();
-    return;
-  }
 
   await loadSession();
   resetSearchInput(true);
   if(!state.user){
-    clearBrowserSessionActive();
     showLogin();
     return;
   }
@@ -3550,24 +3756,275 @@ document.addEventListener('DOMContentLoaded',async()=>{
 window.addEventListener('pageshow',()=>{ setTimeout(()=>resetSearchInput(true),0); setTimeout(()=>resetSearchInput(true),300); });
 window.addEventListener('load',()=>{ setTimeout(()=>resetSearchInput(true),0); setTimeout(()=>resetSearchInput(true),500); });
 </script>
-<script id="venylAdminSidebarFix">
-    (() => {
-      const apply = () => {
-        const sections = [...document.querySelectorAll('.nav-section')];
-        const target = sections.find(el => /Управление|Manage|Hantera|Керування/i.test(el.innerText || ''));
-        if (!target) return;
-        target.style.display = 'none';
-        fetch('/api/auth/me', { credentials: 'same-origin' })
-          .then(r => r.ok ? r.json() : { user: null })
-          .then(({ user }) => {
-            const admin = user && (user.isAdmin === true || String(user.role || '').toLowerCase() === 'admin');
-            if (admin) target.style.display = '';
-          })
-          .catch(() => {});
+<style>
+#venylSearchSuggest{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:1200;background:var(--panel,#11131b);border:1px solid var(--line,rgba(255,255,255,.08));border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.4);overflow:hidden;display:none}
+#venylSearchSuggest.open{display:block}
+.vss-title{padding:10px 14px 6px;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.vss-item{display:flex;align-items:center;gap:10px;padding:10px 14px;color:var(--text,#fff);cursor:pointer}
+.vss-item:hover{background:rgba(255,255,255,.05)}
+.vss-cover{width:36px;height:36px;border-radius:8px;object-fit:cover;background:rgba(255,255,255,.06);display:grid;place-items:center;flex:none}
+.vss-main{min-width:0;flex:1}.vss-main b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.vss-main span{display:block;color:var(--muted);font-size:11px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.venyl-comments{margin-top:18px;border-top:1px solid var(--line,rgba(255,255,255,.08));padding-top:16px}.venyl-comments h3{margin:0 0 10px}.vc-list{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow:auto}.vc-item{display:flex;gap:9px}.vc-avatar{width:32px;height:32px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.07);display:grid;place-items:center;flex:none;font-size:11px}.vc-avatar img{width:100%;height:100%;object-fit:cover}.vc-body{min-width:0;flex:1}.vc-head{display:flex;gap:7px;align-items:center}.vc-head b{font-size:12px}.vc-head span{font-size:10px;color:var(--muted)}.vc-text{font-size:12px;line-height:1.5;margin-top:3px;white-space:pre-wrap;word-break:break-word}.vc-delete{margin-left:auto;border:0;background:none;color:var(--muted);cursor:pointer}.vc-form{display:flex;gap:8px;margin-top:12px}.vc-form textarea{flex:1;min-height:42px;resize:vertical;background:var(--input,#0e1017);border:1px solid var(--line,rgba(255,255,255,.08));border-radius:10px;color:inherit;padding:9px;font:inherit}.vc-login{font-size:12px;color:var(--muted);margin-top:10px}
+
+/* ===================== STAGE 1: PRODUCTION UX ===================== */
+.app-notice{position:fixed;left:50%;top:76px;transform:translateX(-50%) translateY(-10px);z-index:2600;max-width:min(680px,calc(100vw - 28px));padding:11px 14px;border:1px solid var(--accent-border);background:rgba(15,15,22,.96);backdrop-filter:blur(18px);border-radius:12px;color:var(--cream2);font-size:12px;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.2s}.app-notice.show{opacity:1;transform:translateX(-50%) translateY(0)}.app-notice.error{border-color:rgba(217,79,79,.35)}
+.skeleton-list{display:grid;gap:8px}.skeleton-row{height:78px;border-radius:12px;background:linear-gradient(90deg,var(--ink3) 25%,var(--ink4) 37%,var(--ink3) 63%);background-size:400% 100%;animation:skeletonShimmer 1.3s ease infinite;opacity:.8}.skeleton-card{height:82px;border-radius:16px;background:linear-gradient(90deg,var(--ink3) 25%,var(--ink4) 37%,var(--ink3) 63%);background-size:400% 100%;animation:skeletonShimmer 1.3s ease infinite}@keyframes skeletonShimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.mobile-bottom-nav{display:none}
+.nav-search-link{margin-top:3px}
+.search-wrap{z-index:31}
+#venylSearchSuggest{max-height:min(420px,60vh);overflow:auto}
+.track-row:focus-visible,.nav-item:focus-visible,.btn-primary:focus-visible,.btn-sm:focus-visible,.btn-icon:focus-visible,.my-music-tab:focus-visible,.mini-track-card:focus-visible,.mobile-bottom-nav button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.track-cover img,.album-cover img,.artist-photo img,.playlist-cover img{background:var(--ink4)}
+.error-state{padding:32px 20px;text-align:center;border:1px solid rgba(217,79,79,.2);background:rgba(217,79,79,.035);border-radius:16px;color:var(--muted2)}.error-state b{display:block;color:var(--cream);margin-bottom:6px}.error-state button{margin-top:12px}
+.empty-state{min-height:120px;display:grid;place-items:center}
+@media(max-width:820px){
+  .mobile-bottom-nav{position:fixed;left:0;right:0;bottom:0;height:64px;background:rgba(11,11,17,.96);border-top:1px solid var(--wire2);backdrop-filter:blur(20px);display:grid;grid-template-columns:repeat(5,1fr);z-index:2100;padding-bottom:env(safe-area-inset-bottom)}
+  .mobile-bottom-nav button{border:0;background:none;color:var(--muted2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;font:600 9px 'Cabinet Grotesk';cursor:pointer}.mobile-bottom-nav button span{font-size:18px;line-height:1}.mobile-bottom-nav button.active{color:var(--accent2)}
+  .shell{padding-bottom:64px}.player{bottom:64px}.topbar{padding:10px 14px}.search-wrap{max-width:none}.topbar .language-select{display:none}.topbar-actions .btn-sm{display:none}.topbar-actions{gap:5px}.btn-icon{width:34px;height:34px}
+  main{padding:22px 14px}.hero-v2{border-radius:20px}.stats-bar{padding:12px}.discovery-grid{gap:14px}.track-row{padding:9px 8px;gap:8px}.track-cover{width:46px;height:46px}.track-info .track-name{font-size:13px}.track-actions{min-width:28px}.my-music-title{font-size:34px}
+}
+</style>
+<script>
+(function(){
+  // The original app stores state in a script-local const; expose it for the optional hub and desktop integrations.
+  window.state=state;
+
+  // Persist queue and restore it between page opens.
+  try{ const saved=JSON.parse(localStorage.getItem('venyl_queue_v2')||'[]'); if(Array.isArray(saved)) state.queue=saved.filter(x=>x&&x.id); }catch{}
+  function saveQueue(){try{localStorage.setItem('venyl_queue_v2',JSON.stringify((state.queue||[]).slice(0,100)))}catch{}}
+  const oldAdd=window.addTrackToQueue;
+  if(oldAdd) window.addTrackToQueue=function(id){const r=oldAdd.apply(this,arguments);saveQueue();return r};
+  const oldNext=window.nextTrack;
+  if(oldNext) window.nextTrack=function(){const r=oldNext.apply(this,arguments);saveQueue();return r};
+  const oldPlayNext=window.playTrackNext;
+  if(oldPlayNext) window.playTrackNext=function(id){const r=oldPlayNext.apply(this,arguments);saveQueue();return r};
+  window.addEventListener('beforeunload',saveQueue);
+
+  // Keyboard-first player controls.
+  document.addEventListener('keydown',e=>{
+    const tag=(e.target?.tagName||'').toLowerCase();
+    if(['input','textarea','select'].includes(tag)) return;
+    if(e.code==='Space'){e.preventDefault();togglePlay();}
+    else if(e.code==='ArrowRight' && e.shiftKey){e.preventDefault();nextTrack()}
+    else if(e.code==='ArrowLeft' && e.shiftKey){e.preventDefault();prevTrack()}
+    else if(e.key.toLowerCase()==='m'){audio.muted=!audio.muted}
+    else if(e.key.toLowerCase()==='f'){if(state.currentTrack)toggleFavCurrent()}
+  });
+
+  // Media Session for browser/mobile and the Venyl desktop wrapper.
+  function syncMedia(){
+    if(!('mediaSession' in navigator) || !state.currentTrack)return;
+    const t=state.currentTrack;
+    try{navigator.mediaSession.metadata=new MediaMetadata({title:t.title||'Venyl',artist:t.artist||'Venyl',album:t.album||'Venyl',artwork:t.coverUrl?[{src:new URL(t.coverUrl,location.origin).href,sizes:'512x512'}]:[]});}catch{}
+  }
+  if('mediaSession' in navigator){
+    try{navigator.mediaSession.setActionHandler('play',()=>togglePlay());navigator.mediaSession.setActionHandler('pause',()=>togglePlay());navigator.mediaSession.setActionHandler('nexttrack',()=>nextTrack());navigator.mediaSession.setActionHandler('previoustrack',()=>prevTrack());navigator.mediaSession.setActionHandler('seekbackward',()=>audio.currentTime=Math.max(0,audio.currentTime-10));navigator.mediaSession.setActionHandler('seekforward',()=>audio.currentTime=Math.min(audio.duration||0,audio.currentTime+10));}catch{}
+  }
+  const oldUpdate=window.updatePlayerMeta;
+  if(oldUpdate) window.updatePlayerMeta=function(){const r=oldUpdate.apply(this,arguments);syncMedia();return r};
+
+  // Search suggestions: fast API-backed suggestions without replacing the existing full search page.
+  const input=document.getElementById('searchInput');
+  if(input){
+    const wrap=input.closest('.search-wrap') || input.parentElement;
+    if(wrap){if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+      const box=document.createElement('div');box.id='venylSearchSuggest';wrap.appendChild(box);
+      let timer=0,request=0;
+      const hide=()=>box.classList.remove('open');
+      const render=(d)=>{
+        const rows=[];
+        (d.tracks||[]).slice(0,5).forEach(t=>rows.push(`<div class="vss-item" data-track="${Number(t.id)}"><div class="vss-cover">${t.coverUrl?`<img src="${esc(t.coverUrl)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`:'♪'}</div><div class="vss-main"><b>${esc(t.title)}</b><span>${esc(t.artist||'Трек')}</span></div></div>`));
+        (d.artists||[]).slice(0,3).forEach(a=>rows.push(`<div class="vss-item" data-artist="${Number(a.id)}"><div class="vss-cover">${a.photoUrl?`<img src="${esc(a.photoUrl)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:'♪'}</div><div class="vss-main"><b>${esc(a.name)}</b><span>Артист</span></div></div>`));
+        box.innerHTML=rows.length?`<div class="vss-title">Быстрый поиск</div>${rows.join('')}`:'';
+        if(rows.length)box.classList.add('open');else hide();
       };
-      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply, { once: true });
-      else apply();
-    })();
-    </script>
+      input.addEventListener('input',()=>{clearTimeout(timer);const q=input.value.trim();if(q.length<2){hide();return}timer=setTimeout(async()=>{const n=++request;try{const r=await fetch('/api/search?q='+encodeURIComponent(q),{credentials:'include'});const d=await r.json();if(n===request)render(d)}catch{}},180)});
+      box.addEventListener('click',e=>{const item=e.target.closest('.vss-item');if(!item)return;hide();if(item.dataset.track){const t=findTrackById(Number(item.dataset.track));if(t)playTrackObject(t,0,[t]);}else if(item.dataset.artist)openArtistProfile(Number(item.dataset.artist));});
+      document.addEventListener('click',e=>{if(!wrap.contains(e.target))hide()});
+    }
+  }
+
+  // Comments inside track details.
+  async function loadTrackComments(trackId){
+    const box=document.getElementById('venylCommentsList');if(!box)return;
+    try{const d=await api('/api/tracks/'+trackId+'/comments');const comments=d.comments||[];box.innerHTML=comments.length?comments.map(c=>`<div class="vc-item"><div class="vc-avatar">${c.user?.avatarUrl?`<img src="${esc(c.user.avatarUrl)}">`:esc((c.user?.name||'U')[0])}</div><div class="vc-body"><div class="vc-head"><b style="color:${esc(c.user?.nicknameColor||'inherit')};cursor:pointer" onclick="openPublicUserProfile(${Number(c.user?.id||0)})">${esc(c.user?.name||'Пользователь')}</b><span>${c.createdAt?new Date(c.createdAt.replace(' ','T')+'Z').toLocaleString('ru-RU'):''}</span>${state.user&&(Number(c.user?.id)===Number(state.user.id)||state.isAdmin)?`<button class="vc-delete" onclick="deleteVenylComment(${Number(c.id)},${Number(trackId)})">×</button>`:''}</div><div class="vc-text">${esc(c.text)}</div></div></div>`).join(''):'<div class="vc-login">Комментариев пока нет.</div>'}catch{box.innerHTML='<div class="vc-login">Не удалось загрузить комментарии.</div>'}
+  }
+  window.deleteVenylComment=async(id,trackId)=>{try{await api('/api/comments/'+id,{method:'DELETE'});loadTrackComments(trackId)}catch(e){toast(e.message||'Не удалось удалить комментарий','err')}};
+  window.submitVenylComment=async(trackId)=>{if(!state.user)return showLogin();const input=document.getElementById('venylCommentInput');const text=input?.value.trim();if(!text)return toast('Напиши комментарий','err');try{await api('/api/tracks/'+trackId+'/comments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});input.value='';loadTrackComments(trackId)}catch(e){toast(e.message||'Не удалось отправить комментарий','err')}};
+  const oldInfo=window.showTrackInfo;
+  if(oldInfo) window.showTrackInfo=function(trackId){oldInfo.apply(this,arguments);const t=findTrackById(trackId);if(!t)return;const host=document.getElementById('trackInfoContent');if(!host)return;const wrap=document.createElement('div');wrap.className='venyl-comments';wrap.innerHTML=`<h3>Комментарии</h3><div class="vc-list" id="venylCommentsList"><div class="vc-login">Загрузка…</div></div>${state.user?`<div class="vc-form"><textarea id="venylCommentInput" maxlength="1000" placeholder="Написать комментарий…"></textarea><button class="btn-sm btn-accent" onclick="submitVenylComment(${Number(t.id)})">Отправить</button></div>`:'<div class="vc-login">Войди в аккаунт, чтобы оставлять комментарии.</div>'}`;host.appendChild(wrap);loadTrackComments(Number(t.id));};
+
+  // Continue listening: remember current position for each track.
+  function posKey(id){return 'venyl_pos_'+id}
+  const oldPlay=window.playTrackObject;
+  if(oldPlay) window.playTrackObject=function(t,idx,list){const r=oldPlay.apply(this,arguments);if(t?.id){const pos=Number(localStorage.getItem(posKey(t.id)));if(pos>5 && Number.isFinite(pos))setTimeout(()=>{if(state.currentTrack?.id===t.id && audio.duration && pos<audio.duration-5)audio.currentTime=pos},120)}return r};
+  audio.addEventListener('timeupdate',()=>{if(state.currentTrack?.id && audio.currentTime>3 && audio.duration) localStorage.setItem(posKey(state.currentTrack.id),String(audio.currentTime))});
+})();
+</script>
+<script id="stage3SocialJS">async function openPublicUserProfile(id){
+  try{
+    const data=await api('/api/users/'+Number(id));
+    state.currentPublicUser=data;
+    hideAllMainViews();
+    qs('publicUserProfileView').style.display='block';
+    const u=data.user||{};
+    const tracks=Array.isArray(data.tracks)?data.tracks:[];
+    const playlists=Array.isArray(data.playlists)?data.playlists:[];
+    qs('publicUserProfileView').innerHTML=`
+      <div class="public-profile-shell">
+        <button class="btn-ghost public-profile-back" onclick="showSection('users',document.querySelector('.nav-item[data-section=\\'users\\']'))">← Пользователи</button>
+        <section class="public-profile-hero">
+          <div class="public-profile-avatar">${avatarMarkup(u)}</div>
+          <div class="public-profile-main">
+            <div class="public-profile-name" style="color:${esc(u.nicknameColor||'var(--cream)')}">${esc(u.name||'Пользователь')}</div>
+            <div class="public-profile-meta">Публичный профиль Venyl</div>
+            <div class="public-profile-stats"><span><strong>${Number(u.trackCount)||0}</strong> треков</span><span><strong>${Number(u.playlistCount)||0}</strong> плейлистов</span><button class="text-link" onclick="loadFollowersAndShow(${Number(u.id)})"><strong>${Number(u.followerCount)||0}</strong> подписчиков</button><span><strong>${Number(u.followingCount)||0}</strong> подписок</span></div>
+            <div class="public-profile-actions">
+              ${Number(u.id)===Number(state.user?.id)?'<span class="section-meta">Это твой профиль</span>':`<button class="btn-sm ${u.following?'':'btn-accent'}" onclick="togglePublicUserFollow(${Number(u.id)},${u.following?'true':'false'})">${u.following?'Отписаться':'Подписаться'}</button>${u.following&&u.followedBy?`<button class="btn-sm btn-accent" onclick="openChatFromProfile(${Number(u.id)})">Написать</button>`:''}`}
+            </div>
+          </div>
+        </section>
+        <section class="public-profile-panel"><div class="public-profile-panel-head"><div class="public-profile-panel-title">Треки</div><div class="users-found-meta">${tracks.length}</div></div><div id="publicUserTracks"></div></section>
+        <section class="public-profile-panel"><div class="public-profile-panel-head"><div class="public-profile-panel-title">Подписчики</div><div class="users-found-meta">${Number(u.followerCount)||0}</div></div><div id="publicFollowersBox"><div class="social-empty">Нажми на количество подписчиков, чтобы открыть список.</div></div></section>
+        <section class="public-profile-panel"><div class="public-profile-panel-head"><div class="public-profile-panel-title">Публичные плейлисты</div><div class="users-found-meta">${playlists.length}</div></div><div class="public-playlists" id="publicUserPlaylists"></div></section>
+        <div class="public-profile-note">Показываем только ник, аватар, количество подписчиков/подписок, опубликованные треки и публичные плейлисты. Email и другие личные данные недоступны другим пользователям.</div>
+      </div>`;
+    if(tracks.length) renderTracks(tracks,'publicUserTracks'); else qs('publicUserTracks').innerHTML='<div class="social-empty">У пользователя пока нет опубликованных треков.</div>';
+    if(playlists.length){qs('publicUserPlaylists').innerHTML=playlists.map(p=>`<button class="public-playlist-card" onclick="openPlaylist(${Number(p.id)})"><div class="playlist-cover">${p.coverUrl?`<img src="${esc(p.coverUrl)}" alt="">`:'♫'}</div><div style="min-width:0"><b>${esc(p.name)}</b><span>${Number(p.trackCount)||0} треков</span></div></button>`).join('');}else qs('publicUserPlaylists').innerHTML='<div class="social-empty">Публичных плейлистов пока нет.</div>';
+  }catch(e){toast(e.message||'Не удалось открыть профиль','err');}
+}
+function updateChatBadge(total){const b=qs('chatNavBadge');if(!b)return;const n=Number(total)||0;b.textContent=n>99?'99+':String(n);b.style.display=n?'inline-flex':'none'}
+function updateUsersBadge(total){const b=qs('usersNavBadge');if(!b)return;const n=Number(total)||0;b.textContent=n>99?'99+':String(n);b.style.display=n?'inline-flex':'none'}
+function formatChatTime(v){try{const d=new Date(String(v).replace(' ','T')+'Z');return d.toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}catch{return ''}}
+function startChatPolling(){stopChatPolling();state.chatPoll=setInterval(()=>{if(state.activeSection==='chat')loadChatConversations(true)},7000)}
+function stopChatPolling(){if(state.chatPoll){clearInterval(state.chatPoll);state.chatPoll=null}}
+async function loadChatConversations(silent=false){
+  const box=qs('chatConversations');if(!box||!state.user)return;
+  try{const data=await api('/api/chat/conversations');state.chatConversations=Array.isArray(data.users)?data.users:[];updateChatBadge(data.totalUnread||0);const meta=qs('chatCountMeta');if(meta)meta.textContent=state.chatConversations.length?`${state.chatConversations.length} диалогов`:'';
+    if(!state.chatConversations.length){box.innerHTML='<div class="chat-empty" style="height:auto;padding:30px">Нет доступных чатов.<br><span style="font-size:10px">Подпишись на пользователя и дождись взаимной подписки.</span></div>';return}
+    box.innerHTML=state.chatConversations.map(u=>`<button class="chat-person ${state.currentChatUser&&Number(state.currentChatUser.id)===Number(u.id)?'active':''}" onclick="openChat(${Number(u.id)})"><div class="user-card-avatar" style="width:38px;height:38px">${avatarMarkup(u)}</div><div class="chat-person-main"><div class="chat-person-name" style="color:${esc(u.nicknameColor||'var(--cream)')}">${esc(u.name)}</div><div class="chat-person-meta">${u.lastMessage?(u.lastMessage.trackId?'🎵 Трек':esc((u.lastMessage.text||'').slice(0,55))):'Новый диалог'}</div></div>${u.unread?`<span class="chat-unread">${u.unread>99?'99+':u.unread}</span>`:''}</button>`).join('');
+    if(state.currentChatUser){const fresh=state.chatConversations.find(x=>Number(x.id)===Number(state.currentChatUser.id));if(fresh)state.currentChatUser=fresh;}
+  }catch(e){if(!silent)toast(e.message||'Не удалось загрузить чаты','err');}
+}
+async function openChat(userId,draftTrackId=null){
+  if(!state.user)return showLogin();
+  try{const data=await api('/api/chat/'+Number(userId)+'/messages');state.currentChatUser=data.user;state.chatDraftTrackId=draftTrackId||null;qs('chatLayout')?.classList.add('chat-has-active');renderChatHeader(data.user);renderChatMessages(data.messages||[]);qs('chatCompose').style.display='flex';const inp=qs('chatMessageInput');if(inp){inp.value='';inp.focus()};if(window.innerWidth<=820)qs('chatView')?.scrollIntoView({block:'start'});await loadChatConversations(true);if(state.chatDraftTrackId)toast('Трек выбран — нажми «Отправить»','ok');}catch(e){toast(e.message||'Не удалось открыть чат','err');}}
+function closeActiveChat(){state.currentChatUser=null;state.chatDraftTrackId=null;qs('chatCompose').style.display='none';qs('chatMainHead').innerHTML='<button class="btn-ghost chat-mobile-back" onclick="closeActiveChat()">←</button><div class="chat-head-user"><div class="chat-empty" style="padding:0;justify-content:flex-start">Выбери собеседника слева.</div></div>';qs('chatMessages').innerHTML='<div class="chat-empty">Выбери диалог.</div>';qs('chatLayout')?.classList.remove('chat-has-active')}
+function renderChatHeader(u){qs('chatMainHead').innerHTML=`<button class="btn-ghost chat-mobile-back" onclick="closeActiveChat()">←</button><div class="chat-head-user"><div class="user-card-avatar" style="width:40px;height:40px">${avatarMarkup(u)}</div><div style="min-width:0"><div style="font-weight:900;color:${esc(u.nicknameColor||'var(--cream)')}">${esc(u.name)}</div><div class="section-meta">Взаимная подписка</div></div></div><button class="btn-sm" onclick="openPublicUserProfile(${Number(u.id)})">Профиль</button>`}
+function renderChatMessages(messages){const box=qs('chatMessages');if(!box)return;if(!messages.length){box.innerHTML='<div class="chat-empty">Здесь пока нет сообщений. Напиши первым.</div>';return}const byId=new Map((state.tracks||[]).map(t=>[Number(t.id),t]));box.innerHTML=messages.map(m=>{const mine=Number(m.fromUserId)===Number(state.user.id);const t=m.trackId?byId.get(Number(m.trackId)):null;return `<div class="chat-bubble ${mine?'mine':''}">${m.text?`<div class="chat-bubble-text">${esc(m.text)}</div>`:''}${m.trackId?`<div class="chat-track-card" onclick="playTrackById(${Number(m.trackId)})"><div class="chat-track-picker-cover">${t?.coverUrl?`<img src="${esc(t.coverUrl)}" alt="">`:'♫'}</div><div><div style="font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(t?.title||'Трек')}</div><div class="chat-person-meta">${esc(t?.artist||'Venyl')} · ▶ Слушать</div></div></div>`:''}<div class="chat-time">${formatChatTime(m.createdAt)}${mine&&m.readAt?' · прочитано':''}</div></div>`}).join('');box.scrollTop=box.scrollHeight}
+function chatInputKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChatMessage()}}
+async function sendChatMessage(){const u=state.currentChatUser;if(!u)return toast('Сначала выбери чат','err');const input=qs('chatMessageInput');const text=(input?.value||'').trim();const trackId=state.chatDraftTrackId;if(!text&&!trackId)return toast('Напиши сообщение или выбери трек','err');try{await api('/api/chat/'+Number(u.id)+'/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,trackId})});state.chatDraftTrackId=null;if(input)input.value='';closeChatTrackPicker();await openChat(u.id)}catch(e){toast(e.message||'Не удалось отправить сообщение','err')}}
+function openChatFromProfile(id){showSection('chat',document.querySelector('.nav-item[data-section="chat"]'));setTimeout(()=>openChat(Number(id)),50)}
+async function sendTrackToChat(trackId){if(!state.user)return showLogin();try{await loadChatConversations(true);if(!(state.chatConversations||[]).length)return toast('Нет взаимных подписок для отправки треков','err');showSection('chat',document.querySelector('.nav-item[data-section="chat"]'));setTimeout(()=>openChatTrackPicker(Number(trackId)),60)}catch(e){toast(e.message||'Не удалось открыть чат','err')}}
+function renderChatTrackPicker(query=''){
+  const box=qs('chatTrackPickerList');if(!box)return;const q=String(query||'').trim().toLocaleLowerCase('ru-RU');const list=(state.tracks||[]).filter(t=>!q||String(t.title||'').toLocaleLowerCase('ru-RU').includes(q)||String(t.artist||'').toLocaleLowerCase('ru-RU').includes(q)).slice(0,100);box.innerHTML=list.length?list.map(t=>`<button class="chat-track-picker-row" onclick="chooseChatTrack(${Number(t.id)})"><div class="chat-track-picker-cover">${t.coverUrl?`<img src="${esc(t.coverUrl)}" alt="">`:'♫'}</div><div class="chat-track-picker-copy"><b>${esc(t.title||'Трек')}</b><span>${esc(t.artist||'Venyl')}</span></div></button>`).join(''):'<div class="social-empty">Ничего не найдено.</div>'}
+function openChatTrackPicker(preselectedTrackId=null){if(!state.currentChatUser)return toast('Сначала выбери чат','err');state.chatDraftTrackId=preselectedTrackId?Number(preselectedTrackId):state.chatDraftTrackId;const input=qs('chatTrackPickerSearch');if(input)input.value='';renderChatTrackPicker('');qs('chatTrackPickerModal').classList.add('open')}
+function chooseChatTrack(id){state.chatDraftTrackId=Number(id);qs('chatTrackPickerModal').classList.remove('open');const t=findTrackById(id);toast(t?`Выбран «${t.title}» — нажми «Отправить»`:'Трек выбран','ok')}
+function closeChatTrackPicker(){qs('chatTrackPickerModal')?.classList.remove('open')}
+async function renderIncomingFollowers(){if(!state.user)return;const box=qs('incomingFollowersList');if(!box)return;try{const data=await api('/api/social/followers');state.incomingFollowers=Array.isArray(data.users)?data.users:[];updateUsersBadge(state.incomingFollowers.length);const meta=qs('incomingFollowersMeta');if(meta)meta.textContent=state.incomingFollowers.length?`${state.incomingFollowers.length} новых`:'';if(!state.incomingFollowers.length){box.innerHTML='<div class="social-empty"><strong>Пока никого нет</strong><br>Когда кто-то подпишется на тебя, здесь появится карточка.</div>';return}box.innerHTML=state.incomingFollowers.map(u=>`<div class="incoming-card"><div class="incoming-main" onclick="openPublicUserProfile(${Number(u.id)})"><div class="user-card-avatar" style="width:46px;height:46px">${avatarMarkup(u)}</div><div class="incoming-copy"><div class="incoming-name" style="color:${esc(u.nicknameColor||'var(--cream)')}">${esc(u.name)}</div><div class="incoming-meta">${Number(u.followerCount)||0} подписчиков · ${Number(u.followingCount)||0} подписок</div></div></div><div class="incoming-actions">${u.isFollowing?`<button class="btn-sm" onclick="event.stopPropagation();followUser(${Number(u.id)})">Подписки</button>`:`<button class="btn-sm btn-accent" onclick="event.stopPropagation();followUser(${Number(u.id)})">Подписаться</button>`}<button class="incoming-dismiss" title="Скрыть" onclick="event.stopPropagation();dismissIncomingFollower(${Number(u.id)})">×</button></div></div>`).join('')}catch(e){box.innerHTML='<div class="social-empty">Не удалось загрузить подписки.</div>'}}
+async function followUser(id){try{const r=await api('/api/users/'+Number(id)+'/follow',{method:'POST'});await renderIncomingFollowers();if(state.activeSection==='users'&&qs('usersSearchInput')?.value)await loadPublicUsers(qs('usersSearchInput').value);if(state.currentPublicUser&&Number(state.currentPublicUser.user?.id)===Number(id))await openPublicUserProfile(id);return r}catch(e){toast(e.message||'Не удалось изменить подписку','err')}}
+async function dismissIncomingFollower(id){try{await api('/api/social/followers/'+Number(id)+'/dismiss',{method:'POST'});await renderIncomingFollowers()}catch(e){toast(e.message||'Не удалось скрыть предложение','err')}}
+async function loadPublicUsers(q=''){
+  const query=String(q||'').trim();const grid=qs('usersGrid');const hint=qs('usersSearchHint');const meta=qs('usersFoundMeta');if(!grid)return;await renderIncomingFollowers();
+  if(!query){grid.innerHTML='<div class="social-empty"><strong>Список пользователей скрыт</strong><br>Введи ник в поле поиска, чтобы найти аккаунт.</div>';if(hint)hint.textContent='Начни вводить ник, чтобы найти пользователя.';if(meta)meta.textContent='';return}
+  grid.innerHTML='<div class="social-empty">Ищем пользователя…</div>';try{const data=await api('/api/users?q='+encodeURIComponent(query));state.publicUsers=Array.isArray(data.users)?data.users:[];if(meta)meta.textContent=`${state.publicUsers.length} найдено`;if(hint)hint.textContent='Совпадения только по нику.';if(!state.publicUsers.length){grid.innerHTML='<div class="social-empty"><strong>Ничего не найдено</strong><br>Попробуй другое написание ника.</div>';return}grid.innerHTML=state.publicUsers.map(u=>`<div class="user-card-wrap"><div class="user-card-main" onclick="openPublicUserProfile(${Number(u.id)})"><div class="user-card-avatar">${avatarMarkup(u)}</div><div class="user-card-copy"><div class="user-card-name" style="color:${esc(u.nicknameColor||'var(--cream)')}">${esc(u.name)}</div><div class="user-card-meta">${Number(u.followerCount)||0} подписчиков · ${Number(u.trackCount)||0} треков</div></div></div><div class="user-card-actions">${u.isFollowing?`<button class="btn-sm" onclick="event.stopPropagation();followUser(${Number(u.id)})">Отписаться</button>`:`<button class="btn-sm btn-accent" onclick="event.stopPropagation();followUser(${Number(u.id)})">Подписаться</button>`}</div></div>`).join('')}catch(e){grid.innerHTML='<div class="social-empty">Поиск временно недоступен.</div>';toast(e.message||'Ошибка поиска','err')}}
+async function togglePublicUserFollow(id,following){await (following?api('/api/users/'+Number(id)+'/follow',{method:'DELETE'}):api('/api/users/'+Number(id)+'/follow',{method:'POST'}));await openPublicUserProfile(id);await renderIncomingFollowers()}
+async function loadFollowersAndShow(id){try{const data=await api('/api/users/'+Number(id)+'/followers');const box=qs('publicFollowersBox');if(!box)return;const users=Array.isArray(data.users)?data.users:[];box.innerHTML=users.length?users.map(u=>`<div class="user-card-wrap" style="margin-bottom:8px"><div class="user-card-main" onclick="openPublicUserProfile(${Number(u.id)})"><div class="user-card-avatar">${avatarMarkup(u)}</div><div class="user-card-copy"><div class="user-card-name" style="color:${esc(u.nicknameColor||'var(--cream)')}">${esc(u.name)}</div><div class="user-card-meta">${Number(u.followerCount)||0} подписчиков</div></div></div>${Number(u.id)!==Number(state.user?.id)?`<div class="user-card-actions"><button class="btn-sm ${u.following?'':'btn-accent'}" onclick="event.stopPropagation();followUserFromProfile(${Number(u.id)},${u.following?'true':'false'},${Number(id)})">${u.following?'Отписаться':'Подписаться'}</button></div>`:''}</div>`).join(''):'<div class="social-empty">Подписчиков пока нет.</div>'}catch(e){toast(e.message||'Не удалось загрузить подписчиков','err')}}
+async function followUserFromProfile(id,currentlyFollowing,profileId){try{await api('/api/users/'+Number(id)+'/follow',{method:currentlyFollowing?'DELETE':'POST'});await openPublicUserProfile(profileId);await loadFollowersAndShow(profileId)}catch(e){toast(e.message||'Не удалось изменить подписку','err')}}
+async function stopChatWhenLeaving(s){if(s!=='chat')stopChatPolling()}
+</script>
+<style id="stage2MusicUX">
+/* ===================== STAGE 2: MUSIC UX ===================== */
+.player-queue-btn{border:1px solid var(--wire2);background:var(--ink3);color:var(--muted2);height:32px;min-width:54px;padding:0 10px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font:700 10px 'Cabinet Grotesk'}.player-queue-btn:hover{color:var(--cream);border-color:var(--accent-border);background:var(--ink4)}
+.now-playing-overlay{position:fixed;inset:0;background:rgba(5,5,9,.86);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:none;align-items:center;justify-content:center;z-index:3200;padding:24px}.now-playing-overlay.open{display:flex}
+.now-playing-panel{width:min(1080px,100%);max-height:min(860px,calc(100vh - 48px));background:linear-gradient(145deg,var(--ink2),#0b0b11 72%);border:1px solid var(--wire2);border-radius:28px;box-shadow:var(--shadow-lg);overflow:hidden;display:grid;grid-template-columns:minmax(300px,1.1fr) minmax(320px,.9fr)}
+.np-visual{padding:34px;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:520px;background:radial-gradient(circle at 50% 40%,rgba(200,169,110,.09),transparent 55%)}.np-cover-large{width:min(420px,70vw);aspect-ratio:1;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,#201040,#090914);border:1px solid var(--wire2);box-shadow:0 30px 80px rgba(0,0,0,.55);display:grid;place-items:center;color:var(--accent);font-size:72px}.np-cover-large img{width:100%;height:100%;object-fit:cover;display:block}.np-now-label{margin-top:18px;color:var(--muted);font-size:9px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase}.np-title-large{font-size:26px;font-weight:900;margin-top:6px;text-align:center;max-width:600px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.np-artist-large{font-size:13px;color:var(--muted2);margin-top:3px}.np-progress-area{width:min(420px,70vw);margin-top:20px}.np-progress-track{height:5px;background:var(--ink4);border-radius:9px;overflow:hidden;cursor:pointer}.np-progress-fill{height:100%;width:0;background:var(--accent);border-radius:inherit}.np-times{display:flex;justify-content:space-between;color:var(--muted);font-size:9px;margin-top:7px}.np-big-controls{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:18px}.np-big-controls button{border:0;background:none;color:var(--muted2);cursor:pointer}.np-big-controls .primary{width:52px;height:52px;border-radius:50%;background:var(--accent);color:var(--ink);display:grid;place-items:center;font-size:20px}.np-big-controls .small{width:36px;height:36px;font-size:16px}.np-side{padding:24px;display:flex;flex-direction:column;min-width:0;border-left:1px solid var(--wire)}.np-side-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.np-side-title{font-size:17px;font-weight:900}.np-side-sub{font-size:10px;color:var(--muted);margin-top:3px}.np-close{width:34px;height:34px;border-radius:50%;background:var(--ink4);border:1px solid var(--wire2);color:var(--muted2);cursor:pointer}.np-queue-list{flex:1;overflow:auto;display:flex;flex-direction:column;gap:6px;padding-right:4px}.npq-row{display:flex;align-items:center;gap:9px;padding:8px;border:1px solid transparent;border-radius:12px;background:rgba(255,255,255,.015);cursor:grab}.npq-row:hover{background:var(--ink3);border-color:var(--wire)}.npq-row.dragging{opacity:.45}.npq-index{width:20px;color:var(--muted);font-size:10px;text-align:center}.npq-cover{width:44px;height:44px;border-radius:9px;overflow:hidden;background:var(--ink4);flex:none}.npq-cover img{width:100%;height:100%;object-fit:cover}.npq-main{min-width:0;flex:1}.npq-main b,.npq-main span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.npq-main b{font-size:12px}.npq-main span{font-size:10px;color:var(--muted2);margin-top:2px}.npq-actions{display:flex;gap:4px}.npq-actions button{width:28px;height:28px;border-radius:8px;border:1px solid var(--wire2);background:var(--ink4);color:var(--muted2);cursor:pointer}.npq-actions button:hover{color:var(--cream);border-color:var(--accent-border)}.np-side-foot{padding-top:12px;display:flex;gap:7px;flex-wrap:wrap}.np-side-foot .btn-sm{flex:1;justify-content:center}
+.music-shortcuts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.music-shortcut{padding:5px 8px;border-radius:8px;background:var(--ink4);border:1px solid var(--wire);font-size:9px;color:var(--muted)}
+.smart-radio-card{background:linear-gradient(135deg,rgba(200,169,110,.10),rgba(255,255,255,.015));border:1px solid var(--accent-border);border-radius:18px;padding:16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.smart-radio-card h3{font-size:15px}.smart-radio-card p{font-size:10px;color:var(--muted2);margin-top:4px}.smart-radio-card button{flex:none}
+.my-list-row.drag-target{border-color:var(--accent);background:var(--accent-glow)}
+@media(max-width:900px){.now-playing-panel{grid-template-columns:1fr;overflow:auto}.np-side{border-left:0;border-top:1px solid var(--wire);max-height:40vh}.np-visual{min-height:unset;padding:24px}.np-cover-large{width:min(360px,78vw)}.np-progress-area{width:min(360px,78vw)}}
+@media(max-width:520px){.now-playing-overlay{padding:8px}.now-playing-panel{border-radius:20px;max-height:calc(100vh - 16px)}.np-visual{padding:18px}.np-cover-large{width:78vw}.np-title-large{font-size:21px}.np-side{padding:16px}.player-queue-btn{min-width:44px;padding:0 7px}}
+</style>
+<div aria-hidden="true" class="now-playing-overlay" id="venylNowPlaying">
+<div aria-label="Сейчас играет" aria-modal="true" class="now-playing-panel" role="dialog">
+<section class="np-visual">
+<div class="np-cover-large" id="npLargeCover">♫</div>
+<div class="np-now-label">Сейчас играет</div>
+<div class="np-title-large" id="npLargeTitle">Выберите трек</div>
+<div class="np-artist-large" id="npLargeArtist">—</div>
+<div class="np-progress-area"><div class="np-progress-track" id="npLargeProgress"><div class="np-progress-fill" id="npLargeFill"></div></div><div class="np-times"><span id="npLargeCurrent">0:00</span><span id="npLargeDuration">0:00</span></div></div>
+<div class="np-big-controls">
+<button class="small" onclick="prevTrack()" title="Предыдущий">⏮</button>
+<button class="small" onclick="shuffle()" title="Перемешать">🔀</button>
+<button class="primary" id="npLargePlay" onclick="togglePlay()" title="Воспроизвести">▶</button>
+<button class="small" onclick="nextTrack()" title="Следующий">⏭</button>
+<button class="small" onclick="toggleRepeat()" title="Повтор">↻</button>
+</div>
+<div class="music-shortcuts"><span class="music-shortcut">Space play/pause</span><span class="music-shortcut">Shift + ←/→ трек</span><span class="music-shortcut">M mute</span><span class="music-shortcut">F любимое</span></div>
+</section>
+<aside class="np-side">
+<div class="np-side-head"><div><div class="np-side-title">Очередь</div><div class="np-side-sub" id="npQueueMeta">0 треков</div></div><button class="np-close" onclick="closeNowPlaying()">×</button></div>
+<div class="np-queue-list" id="npQueueList"></div>
+<div class="np-side-foot"><button class="btn-sm" onclick="shuffleQueue();renderNowPlayingQueue()">Перемешать</button><button class="btn-sm" onclick="clearQueue();renderNowPlayingQueue()">Очистить</button></div>
+</aside>
+</div>
+</div>
+<script id="stage2MusicUXScript">
+(function(){
+  const LS='venyl_queue_v2';
+  const overlay=document.getElementById('venylNowPlaying');
+  const qList=document.getElementById('npQueueList');
+  const qMeta=document.getElementById('npQueueMeta');
+  const cover=document.getElementById('npLargeCover');
+  const title=document.getElementById('npLargeTitle');
+  const artist=document.getElementById('npLargeArtist');
+  const fill=document.getElementById('npLargeFill');
+  const cur=document.getElementById('npLargeCurrent');
+  const dur=document.getElementById('npLargeDuration');
+  const play=document.getElementById('npLargePlay');
+  const progress=document.getElementById('npLargeProgress');
+  function esc2(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function persist(){try{localStorage.setItem(LS,JSON.stringify((state.queue||[]).slice(0,100)))}catch{}}
+  function coverHtml(t){return t?.coverUrl?`<img src="${esc2(t.coverUrl)}" alt="">`:'♫'}
+  window.openNowPlaying=()=>{overlay?.classList.add('open');overlay?.setAttribute('aria-hidden','false');renderNowPlaying();}
+  window.closeNowPlaying=()=>{overlay?.classList.remove('open');overlay?.setAttribute('aria-hidden','true');}
+  window.renderNowPlaying=()=>{renderNowPlayingMain();renderNowPlayingQueue()}
+  function renderNowPlayingMain(){const t=state.currentTrack;if(!t){cover.innerHTML='♫';title.textContent='Выберите трек';artist.textContent='—';play.textContent='▶';return}cover.innerHTML=coverHtml(t);title.textContent=t.title||'Venyl';artist.textContent=t.artist||'—';play.textContent=state.isPlaying?'❚❚':'▶'}
+  window.renderNowPlayingQueue=()=>{const q=state.queue||[];qMeta.textContent=q.length+' трек'+(q.length%10===1&&q.length%100!==11?'':'ов');if(!q.length){qList.innerHTML='<div class="personal-empty compact"><b>Очередь пуста</b><span>Добавляй треки через ⋯ или запусти радио.</span></div>';return}qList.innerHTML=q.map((t,i)=>`<div class="npq-row" draggable="true" data-qidx="${i}"><span class="npq-index">${i+1}</span><div class="npq-cover">${coverHtml(t)}</div><div class="npq-main"><b>${esc2(t.title)}</b><span>${esc2(t.artist||'—')}</span></div><div class="npq-actions"><button title="Сыграть сейчас" onclick="queuePlayNow(${i})">▶</button><button title="Удалить" onclick="removeQueueAt(${i})">×</button></div></div>`).join('');bindDrag()}
+  function bindDrag(){qList.querySelectorAll('.npq-row').forEach(row=>{row.addEventListener('dragstart',e=>{row.classList.add('dragging');e.dataTransfer.setData('text/plain',row.dataset.qidx)});row.addEventListener('dragend',()=>row.classList.remove('dragging'));row.addEventListener('dragover',e=>{e.preventDefault();row.classList.add('drag-target')});row.addEventListener('dragleave',()=>row.classList.remove('drag-target'));row.addEventListener('drop',e=>{e.preventDefault();row.classList.remove('drag-target');const from=Number(e.dataTransfer.getData('text/plain')),to=Number(row.dataset.qidx);if(!Number.isInteger(from)||!Number.isInteger(to)||from===to)return;const q=[...(state.queue||[])];const [moved]=q.splice(from,1);q.splice(to,0,moved);state.queue=q;persist();renderNowPlayingQueue();if(typeof renderMyMusicPage==='function'&&state.activeSection==='myMusic')renderMyMusicPage('queue');})})}
+  window.queuePlayNow=(i)=>{const q=state.queue||[];const t=q[i];if(!t)return;state.queue=q.filter((_,idx)=>idx!==i);persist();const list=[t,...state.queue];playTrackObject(t,0,list);renderNowPlayingQueue();}
+  window.removeQueueAt=(i)=>{state.queue=(state.queue||[]).filter((_,idx)=>idx!==i);persist();renderNowPlayingQueue();if(typeof renderMyMusicPage==='function'&&state.activeSection==='myMusic')renderMyMusicPage('queue');}
+  window.clearQueue=()=>{state.queue=[];persist();if(typeof renderMyMusicPage==='function'&&state.activeSection==='myMusic')renderMyMusicPage('queue')}
+  window.shuffleQueue=()=>{state.queue=[...(state.queue||[])].sort(()=>Math.random()-0.5);persist();if(typeof renderMyMusicPage==='function'&&state.activeSection==='myMusic')renderMyMusicPage('queue')}
+  overlay?.addEventListener('click',e=>{if(e.target===overlay)closeNowPlaying()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay?.classList.contains('open'))closeNowPlaying()});
+  progress?.addEventListener('click',e=>{if(!audio.duration)return;const r=progress.getBoundingClientRect();audio.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*audio.duration});
+  audio.addEventListener('timeupdate',()=>{if(!audio.duration)return;fill.style.width=(audio.currentTime/audio.duration*100)+'%';cur.textContent=fmtTime(audio.currentTime);dur.textContent=fmtTime(audio.duration)});
+  audio.addEventListener('play',renderNowPlayingMain);audio.addEventListener('pause',renderNowPlayingMain);
+  const oldUpdate=window.updatePlayerMeta;if(oldUpdate)window.updatePlayerMeta=function(){const r=oldUpdate.apply(this,arguments);renderNowPlayingMain();return r};
+  const oldAdd=window.addTrackToQueue;if(oldAdd)window.addTrackToQueue=function(id){const r=oldAdd.apply(this,arguments);persist();renderNowPlayingQueue();return r};
+  const oldNext=window.nextTrack;if(oldNext)window.nextTrack=function(){const r=oldNext.apply(this,arguments);persist();renderNowPlayingQueue();return r};
+  const oldPlayNext=window.playTrackNext;if(oldPlayNext)window.playTrackNext=function(id){const r=oldPlayNext.apply(this,arguments);persist();renderNowPlayingQueue();return r};
+  const npCover=document.getElementById('npCover');const npText=document.getElementById('npTitle');if(npCover)npCover.style.cursor='pointer',npCover.title='Открыть плеер',npCover.addEventListener('click',openNowPlaying);if(npText)npText.style.cursor='pointer',npText.title='Открыть плеер',npText.addEventListener('click',openNowPlaying);
+  // Add queue button to compact player once.
+  const controls=document.querySelector('.player-controls');if(controls&&!document.getElementById('playerQueueBtn')){const b=document.createElement('button');b.id='playerQueueBtn';b.className='player-queue-btn';b.title='Открыть очередь';b.innerHTML='☰ <span>Очередь</span>';b.onclick=openNowPlaying;controls.appendChild(b)}
+  // A richer radio action: use the current track and continue with an automatically shuffled matching set.
+  window.startSmartRadio=()=>{const base=state.currentTrack;if(!base)return toast('Сначала запусти трек','err');const g=String(base.genre||'').toLowerCase(),a=String(base.artist||'').toLowerCase();const list=state.tracks.filter(t=>Number(t.id)!==Number(base.id)&&!state.excludedTracks?.has(Number(t.id))).sort((x,y)=>{const xs=(String(x.genre||'').toLowerCase().includes(g)?4:0)+(String(x.artist||'').toLowerCase()===a?6:0)+Math.random()*2;const ys=(String(y.genre||'').toLowerCase().includes(g)?4:0)+(String(y.artist||'').toLowerCase()===a?6:0)+Math.random()*2;return ys-xs}).slice(0,25);state.queue=list;persist();playTrackObject(base,0,[base,...list]);toast('Радио запущено','ok');renderNowPlayingQueue()}
+  // Make the player queue visible from common keyboard shortcut.
+  document.addEventListener('keydown',e=>{if(['input','textarea','select'].includes((e.target?.tagName||'').toLowerCase()))return;if(e.key.toLowerCase()==='q'&&!e.ctrlKey&&!e.metaKey)openNowPlaying()});
+  // Request better recommendations from backend with local exclusions.
+  window.fetchMyRecommendationsStage2=async()=>{if(!state.user)return [];try{const ex=[...(state.excludedTracks||[])].slice(0,80).join(',');const d=await api('/api/recommendations'+(ex?'?exclude='+encodeURIComponent(ex):''));return Array.isArray(d.tracks)?d.tracks:[]}catch{return []}};
+  // Replace recommendation loader only once, preserving the existing UI.
+  if(typeof window.renderMyMusicPage==='function'){ /* page renderer remains compatible; data source upgraded below */ }
+  const oldFetch=window.fetchMyRecommendations;if(oldFetch)window.fetchMyRecommendations=window.fetchMyRecommendationsStage2;
+  renderNowPlayingMain();renderNowPlayingQueue();
+})();
+</script>
+<script>if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));</script>
+<style id="stage3SocialCSS">
+.public-user-modal{max-width:760px}.public-user-head{display:flex;align-items:flex-start;gap:16px;padding:8px 0}.public-user-avatar{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,#2b1d0e,#6f5425);border:1px solid var(--accent-border);display:grid;place-items:center;overflow:hidden;color:var(--accent);font-size:28px;font-weight:900;flex:none}.public-user-avatar img{width:100%;height:100%;object-fit:cover}.public-user-meta{min-width:0;flex:1}.public-user-name{font-size:22px;font-weight:900}.public-user-bio{margin-top:5px;color:var(--muted2);line-height:1.5;font-size:12px;white-space:pre-wrap}.public-user-stats{display:flex;gap:16px;margin-top:10px;color:var(--muted);font-size:11px}.public-user-stats b{color:var(--cream);font-size:14px}.public-user-head>.btn-sm{margin-left:auto;flex:none}.public-playlists{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}.public-playlist-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:var(--ink3);border:1px solid var(--wire);color:inherit;text-align:left;cursor:pointer}.public-playlist-card:hover{border-color:var(--wire3);background:var(--ink4)}.public-playlist-card b,.public-playlist-card span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.public-playlist-card span{font-size:10px;color:var(--muted);margin-top:3px}.public-playlist-card .playlist-cover{width:48px;height:48px;border-radius:10px;padding:0;flex:none}@media(max-width:600px){.public-user-head{flex-wrap:wrap}.public-user-head>.btn-sm{margin-left:88px}.public-playlists{grid-template-columns:1fr}}
+</style>
+
+
+<div class="modal-overlay" id="chatTrackPickerModal" onclick="if(event.target===this)closeChatTrackPicker()"><div class="modal"><div class="modal-header"><div><div class="modal-title">Отправить трек</div><div class="section-meta">Выбери трек из каталога Venyl</div></div><button class="modal-close" onclick="closeChatTrackPicker()"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293 4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button></div><input class="form-input" id="chatTrackPickerSearch" placeholder="Найти трек…" autocomplete="off" oninput="renderChatTrackPicker(this.value)" style="margin-bottom:12px"><div class="chat-track-picker-list" id="chatTrackPickerList"></div></div></div>
 </body>
 </html>
