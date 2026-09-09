@@ -12,7 +12,7 @@ const CONFIGURED = Boolean(SUPABASE_URL && SUPABASE_KEY);
 const TABLES = [
   'users','email_verification_tokens','artists','albums','tracks','track_artists',
   'subscriptions','favorite_tracks','playlists','playlist_tracks','listen_history','comments',
-  'user_follows','dismissed_follow_suggestions','chat_messages'
+  'user_follows','playlist_likes','user_subscriptions','user_follow_dismissals','chat_messages'
 ];
 const COMPOSITE = { track_artists: ['track_id', 'artist_id'] };
 const BUCKETS = ['tracks','covers','artists','avatars','albums','playlists'];
@@ -21,11 +21,11 @@ const blank = () => Object.fromEntries(TABLES.map(k => [k, []]));
 function readLocal(){ try { return { ...blank(), ...JSON.parse(fs.readFileSync(JSON_PATH,'utf8')) }; } catch { return blank(); } }
 function writeLocal(db){ fs.mkdirSync(DATA_DIR,{recursive:true}); fs.writeFileSync(JSON_PATH, JSON.stringify(db,null,2), 'utf8'); }
 function norm(table,row){ const r={...row}; if(table==='users'&&'is_verified'in r)r.is_verified=Boolean(r.is_verified); if(table==='playlists'&&'is_public'in r)r.is_public=Boolean(r.is_public); return r; }
-function denorm(table,row){ const r={...row}; if(table==='users'&&'is_verified'in r)r.is_verified=r.is_verified?1:0; if(table==='playlists'&&'is_public'in r)r.is_public=Boolean(r.is_public); return r; }
+function denorm(table,row){ const r={...row}; if(table==='users'&&'is_verified'in r)r.is_verified=r.is_verified?1:0; if(table==='playlists'&&'is_public'in r)r.is_public=r.is_public?1:0; return r; }
 async function request(table,{method='GET',query='',body,prefer}={}){ const headers={apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'}; if(prefer)headers.Prefer=prefer; const res=await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`,{method,headers,body:body===undefined?undefined:JSON.stringify(body)}); const text=await res.text(); if(!res.ok)throw new Error(`Supabase ${res.status} ${table}: ${text.slice(0,500)}`); return text?JSON.parse(text):null; }
 async function storageList(bucket){ const res=await fetch(`${SUPABASE_URL}/storage/v1/object/list/${bucket}`,{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({prefix:'',limit:1000,offset:0,sortBy:{column:'name',order:'asc'}})}); const text=await res.text(); if(!res.ok)throw new Error(`Storage list ${res.status}: ${text.slice(0,500)}`); return text?JSON.parse(text):[]; }
 async function storageUpload(bucket,name,filePath){ const data=fs.readFileSync(filePath); const res=await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${encodeURIComponent(name)}`,{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/octet-stream','x-upsert':'true'},body:data}); const text=await res.text(); if(!res.ok)throw new Error(`Storage upload ${res.status}: ${text.slice(0,300)}`); }
-async function storageDownload(bucket,name,filePath){ const res=await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${encodeURIComponent(name)}`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}); if(!res.ok)throw new Error(`Storage download ${res.status} ${bucket}/${name}`); const data=Buffer.from(await res.arrayBuffer()); fs.mkdirSync(path.dirname(filePath),{recursive:true}); fs.writeFileSync(filePath,data); }
+async function storageDownload(bucket,name,filePath){ const res=await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${encodeURIComponent(name)}`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}}); if(!res.ok)throw new Error(`Storage download ${res.status} ${bucket}/${name}`); const data=Buffer.from(await res.arrayBuffer()); fs.mkdirSync(path.dirname(filePath),{recursive:true}); fs.writeFileSync(filePath,data); }
 function bucketLocalDir(bucket){ return path.join(UPLOADS_DIR,bucket==='tracks'?'tracks':bucket==='covers'?'covers':bucket==='artists'?'artists':bucket==='avatars'?'avatars':bucket==='albums'?'albums':'playlists'); }
 async function syncBucket(bucket){ const dir=bucketLocalDir(bucket); fs.mkdirSync(dir,{recursive:true}); const remote=(await storageList(bucket)).filter(x=>x&&x.name); const remoteNames=new Set(remote.map(x=>x.name)); for(const obj of remote){ const local=path.join(dir,obj.name); if(!fs.existsSync(local))await storageDownload(bucket,obj.name,local); } for(const entry of fs.readdirSync(dir,{withFileTypes:true})){ if(!entry.isFile())continue; if(!remoteNames.has(entry.name))await storageUpload(bucket,entry.name,path.join(dir,entry.name)); } }
 async function syncStorage(){ for(const bucket of BUCKETS)await syncBucket(bucket); }
@@ -41,7 +41,7 @@ async function main(){
   console.log('[Venyl] Supabase storage configured.');
   let remote=blank();
   for(const table of TABLES)remote[table]=await fetchAll(table);
-  const remoteHasData=remote.users.length||remote.artists.length||remote.tracks.length;
+  const remoteHasData=remote.users.length||remote.artists.length||remote.tracks.length||remote.playlists.length;
   if(!remoteHasData){ console.log('[Venyl] Supabase is empty -> importing existing data/venyl.json.'); await sync(local,blank()); writeLocal(local); }
   else { console.log('[Venyl] Restoring database from Supabase.'); writeLocal(remote); }
   await syncStorage();
