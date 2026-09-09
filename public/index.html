@@ -3550,5 +3550,24 @@ document.addEventListener('DOMContentLoaded',async()=>{
 window.addEventListener('pageshow',()=>{ setTimeout(()=>resetSearchInput(true),0); setTimeout(()=>resetSearchInput(true),300); });
 window.addEventListener('load',()=>{ setTimeout(()=>resetSearchInput(true),0); setTimeout(()=>resetSearchInput(true),500); });
 </script>
+<script id="venylAdminSidebarFix">
+    (() => {
+      const apply = () => {
+        const sections = [...document.querySelectorAll('.nav-section')];
+        const target = sections.find(el => /Управление|Manage|Hantera|Керування/i.test(el.innerText || ''));
+        if (!target) return;
+        target.style.display = 'none';
+        fetch('/api/auth/me', { credentials: 'same-origin' })
+          .then(r => r.ok ? r.json() : { user: null })
+          .then(({ user }) => {
+            const admin = user && (user.isAdmin === true || String(user.role || '').toLowerCase() === 'admin');
+            if (admin) target.style.display = '';
+          })
+          .catch(() => {});
+      };
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply, { once: true });
+      else apply();
+    })();
+    </script>
 </body>
 </html>
