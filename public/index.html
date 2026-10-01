@@ -1452,9 +1452,9 @@ select.form-input{cursor:pointer}
 @media(max-width:520px){.users-search-box{min-width:0}.users-section-card{padding:14px}.public-profile-hero{padding:18px;gap:14px}.public-profile-avatar{width:68px;height:68px;font-size:22px}.public-profile-name{font-size:20px}.public-profile-stats{gap:11px}.public-profile-actions{margin-top:12px}.chat-layout{height:calc(100vh - 210px);min-height:420px;border-radius:16px}.chat-bubble{max-width:86%}.chat-compose{gap:6px}.chat-compose .btn-sm{padding:9px 10px}.chat-compose-tools .btn-sm{padding:9px 10px}}
 
 /* Separate top-level application views: only the active view is shown by JS. */
-#homeView,#myMusicView,#artistsView,#favoritesView,#playlistsView,#playlistProfileView,#artistProfileView,#albumProfileView,#searchView,#usersView,#publicUserProfileView,#chatView,#adminPanelView{box-sizing:border-box;}
+#homeView,#discoverView,#myMusicView,#artistsView,#favoritesView,#playlistsView,#playlistProfileView,#artistProfileView,#albumProfileView,#searchView,#usersView,#publicUserProfileView,#chatView,#adminPanelView{box-sizing:border-box;}
 </style>
-</head>
+<style id="venylCoverEditCSS">.cover-edit-row{display:flex;align-items:center;gap:14px}.cover-edit-preview{width:92px;height:92px;border-radius:14px;background:linear-gradient(135deg,#24133b,#11111a);border:1px solid var(--wire2);display:grid;place-items:center;overflow:hidden;color:var(--accent);font-size:24px;flex:none}.cover-edit-preview img{width:100%;height:100%;object-fit:cover;display:block}.cover-edit-actions{display:flex;gap:8px;flex-wrap:wrap}.cover-edit-actions .btn-sm{min-height:36px}</style></head>
 <body>
 <!-- MAIN APP -->
 <div class="page active" id="app">
@@ -1475,8 +1475,11 @@ select.form-input{cursor:pointer}
 <a class="nav-item active" data-section="home" onclick="showSection('home',this)">
 <span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M10 2L2 8v10h6v-5h4v5h6V8L10 2z"></path></svg></span>Главная
     </a>
+<a class="nav-item" data-section="discover" onclick="showSection('discover',this)">
+<span class="nav-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 20 20"><path d="M10 2.5a7.5 7.5 0 1 1-7.5 7.5A7.5 7.5 0 0 1 10 2.5Z"></path><path d="m12.6 7.4-1.5 3.7-3.7 1.5 1.5-3.7 3.7-1.5Z"></path></svg></span>Открытие
+</a>
 <a class="nav-item" data-section="myMusic" onclick="showSection('myMusic',this)">
-<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M11 3a1 1 0 00-2 0v9.126A3.5 3.5 0 0010 19a3.5 3.5 0 003.5-3.5A3.49 3.49 0 0011 12.126V6.618l5.553 1.851A1 1 0 0018 7.52V4a1 1 0 00-.684-.949l-6-2A1 1 0 0010 2v1h1v0zm0 12.5A1.5 1.5 0 1110 14a1.5 1.5 0 011 1.5z"></path></svg></span>Моя музыка
+<span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7.5a5 5 0 0 1 10 0v4a5 5 0 0 1-10 0z"/><path d="M3.5 10v1.5M16.5 10v1.5"/><path d="M8 11.5a2 2 0 0 0 4 0"/></svg></span>Моя музыка
     </a><a class="nav-item" data-section="users" onclick="showSection('users',this)">
       <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm6-1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM1.5 17a5.5 5.5 0 0 1 11 0v1h-11v-1Zm10.5 1v-1.1a6.7 6.7 0 0 0-1.1-3.7A4.5 4.5 0 0 1 18.5 17v1H12Z"/></svg></span>Пользователи <span class="nav-badge" id="usersNavBadge" style="display:none"></span>
     </a>
@@ -1484,13 +1487,13 @@ select.form-input{cursor:pointer}
       <span class="nav-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 3.5A2.5 2.5 0 0 1 5.5 1h9A2.5 2.5 0 0 1 17 3.5v6A2.5 2.5 0 0 1 14.5 12H9l-4.2 3.2c-.8.6-1.8.1-1.8-.9V12A2.5 2.5 0 0 1 1 9.5v-6h2Zm2.5-.5A.5.5 0 0 0 5 3.5v6c0 .28.22.5.5.5h8.9a.5.5 0 0 0 .6-.5v-6a.5.5 0 0 0-.5-.5h-9Z"/></svg></span>Чаты <span class="nav-badge" id="chatNavBadge" style="display:none"></span>
     </a>
 <a class="nav-item" data-section="artists" onclick="showSection('artists',this)">
-<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"></path></svg></span>Артисты
+<span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6" r="3"/><path d="M4 17a6 6 0 0 1 12 0"/><path d="M15.5 3.5v4"/><path d="M13.5 5.5h4"/></svg></span>Артисты
     </a>
 <a class="nav-item" data-section="favorites" onclick="showSection('favorites',this)">
 <span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path></svg></span>Избранное
     </a>
 <a class="nav-item" data-section="playlists" onclick="showSection('playlists',this)">
-<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12.5a1 1 0 01-1.55.83L10 14.36l-4.45 2.97A1 1 0 014 16.5V4z"></path></svg></span>Плейлисты
+<span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 5h14M3 10h14M3 15h9"/><circle cx="15.5" cy="15" r="2.5"/></svg></span>Плейлисты
     </a>
 <a class="nav-item nav-search-link" onclick="focusSearch()">
 <span class="nav-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 20 20"><circle cx="9" cy="9" r="6"></circle><path d="m14 14 4 4" stroke-linecap="round"></path></svg></span>Поиск
@@ -1502,13 +1505,13 @@ select.form-input{cursor:pointer}
 <span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V15a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"></path><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"></path></svg></span>Загрузить трек
     </a>
 <a class="nav-item" onclick="openArtistEdit()">
-<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"></path></svg></span>Новый артист
+<span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="6" r="2.5"/><path d="M3.5 16a4.5 4.5 0 0 1 9 0"/><path d="M15 8v6M12 11h6"/></svg></span>Новый артист
     </a>
 <a class="nav-item" onclick="openAlbumModal()">
-<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path></svg></span>Создать альбом
+<span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="2"/><circle cx="10" cy="10" r="3.2"/><circle cx="10" cy="10" r="1"/><path d="M10 3v2M17 10h-2"/></svg></span>Создать альбом
     </a>
 <a class="nav-item" onclick="showSection('admin',this)">
-<span class="nav-icon"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v2.08c0 .65-.21 1.28-.6 1.8L2.4 13.2A1 1 0 003.2 14.8h13.6a1 1 0 00.8-1.6l-1-1.32a3 3 0 01-.6-1.8V8a6 6 0 00-6-6zm-2 15a2 2 0 004 0H8z"></path></svg></span>Админ-панель
+<span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5l6 2.5v4.5c0 3.8-2.4 6.3-6 8-3.6-1.7-6-4.2-6-8V5z"/><path d="M7.2 10l1.8 1.8 3.8-4"/></svg></span>Админ-панель
     </a>
 </div>
 <div class="sidebar-bottom">
@@ -1678,6 +1681,26 @@ select.form-input{cursor:pointer}
 </div>
 <div class="continue-grid" id="continueListeningGrid"></div>
 </section>
+<section class="mb-section social-pulse-section" id="socialPulseSection">
+  <div class="section-head">
+    <div><div class="section-title">Твой социальный Venyl</div><div class="home-personal-sub">Друзья, активность и новые события</div></div>
+    <button class="btn-sm" onclick="loadSocialPulse(true)">Обновить</button>
+  </div>
+  <div class="social-pulse-grid">
+    <div class="social-pulse-card">
+      <div class="social-pulse-card-head"><h3>Слушают сейчас</h3><span id="socialListeningMeta"></span></div>
+      <div id="socialListeningList" class="social-pulse-list"><div class="personal-empty compact"><span>Загрузка…</span></div></div>
+    </div>
+    <div class="social-pulse-card">
+      <div class="social-pulse-card-head"><h3>Лента друзей</h3><span id="socialFeedMeta"></span></div>
+      <div id="socialFeedList" class="social-pulse-list"><div class="personal-empty compact"><span>Загрузка…</span></div></div>
+    </div>
+    <div class="social-pulse-card">
+      <div class="social-pulse-card-head"><h3>Уведомления</h3><span id="socialNotificationsMeta"></span></div>
+      <div id="socialNotificationsList" class="social-pulse-list"><div class="personal-empty compact"><span>Загрузка…</span></div></div>
+    </div>
+  </div>
+</section>
 <!-- CHART (hidden title, full width) -->
 <div class="mb-section">
 <div class="section-head">
@@ -1696,6 +1719,13 @@ select.form-input{cursor:pointer}
 </div>
 </div>
 <!-- MY MUSIC -->
+<div id="discoverView" style="display:none">
+<div class="page-head"><div><div class="page-kicker">VENYL DISCOVER</div><h1>Открытие</h1><p>Найди что-то новое — от популярных треков до свежих релизов.</p></div><button class="btn-sm btn-accent" onclick="refreshDiscover()">Обновить</button></div>
+<div class="discover-section"><div class="section-head"><div class="section-title">🔥 В тренде</div><span class="section-meta">Самое популярное сейчас</span></div><div class="tracks-list" id="discoverTrending"></div></div>
+<div class="discover-section"><div class="section-head"><div class="section-title">🆕 Новые релизы</div><span class="section-meta">Последние добавления</span></div><div class="tracks-list" id="discoverNew"></div></div>
+<div class="discover-section"><div class="section-head"><div class="section-title">🎤 Популярные артисты</div></div><div class="artist-grid" id="discoverArtists"></div></div>
+<div class="discover-section"><div class="section-head"><div class="section-title">💿 Популярные альбомы</div></div><div class="albums-grid" id="discoverAlbums"></div></div>
+</div>
 <div id="myMusicView" style="display:none">
 <div class="my-music-hero">
 <div>
@@ -1713,7 +1743,7 @@ select.form-input{cursor:pointer}
 <button class="my-music-tab" data-my-tab="history">История</button>
 <button class="my-music-tab" data-my-tab="recommendations">Для тебя</button>
 <button class="my-music-tab" data-my-tab="queue">Очередь</button>
-<button class="my-music-tab" data-my-tab="stats">Статистика</button>
+<button class="my-music-tab" data-my-tab="stats">Статистика</button><button class="my-music-tab" data-my-tab="wrapped">Wrapped</button>
 </div>
 <div id="myMusicContent"></div>
 </div>
@@ -1887,6 +1917,9 @@ select.form-input{cursor:pointer}
 <button class="ctrl-btn" id="repeatBtn" onclick="toggleRepeat()" title="Повтор">
 <svg fill="currentColor" viewbox="0 0 20 20"><path d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"></path></svg>
 </button>
+<button class="ctrl-btn" id="radioBtn" onclick="startVenylRadio()" title="Venyl Radio">♫</button>
+<button class="ctrl-btn" onclick="skipBack10()" title="Назад 10 секунд">↶10</button>
+<button class="ctrl-btn" onclick="skipForward10()" title="Вперёд 10 секунд">10↷</button>
 </div>
 <div class="progress-wrap">
 <span class="prog-time" id="curTime">0:00</span>
@@ -1899,6 +1932,12 @@ select.form-input{cursor:pointer}
 <div class="player-right">
 <div class="eq-bars" id="eqBars" style="display:none">
 <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+</div>
+<div class="advanced-player-tools">
+<button class="player-tool-btn" id="sleepTimerBtn" onclick="toggleSleepTimer()" title="Таймер сна">⏱</button>
+<select class="player-speed" id="playbackRateSelect" onchange="setPlaybackRate(this.value)" title="Скорость">
+<option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option>
+</select>
 </div>
 <div class="vol-wrap">
 <div class="vol-icon">
@@ -1971,9 +2010,25 @@ select.form-input{cursor:pointer}
 <div class="modal-overlay" id="uploadModal" onclick="if(event.target===this)closeUpload()">
 <div class="modal">
 <div class="modal-header">
-<div class="modal-title">Загрузить трек</div>
+<div class="modal-title">Загрузить музыку</div>
 <button class="modal-close" onclick="closeUpload()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
 </div>
+<div class="form-group" style="padding:14px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.025)">
+<label class="form-label">Умный импорт библиотеки</label>
+<div class="drop-zone" id="albumZipDrop" onclick="qs('albumZipFile').click()">
+<div class="drop-text">Выбери <span>ZIP с любыми треками</span></div>
+<input accept=".zip,application/zip" id="albumZipFile" onchange="handleAlbumZip(event)" style="display:none" type="file"/>
+</div>
+<div style="font-size:11px;color:var(--muted);line-height:1.5;margin-top:8px">Venyl прочитает ID3-теги и сам разделит музыку по исполнителям и альбомам. Треки без альбома попадут в Singles.</div>
+<button class="auth-btn-full" id="albumZipPreviewBtn" onclick="previewAlbumZip()" type="button" style="margin-top:10px">Показать предпросмотр</button>
+<div id="albumZipStatus" style="font-size:12px;color:var(--muted);margin-top:8px"></div>
+<div id="albumZipPreview" style="display:none;margin-top:12px"></div>
+<div id="albumZipActions" style="display:none;gap:8px;margin-top:10px">
+<button class="auth-btn-full" id="albumZipImportBtn" onclick="commitAlbumZip()" type="button" style="margin:0;flex:1">Импортировать всё</button>
+<button class="btn-sm" onclick="cancelAlbumZipPreview()" type="button">Отмена</button>
+</div>
+</div>
+<div style="height:14px"></div>
 <div class="form-group">
 <label class="form-label">Аудиофайл</label>
 <div class="drop-zone" id="audioDrop" onclick="qs('audioFile').click()">
@@ -2080,6 +2135,33 @@ select.form-input{cursor:pointer}
 <button class="auth-btn-full" onclick="submitAlbum()">Создать альбом</button>
 </div>
 </div>
+<div class="modal-overlay" id="trackEditModal" onclick="if(event.target===this)closeTrackEditModal()">
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title">Редактировать трек</div>
+<button class="modal-close" onclick="closeTrackEditModal()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
+</div>
+<input id="trackEditId" type="hidden"/>
+<div class="form-group"><label class="form-label">Обложка трека</label><div class="cover-edit-row"><div class="cover-edit-preview" id="trackEditCoverPreview">♫</div><div class="cover-edit-actions"><input accept="image/jpeg,image/png,image/webp" id="trackEditCover" type="file" style="display:none" onchange="previewEditCover(this,'trackEditCoverPreview')"/><button type="button" class="btn-sm" onclick="qs('trackEditCover').click()">Выбрать обложку</button><button type="button" class="btn-sm" onclick="clearEditCover('trackEditCover','trackEditCoverPreview')">Убрать новую</button></div></div></div>
+<div class="form-group"><label class="form-label">Название</label><input class="form-input" id="trackEditTitle" maxlength="160" placeholder="Название трека"/></div>
+<div class="form-group"><label class="form-label">Артист</label><input class="form-input" id="trackEditArtist" maxlength="200" placeholder="Имя артиста"/></div>
+<div class="form-row"><div class="form-group"><label class="form-label">Альбом</label><input class="form-input" id="trackEditAlbum" maxlength="160" placeholder="Альбом"/></div><div class="form-group"><label class="form-label">Жанр</label><input class="form-input" id="trackEditGenre" maxlength="120" placeholder="Жанр"/></div></div>
+<button class="auth-btn-full" onclick="saveTrackEdit()">Сохранить трек</button>
+</div>
+</div>
+<div class="modal-overlay" id="albumEditModal" onclick="if(event.target===this)closeAlbumEditModal()">
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title">Редактировать альбом</div>
+<button class="modal-close" onclick="closeAlbumEditModal()"><svg fill="currentColor" viewbox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414-1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg></button>
+</div>
+<input id="albumEditId" type="hidden"/>
+<div class="form-group"><label class="form-label">Обложка альбома</label><div class="cover-edit-row"><div class="cover-edit-preview" id="albumEditCoverPreview">♫</div><div class="cover-edit-actions"><input accept="image/jpeg,image/png,image/webp" id="albumEditCover" type="file" style="display:none" onchange="previewEditCover(this,'albumEditCoverPreview')"/><button type="button" class="btn-sm" onclick="qs('albumEditCover').click()">Выбрать обложку</button><button type="button" class="btn-sm" onclick="clearEditCover('albumEditCover','albumEditCoverPreview')">Убрать новую</button></div></div></div>
+<div class="form-group"><label class="form-label">Название альбома</label><input class="form-input" id="albumEditName" maxlength="160" placeholder="Название альбома"/></div>
+<div class="form-group"><label class="form-label">Описание</label><textarea class="form-textarea" id="albumEditDescription" maxlength="500" placeholder="Описание альбома"></textarea></div>
+<button class="auth-btn-full" onclick="saveAlbumEdit()">Сохранить альбом</button>
+</div>
+</div>
 <div class="modal-overlay" id="profileModal" onclick="if(event.target===this)closeProfileModal()">
 <div class="modal">
 <div class="modal-header">
@@ -2088,6 +2170,7 @@ select.form-input{cursor:pointer}
 </div>
 <div class="profile-avatar-lg" id="profileAvatarPreview">U</div>
 <div class="form-group"><label class="form-label">О себе</label><textarea class="form-textarea" id="profileBio" maxlength="500" placeholder="Расскажи немного о себе…"></textarea></div>
+<div class="form-group" id="profileVerificationGroup" style="display:none"><label class="form-label">Email</label><div class="profile-note" id="profileVerificationNote"></div><button class="btn-ghost" type="button" onclick="resendVerificationEmail()" style="margin-top:8px">Отправить письмо повторно</button></div>
 <div class="form-group">
 <label class="form-label">Ник</label>
 <input class="form-input" id="profileName" maxlength="40" placeholder="Твой ник"/>
@@ -2145,6 +2228,13 @@ select.form-input{cursor:pointer}
 </div>
 <input id="playlistEditId" type="hidden"/>
 <div class="form-group"><label class="form-label">Название</label><input class="form-input" id="playlistEditName" placeholder="Мой плейлист"/></div>
+<div class="form-group">
+<label class="form-label">Видимость</label>
+<label style="display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--wire);border-radius:12px;background:var(--ink3);cursor:pointer">
+<input id="playlistEditPublic" type="checkbox" style="width:18px;height:18px;accent-color:var(--accent)"/>
+<span><b>Опубликовать плейлист</b><small style="display:block;color:var(--muted);margin-top:3px">Публичный плейлист будет виден в профиле и доступен другим пользователям.</small></span>
+</label>
+</div>
 <div class="form-group">
 <label class="form-label">Обложка</label>
 <div class="drop-zone" onclick="qs('playlistCoverFile').click()">
@@ -2228,7 +2318,7 @@ function updateUserUI(){
     else el.style.display='flex';
   });
 }
-async function loadSession(){try{const data=await api('/api/auth/me');state.user=data.user||null;state.isAdmin=!!data.user?.isAdmin}catch{state.user=null;state.isAdmin=false}updateUserUI();await Promise.all([loadSubscribedFeed(),loadFavorites(),loadPlaylists()]);}
+async function loadSession(){try{const data=await api('/api/auth/me');state.user=data.user||null;state.isAdmin=!!data.user?.isAdmin}catch{state.user=null;state.isAdmin=false}updateUserUI();await Promise.all([loadSubscribedFeed(),loadFavorites(),loadPlaylists()]);if(state.user) setTimeout(()=>loadSocialPulse(false),600);}
 
 async function loadFavorites(){
   if(!state.user){
@@ -2414,7 +2504,7 @@ function filterTracks(){
   renderSearchResults(q);
 }
 function hideAllMainViews(){
-  ['homeView','myMusicView','artistsView','favoritesView','playlistsView','playlistProfileView','artistProfileView','albumProfileView','searchView','usersView','publicUserProfileView','chatView','adminPanelView'].forEach(id=>{const el=qs(id);if(el)el.style.display='none'});
+  ['homeView','discoverView','myMusicView','artistsView','favoritesView','playlistsView','playlistProfileView','artistProfileView','albumProfileView','searchView','usersView','publicUserProfileView','chatView','adminPanelView'].forEach(id=>{const el=qs(id);if(el)el.style.display='none'});
 }
 function hideSearchView(){
   qs('searchView').style.display='none';
@@ -2717,6 +2807,7 @@ function openPlaylistEditModal(id=null){
   const pl=id?state.playlists.find(x=>Number(x.id)===Number(id))||state.currentPlaylist?.playlist:null;
   qs('playlistEditId').value=pl?.id||'';
   qs('playlistEditName').value=pl?.name||'';
+  if(qs('playlistEditPublic')) qs('playlistEditPublic').checked=!!pl?.isPublic;
   qs('playlistCoverFile').value='';
   qs('playlistEditTitle').textContent=pl?'Редактировать плейлист':'Создать плейлист';
   qs('playlistEditModal').classList.add('open');
@@ -2736,11 +2827,12 @@ async function savePlaylist(){
       const fd=new FormData();
       fd.append('name',name);
       fd.append('playlist_cover',cover);
+       fd.append('isPublic',qs('playlistEditPublic')?.checked?'true':'false');
       r=await fetch(url,{method,body:fd,credentials:'include'});
     }else{
       // Без обложки отправляем обычный JSON: так создание плейлиста работает стабильнее
       // и не зависит от multipart/FormData в браузере.
-      r=await fetch(url,{method,credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({name})});
+      r=await fetch(url,{method,credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,isPublic:!!qs('playlistEditPublic')?.checked})});
     }
     const data=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(data.error||'Не удалось сохранить плейлист');
@@ -2884,6 +2976,51 @@ async function deleteTrack(id){
 function openUpload(){if(!state.isAdmin)return toast('Загрузка доступна только админу','err');qs('uploadModal').classList.add('open')}
 function closeUpload(){qs('uploadModal').classList.remove('open')}
 function handleAudio(e){const f=e.target.files[0];if(f){qs('uploadTitle').value=f.name.replace(/\.[^.]+$/,'');qs('audioDrop').querySelector('.drop-text').innerHTML=`<span class="file-name">${esc(f.name)}</span>`;qs('audioDrop').classList.add('has-file')}}
+let bulkImportPreviewId='';
+function handleAlbumZip(e){
+  const f=e.target.files[0]; if(!f)return;
+  bulkImportPreviewId='';
+  qs('albumZipDrop').querySelector('.drop-text').innerHTML=`<span class="file-name">${esc(f.name)}</span>`;
+  qs('albumZipDrop').classList.add('has-file');
+  qs('albumZipStatus').textContent=`${(f.size/1024/1024).toFixed(1)} MB · готов к предпросмотру`;
+  qs('albumZipPreview').style.display='none'; qs('albumZipActions').style.display='none'; qs('albumZipPreview').innerHTML='';
+}
+function renderBulkImportPreview(data){
+  const p=data.preview||{};
+  const albums=Array.isArray(p.albums)?p.albums:[];
+  const artists=Array.isArray(p.artists)?p.artists:[];
+  const warnings=Array.isArray(p.warnings)?p.warnings:[];
+  const rows=albums.map(g=>`<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border:1px solid var(--wire);border-radius:10px;background:var(--ink3);margin-top:6px"><div style="min-width:0"><b style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(g.album)}</b><span style="font-size:10px;color:var(--muted)">${esc(g.artist)} · ${g.count} трек${g.count===1?'':'ов'}${g.cover?' · обложка':''}</span></div><span style="font-size:10px;color:var(--muted)">→</span></div>`).join('');
+  qs('albumZipPreview').innerHTML=`<div style="padding:12px;border:1px solid var(--wire2);border-radius:14px;background:rgba(255,255,255,.02)"><div style="display:flex;gap:12px;flex-wrap:wrap;font-size:12px"><b>${p.totalTracks||0} треков</b><span>${artists.length} исполнителей</span><span>${albums.length} групп</span></div>${warnings.length?`<div style="margin-top:10px;padding:9px;border-radius:10px;background:rgba(220,170,80,.08);color:var(--muted2);font-size:10px">${warnings.map(w=>`<div>⚠ ${esc(w)}</div>`).join('')}</div>`:''}<div style="margin-top:10px;max-height:240px;overflow:auto">${rows}</div></div>`;
+  qs('albumZipPreview').style.display='block'; qs('albumZipActions').style.display='flex';
+}
+async function previewAlbumZip(){
+  if(!state.isAdmin)return toast('Импорт доступен только админу','err');
+  const file=qs('albumZipFile').files[0]; if(!file)return toast('Выбери ZIP-архив','err');
+  const btn=qs('albumZipPreviewBtn'); btn.disabled=true; btn.textContent='Читаем архив…'; qs('albumZipStatus').textContent='Распаковываем ZIP и читаем ID3-теги. Ничего ещё не импортируется…';
+  const fd=new FormData(); fd.append('album_zip',file);
+  try{
+    const r=await fetch('/api/albums/import-preview',{method:'POST',body:fd,credentials:'include'}); const data=await r.json().catch(()=>({})); if(!r.ok)throw new Error(data.error||'Ошибка предпросмотра');
+    bulkImportPreviewId=data.previewId||''; renderBulkImportPreview(data); qs('albumZipStatus').textContent='Предпросмотр готов. Проверь, как Venyl разложил музыку.';
+  }catch(e){qs('albumZipStatus').textContent=e.message||'Ошибка предпросмотра';toast(e.message||'Ошибка предпросмотра','err');}
+  finally{btn.disabled=false;btn.textContent='Показать предпросмотр';}
+}
+async function commitAlbumZip(){
+  if(!state.isAdmin)return toast('Импорт доступен только админу','err');
+  if(!bulkImportPreviewId)return toast('Сначала сделай предпросмотр','err');
+  const btn=qs('albumZipImportBtn'); btn.disabled=true; btn.textContent='Импортируем…'; qs('albumZipStatus').textContent='Создаём исполнителей и треки…';
+  try{
+    const r=await fetch('/api/albums/import-preview/commit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({previewId:bulkImportPreviewId}),credentials:'include'}); const data=await r.json().catch(()=>({})); if(!r.ok)throw new Error(data.error||'Ошибка импорта');
+    const skipped=Number(data.skipped||0); toast(`Импортировано: ${data.count||0} треков`,'ok'); qs('albumZipStatus').textContent=`Готово: ${data.count||0} добавлено${skipped?`, ${skipped} пропущено`:''}.`;
+    bulkImportPreviewId=''; qs('albumZipFile').value=''; qs('albumZipDrop').classList.remove('has-file'); qs('albumZipDrop').querySelector('.drop-text').innerHTML='Выбери <span>ZIP с любыми треками</span>'; qs('albumZipPreview').style.display='none'; qs('albumZipActions').style.display='none'; qs('albumZipPreview').innerHTML='';
+    await loadTracks(); await loadArtists();
+  }catch(e){qs('albumZipStatus').textContent=e.message||'Ошибка импорта';toast(e.message||'Ошибка импорта','err');}
+  finally{btn.disabled=false;btn.textContent='Импортировать всё';}
+}
+function cancelAlbumZipPreview(){bulkImportPreviewId='';qs('albumZipPreview').style.display='none';qs('albumZipActions').style.display='none';qs('albumZipPreview').innerHTML='';qs('albumZipStatus').textContent='Предпросмотр отменён.';}
+// Keep old function name for compatibility with any existing UI hooks.
+async function importAlbumZip(){return commitAlbumZip();}
+
 async function submitUpload(){
   if(!state.isAdmin)return;
   const fd=new FormData();
@@ -3139,25 +3276,36 @@ async function submitAlbum(){
   }catch(e){toast(e.message||'Не удалось создать альбом','err')}
 }
 
+function previewEditCover(input, previewId){
+  const file=input?.files?.[0], box=qs(previewId); if(!box)return;
+  if(!file){box.innerHTML='♫';return;}
+  const url=URL.createObjectURL(file); box.innerHTML='<img src="'+url.replace(/"/g,'&quot;')+'" alt="">';
+}
+function clearEditCover(inputId, previewId){const input=qs(inputId);if(input)input.value='';const box=qs(previewId);if(box)box.innerHTML='♫';}
 function editTrack(id){
   const t=state.tracks.find(x=>Number(x.id)===Number(id))||(state.currentArtist?.tracks||[]).find(x=>Number(x.id)===Number(id));if(!t)return;
-  qs('trackEditId').value=t.id;qs('trackEditTitle').value=t.title||'';qs('trackEditArtist').value=t.artist||'';qs('trackEditAlbum').value=t.album||'';qs('trackEditGenre').value=t.genre||'';qs('trackEditModal').classList.add('open');
+  qs('trackEditId').value=t.id;qs('trackEditTitle').value=t.title||'';qs('trackEditArtist').value=t.artist||'';qs('trackEditAlbum').value=t.album||'';qs('trackEditGenre').value=t.genre||'';
+  const box=qs('trackEditCoverPreview'); if(box)box.innerHTML=t.coverUrl?'<img src="'+esc(t.coverUrl)+'" alt="">':'♫'; clearEditCover('trackEditCover','trackEditCoverPreview');
+  qs('trackEditModal').classList.add('open');
 }
 function closeTrackEditModal(){qs('trackEditModal').classList.remove('open')}
 async function saveTrackEdit(){
   const id=Number(qs('trackEditId').value);const title=qs('trackEditTitle').value.trim();const artist=qs('trackEditArtist').value.trim();const album=qs('trackEditAlbum').value.trim();const genre=qs('trackEditGenre').value.trim();
   if(!title||!artist)return toast('Название и артист обязательны','err');
-  try{await api('/api/tracks/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,artist,album,genre})});closeTrackEditModal();toast('Трек обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);}
+  const fd=new FormData();fd.append('title',title);fd.append('artist',artist);fd.append('album',album);fd.append('genre',genre);const cover=qs('trackEditCover')?.files?.[0];if(cover)fd.append('cover',cover);
+  try{const r=await fetch('/api/tracks/'+id,{method:'PUT',body:fd,credentials:'include'});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'Не удалось обновить трек');closeTrackEditModal();toast('Трек обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);}
   catch(e){toast(e.message||'Не удалось обновить трек','err')}
 }
 function editAlbum(id){
   const al=(state.currentArtist?.albums||[]).find(x=>Number(x.id)===Number(id));if(!al)return;
-  qs('albumEditId').value=al.id;qs('albumEditName').value=al.name||'';qs('albumEditDescription').value=al.description||'';qs('albumEditModal').classList.add('open');
+  qs('albumEditId').value=al.id;qs('albumEditName').value=al.name||'';qs('albumEditDescription').value=al.description||'';
+  const box=qs('albumEditCoverPreview'); if(box)box.innerHTML=al.coverUrl?'<img src="'+esc(al.coverUrl)+'" alt="">':'♫'; clearEditCover('albumEditCover','albumEditCoverPreview');
+  qs('albumEditModal').classList.add('open');
 }
 function closeAlbumEditModal(){qs('albumEditModal').classList.remove('open')}
 async function saveAlbumEdit(){
   const id=Number(qs('albumEditId').value);const name=qs('albumEditName').value.trim();const description=qs('albumEditDescription').value.trim();
-  if(!name)return toast('Введи название альбома','err');const fd=new FormData();fd.append('name',name);fd.append('description',description);
+  if(!name)return toast('Введи название альбома','err');const fd=new FormData();fd.append('name',name);fd.append('description',description);const cover=qs('albumEditCover')?.files?.[0];if(cover)fd.append('album_cover',cover);
   try{const r=await fetch('/api/albums/'+id,{method:'PUT',body:fd,credentials:'include'});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'Не удалось обновить альбом');closeAlbumEditModal();toast('Альбом обновлён','ok');await loadTracks();await loadArtists();if(state.currentArtist)openArtistProfile(state.currentArtist.artist.id);}
   catch(e){toast(e.message||'Не удалось обновить альбом','err')}
 }
@@ -3174,6 +3322,7 @@ function syncProfileModal(){
   if(!state.user)return;
   qs('profileName').value=state.user.name||''; if(qs('profileBio')) qs('profileBio').value=state.user.bio||'';
   qs('profileAvatarPreview').innerHTML=avatarMarkup(state.user);
+  const verifyGroup=qs('profileVerificationGroup'); const verifyNote=qs('profileVerificationNote'); if(verifyGroup){ const verified=!!state.user.isVerified; verifyGroup.style.display=verified?'none':'block'; if(verifyNote) verifyNote.textContent=verified ? 'Email подтверждён.' : `Не подтверждён: ${state.user.email||''}`; }
   qs('profileNickNote').textContent=state.isAdmin ? 'Администратор может менять ник без ограничений.' : formatCooldown(state.user.nicknameCanChangeAt, 'Ник');
   qs('profileAvatarNote').textContent=state.isAdmin ? 'Администратор может менять аватар без ограничений.' : formatCooldown(state.user.avatarCanChangeAt, 'Аватар');
   const colorGroup=qs('profileColorGroup');
@@ -3197,6 +3346,7 @@ async function saveProfile(){
   if(!state.user)return showLogin();
   const fd=new FormData();
   fd.append('name', qs('profileName').value.trim());
+  fd.append('bio', (qs('profileBio')?.value || '').trim());
   const avatar=qs('profileAvatarFile').files[0];
   if(avatar) fd.append('avatar', avatar);
   if(state.isAdmin) fd.append('nicknameColor', qs('profileNicknameColor').value || '');
@@ -3213,6 +3363,12 @@ async function saveProfile(){
     toast('Профиль обновлён','ok');
     qs('profileAvatarFile').value='';
   }catch(e){toast(e.message||'Не удалось обновить профиль','err')}
+}
+async function resendVerificationEmail(){
+  try{
+    const data=await api('/api/auth/resend-verification',{method:'POST'});
+    toast(data.message||'Письмо отправлено','ok');
+  }catch(e){toast(e.message||'Не удалось отправить письмо','err')}
 }
 async function logoutFromProfile(){ closeProfileModal(); await logout(); }
 function showLogin(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));qs('loginPage').classList.add('active')}
@@ -3340,6 +3496,11 @@ function showSection(s,el){
     if(!state.isAdmin){qs('homeView').style.display='block';toast('Админ-панель доступна только администратору','err');return;}
     qs('adminPanelView').style.display='block';
     loadAdminUsers();
+    return;
+  }
+  if(s==='discover'){
+    qs('discoverView').style.display='block';
+    loadDiscover(false);
     return;
   }
   if(s==='myMusic'){
@@ -3613,6 +3774,19 @@ async function renderMyMusicPage(tab='overview'){
     box.innerHTML=`<section class="my-card full"><div class="my-card-head"><div><h3>Для тебя</h3><p>Музыка, которая подходит твоему вкусу</p></div><button class="btn-sm btn-accent" onclick="playRecommendations()">▶ Слушать подборку</button></div>${recs.length?`<div class="continue-grid large">${recs.map(x=>miniTrackCard(x)).join('')}</div>`:'<div class="personal-empty"><b>Пока мало данных</b><span>Сохрани несколько треков и послушай их — мы соберём персональную подборку.</span></div>'}</section>`;
     return;
   }
+  if(tab==='wrapped'){
+    try{
+      const d=await api('/api/me/wrapped'); const s=d.stats||{};
+      const fmtNum=n=>new Intl.NumberFormat('ru-RU').format(Number(n)||0);
+      const topTracks=s.topTracks||[], topArtists=s.topArtists||[], topGenres=s.topGenres||[];
+      box.innerHTML=`<div class="v26-wrap">
+        <section class="v26-hero"><div class="v26-kicker">VENYL WRAPPED</div><div class="v26-title">Твои музыкальные итоги</div><div class="v26-sub">Статистика на основе реальных прослушиваний этого аккаунта.</div><div class="v26-share"><button class="btn-primary" onclick="copyWrappedSummary()">↗ Скопировать итог</button><button class="btn-ghost" onclick="renderMyMusicPage('stats')">← Статистика</button></div></section>
+        <section class="v26-grid"><div class="v26-stat"><b>${fmtNum(s.plays)}</b><span>прослушиваний</span></div><div class="v26-stat"><b>${fmtNum(s.uniqueTracks)}</b><span>уникальных треков</span></div><div class="v26-stat"><b>${fmtNum(s.minutes)}</b><span>минут музыки</span></div><div class="v26-stat"><b>${fmtNum(s.favoriteCount)}</b><span>избранных треков</span></div><div class="v26-stat"><b>${esc(topGenres[0]?.name||'—')}</b><span>любимый жанр</span></div><div class="v26-stat"><b>${esc(topArtists[0]?.name||'—')}</b><span>топ артист</span></div></section>
+        <section class="v26-card"><div class="my-card-head"><div><h3>Топ треков</h3><p>Треки, к которым ты возвращался чаще всего</p></div></div><div class="v26-list">${topTracks.length?topTracks.map((t,i)=>`<button class="v26-item" onclick="playTrackById(${Number(t.id)})"><span class="v26-rank">${i+1}</span><div class="my-list-cover">${t.coverUrl?`<img src="${esc(t.coverUrl)}" alt="">`:'♫'}</div><div class="my-list-main"><b>${esc(t.title)}</b><span>${esc(t.artist||'—')}</span></div><strong>${fmtNum(t.plays)}</strong></button>`).join(''):'<div class="personal-empty compact">Пока мало прослушиваний.</div>'}</div></section>
+      </div>`;
+    }catch(e){toast(e.message||'Не удалось загрузить итоги','err')}
+    return;
+  }
   if(tab==='queue'){
     const q=state.queue||[];
     box.innerHTML=`<section class="my-card full"><div class="my-card-head"><div><h3>Очередь воспроизведения</h3><p>${q.length} треков</p></div><div class="queue-actions"><button class="btn-sm" onclick="shuffleQueueView()">Перемешать</button><button class="btn-sm" onclick="clearMyQueue()">Очистить</button></div></div>${q.length?`<div class="my-track-list">${q.map((x,i)=>`<div class="my-list-row queue-row"><span class="my-list-num">${i+1}</span><div class="my-list-cover">${x.coverUrl?`<img src="${esc(x.coverUrl)}" alt="">`:'♫'}</div><div class="my-list-main"><b>${esc(x.title)}</b><span>${esc(x.artist||'—')}</span></div><button class="icon-btn" onclick="playTrackById(${Number(x.id)})">▶</button></div>`).join('')}</div>`:'<div class="personal-empty"><b>Очередь пуста</b><span>Открой меню ⋯ у любого трека и выбери «Добавить в очередь».</span></div>'}</section>`;
@@ -3633,7 +3807,63 @@ function renderHomeAll(){
   renderNewReleases();
   renderHomePlaylists();
   renderContinueListening();
+  if(state.user) loadSocialPulse(false);
 }
+
+
+/* ===== VENYL V2.3 SOCIAL PULSE ===== */
+function socialInitial(user){return esc(String(user?.name||'?').trim().slice(0,1).toUpperCase());}
+function socialAvatar(user){return user?.avatarUrl?`<img src="${esc(user.avatarUrl)}" alt="">`:socialInitial(user)}
+function socialAgo(v){const ts=new Date(v||0).getTime();if(!ts)return '';const d=Math.max(0,Date.now()-ts);if(d<60000)return 'только что';if(d<3600000)return `${Math.floor(d/60000)} мин назад`;if(d<86400000)return `${Math.floor(d/3600000)} ч назад`;return `${Math.floor(d/86400000)} дн назад`}
+function socialActivityText(item){
+  if(item.kind==='listen') return `${item.actor?.name||'Пользователь'} слушает музыку`;
+  if(item.kind==='favorite') return `${item.actor?.name||'Пользователь'} добавил трек в избранное`;
+  if(item.kind==='comment') return `${item.actor?.name||'Пользователь'} оставил комментарий`;
+  if(item.kind==='follow') return `${item.actor?.name||'Пользователь'} подписался на ${item.target?.name||'пользователя'}`;
+  if(item.kind==='chat') return item.text||'Новое сообщение';
+  if(item.kind==='playlist_like') return item.text||'Новый лайк плейлиста';
+  return item.text||'Новое событие';
+}
+function renderSocialListening(items){
+  const box=qs('socialListeningList'),meta=qs('socialListeningMeta'); if(!box)return;
+  if(meta)meta.textContent=items.length?`${items.length} сейчас`:'';
+  if(!items.length){box.innerHTML='<div class="social-pulse-empty">Никого из друзей сейчас не видно.\nПослушай музыку — лента появится сама.</div>';return;}
+  box.innerHTML=items.map(item=>`<button class="social-pulse-item" onclick="playTrackById(${Number(item.track?.id)})"><span class="social-pulse-avatar">${socialAvatar(item.user)}</span><span class="social-pulse-copy"><b>${esc(item.user?.name||'Пользователь')}</b><span>слушает сейчас</span><span class="social-pulse-track">${esc(item.track?.title||'Трек')} · ${esc(item.track?.artist||'Venyl')}</span><small>${socialAgo(item.playedAt)}</small></span><span class="social-pulse-dot"></span></button>`).join('');
+}
+function renderSocialFeed(items){
+  const box=qs('socialFeedList'),meta=qs('socialFeedMeta'); if(!box)return;
+  if(meta)meta.textContent=items.length?`${items.length} событий`:'';
+  if(!items.length){box.innerHTML='<div class="social-pulse-empty">Пока пусто. Подпишись на пользователей, чтобы видеть их активность.</div>';return;}
+  box.innerHTML=items.slice(0,12).map(item=>`<button class="social-pulse-item" onclick="${item.track?.id?`playTrackById(${Number(item.track.id)})`:`openPublicUserProfile(${Number(item.actor?.id||0)})`}"><span class="social-pulse-avatar">${socialAvatar(item.actor)}</span><span class="social-pulse-copy"><b>${esc(socialActivityText(item))}</b><span>${esc(item.track?.title?`${item.track.title} · ${item.track.artist||''}`:(item.text||''))}</span><small>${socialAgo(item.createdAt)}</small></span></button>`).join('');
+}
+function socialReadSet(){try{return new Set(JSON.parse(localStorage.getItem('venyl_social_read')||'[]').slice(-200))}catch{return new Set()}}
+function markSocialNotificationsRead(items){try{const ids=items.map(x=>x.id);localStorage.setItem('venyl_social_read',JSON.stringify(ids.slice(-200)))}catch{}}
+function renderSocialNotifications(items){
+  const box=qs('socialNotificationsList'),meta=qs('socialNotificationsMeta'); if(!box)return;
+  const read=socialReadSet(); const unread=items.filter(x=>!read.has(x.id)); if(meta)meta.textContent=unread.length?`${unread.length} новых`:'';
+  if(!items.length){box.innerHTML='<div class="social-pulse-empty">Новых событий пока нет.</div>';return;}
+  box.innerHTML=items.slice(0,12).map(item=>`<button class="social-pulse-item" onclick="${item.kind==='chat'&&item.actor?.id?`openChatFromProfile(${Number(item.actor.id)})`:item.track?.id?`playTrackById(${Number(item.track.id)})`:`openPublicUserProfile(${Number(item.actor?.id||0)})`}"><span class="social-pulse-avatar">${socialAvatar(item.actor)}</span><span class="social-pulse-copy"><b>${esc(item.text||socialActivityText(item))}</b>${item.track?`<span class="social-pulse-track">${esc(item.track.title||'Трек')} · ${esc(item.track.artist||'')}</span>`:''}<small>${socialAgo(item.createdAt)}</small></span>${read.has(item.id)?'':'<span class="social-pulse-dot"></span>'}</button>`).join('');
+}
+async function loadSocialPulse(markSeen=false){
+  if(!state.user)return;
+  const results=await Promise.allSettled([api('/api/social/listening-now'),api('/api/social/feed'),api('/api/social/notifications')]);
+  const [listen,feed,notif]=results.map(r=>r.status==='fulfilled'?r.value:{});
+  renderSocialListening(Array.isArray(listen?.users)?listen.users:[]);
+  renderSocialFeed(Array.isArray(feed?.items)?feed.items:[]);
+  const items=Array.isArray(notif?.items)?notif.items:[];
+  renderSocialNotifications(items);
+  if(markSeen) markSocialNotificationsRead(items);
+}
+(function initV23SocialPulse(){
+  const oldRenderHomeAll=window.renderHomeAll;
+  if(oldRenderHomeAll)window.renderHomeAll=function(){const r=oldRenderHomeAll.apply(this,arguments);if(state.user)loadSocialPulse(false);return r};
+  let timer=null;
+  function start(){if(timer||!state.user)return;timer=setInterval(()=>{if(!document.hidden)loadSocialPulse(false)},60000)}
+  function stop(){if(timer)clearInterval(timer);timer=null}
+  window.addEventListener('beforeunload',stop);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else start()});
+  setTimeout(()=>{if(state.user){loadSocialPulse(false);start()}},2200);
+})();
 
 /* ===== LANGUAGE SYSTEM ===== */
 const LANG_KEY='venyl_language';
@@ -3877,7 +4107,7 @@ window.addEventListener('load',()=>{ setTimeout(()=>resetSearchInput(true),0); s
           <div class="public-profile-avatar">${avatarMarkup(u)}</div>
           <div class="public-profile-main">
             <div class="public-profile-name" style="color:${esc(u.nicknameColor||'var(--cream)')}">${esc(u.name||'Пользователь')}</div>
-            <div class="public-profile-meta">Публичный профиль Venyl</div>
+            <div class="public-profile-meta">Публичный профиль Venyl</div>${u.bio?`<div class="public-user-bio">${esc(u.bio)}</div>`:''}
             <div class="public-profile-stats"><span><strong>${Number(u.trackCount)||0}</strong> треков</span><span><strong>${Number(u.playlistCount)||0}</strong> плейлистов</span><button class="text-link" onclick="loadFollowersAndShow(${Number(u.id)})"><strong>${Number(u.followerCount)||0}</strong> подписчиков</button><span><strong>${Number(u.followingCount)||0}</strong> подписок</span></div>
             <div class="public-profile-actions">
               ${Number(u.id)===Number(state.user?.id)?'<span class="section-meta">Это твой профиль</span>':`<button class="btn-sm ${u.following?'':'btn-accent'}" onclick="togglePublicUserFollow(${Number(u.id)},${u.following?'true':'false'})">${u.following?'Отписаться':'Подписаться'}</button>${u.following&&u.followedBy?`<button class="btn-sm btn-accent" onclick="openChatFromProfile(${Number(u.id)})">Написать</button>`:''}`}
@@ -4020,6 +4250,44 @@ async function stopChatWhenLeaving(s){if(s!=='chat')stopChatPolling()}
 })();
 </script>
 <script>if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));</script>
+
+<script id="venylV24Discover">
+(function(){
+  async function loadDiscover(force){
+    const root=document.getElementById('discoverView'); if(!root)return;
+    const trending=document.getElementById('discoverTrending'), fresh=document.getElementById('discoverNew');
+    if(force || !root.dataset.loaded){
+      if(trending)renderTrackSkeleton('discoverTrending',5);
+      if(fresh)renderTrackSkeleton('discoverNew',5);
+      try{
+        const d=await api('/api/discover');
+        if(trending)renderTracks(d.trending||[],'discoverTrending');
+        if(fresh)renderTracks(d.newReleases||[],'discoverNew');
+        const ag=document.getElementById('discoverArtists'); if(ag)ag.innerHTML=(d.popularArtists||[]).map(a=>artistCardMarkup(a,{showFollowButton:!!state.user})).join('');
+        const al=document.getElementById('discoverAlbums'); if(al)al.innerHTML=(d.popularAlbums||[]).map(a=>`<div class="album-card" onclick="openAlbumFromSearch(${Number(a.artistId||0)},${JSON.stringify(a.name||'').replace(/</g,'\u003c')})"><div class="album-cover">${a.coverUrl?`<img src="${esc(a.coverUrl)}" alt="">`:'<div class="album-cover-placeholder">♫</div>'}</div><div><div class="album-card-name">${esc(a.name)}</div><div class="album-card-desc">${esc(a.artist||'')}</div></div></div>`).join('');
+        root.dataset.loaded='1';
+      }catch(e){toast(e.message||'Не удалось загрузить Discover','err')}
+    }
+  }
+  window.loadDiscover=loadDiscover;
+  window.refreshDiscover=()=>loadDiscover(true);
+  window.openDiscover=()=>showSection('discover');
+})();
+</script>
+<style id="v24DiscoverCSS">
+.discover-section{margin-top:26px}.discover-section:first-of-type{margin-top:6px}.discover-section .tracks-list{max-height:none}.discover-section .artist-grid,.discover-section .albums-grid{margin-top:4px}.page-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:22px}.page-kicker{font-size:10px;letter-spacing:2px;color:var(--accent);font-weight:800;margin-bottom:6px}.page-head h1{margin:0;font-size:32px;line-height:1.05}.page-head p{margin:7px 0 0;color:var(--muted2);font-size:12px}.discover-section .section-head{margin-bottom:12px}
+@media(max-width:680px){.page-head{align-items:flex-start;flex-direction:column}.page-head h1{font-size:28px}}
+</style>
+<style id="v25AdvancedPlayerCSS">
+.advanced-player-tools{display:flex;align-items:center;gap:6px}.player-tool-btn,.player-speed{height:32px;border:1px solid var(--wire);background:var(--ink3);color:var(--muted2);border-radius:9px;font:600 11px 'Cabinet Grotesk';cursor:pointer}.player-tool-btn{min-width:32px;padding:0 8px}.player-speed{padding:0 8px}.player-tool-btn:hover,.player-speed:hover,.player-tool-btn.active{border-color:var(--accent-border);color:var(--accent);background:var(--ink4)}
+@media(max-width:760px){.advanced-player-tools{display:none}.player-controls .ctrl-btn:nth-last-child(-n+3){display:none}}
+.venyl-radio-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--accent);font-size:10px;font-weight:800;margin-left:8px}.venyl-radio-badge::before{content:'●';font-size:8px;animation:venylRadioPulse 1.4s ease-in-out infinite}@keyframes venylRadioPulse{0%,100%{opacity:.35}50%{opacity:1}}
+</style>
+<style id="v23SocialPulseCSS">
+.social-pulse-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.social-pulse-card{background:var(--ink2);border:1px solid var(--wire);border-radius:18px;padding:14px;min-width:0}.social-pulse-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.social-pulse-card-head h3{font-size:14px;margin:0}.social-pulse-card-head span{font-size:10px;color:var(--muted)}.social-pulse-list{display:flex;flex-direction:column;gap:8px;min-height:120px}.social-pulse-item{display:flex;align-items:flex-start;gap:9px;padding:9px;border:1px solid var(--wire);border-radius:12px;background:var(--ink3);cursor:pointer;text-align:left;color:inherit}.social-pulse-item:hover{border-color:var(--wire3);background:var(--ink4)}.social-pulse-avatar{width:34px;height:34px;border-radius:50%;background:var(--ink4);overflow:hidden;display:grid;place-items:center;flex:none;color:var(--accent);font-size:13px;font-weight:800}.social-pulse-avatar img{width:100%;height:100%;object-fit:cover}.social-pulse-copy{min-width:0;flex:1}.social-pulse-copy b{display:block;font-size:11px;line-height:1.35;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.social-pulse-copy span{display:block;margin-top:3px;font-size:10px;line-height:1.4;color:var(--muted2);white-space:normal}.social-pulse-copy small{display:block;margin-top:4px;font-size:9px;color:var(--muted)}.social-pulse-track{margin-top:6px;font-size:10px;color:var(--accent2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.social-pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:5px;flex:none}.social-pulse-empty{padding:20px 8px;color:var(--muted);font-size:10px;text-align:center}.social-pulse-section{scroll-margin-top:80px}
+@media(max-width:1000px){.social-pulse-grid{grid-template-columns:1fr 1fr}.social-pulse-card:last-child{grid-column:1/-1}}
+@media(max-width:680px){.social-pulse-grid{grid-template-columns:1fr}.social-pulse-card:last-child{grid-column:auto}.social-pulse-card{padding:12px}.social-pulse-item{padding:8px}}
+</style>
 <style id="stage3SocialCSS">
 .public-user-modal{max-width:760px}.public-user-head{display:flex;align-items:flex-start;gap:16px;padding:8px 0}.public-user-avatar{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,#2b1d0e,#6f5425);border:1px solid var(--accent-border);display:grid;place-items:center;overflow:hidden;color:var(--accent);font-size:28px;font-weight:900;flex:none}.public-user-avatar img{width:100%;height:100%;object-fit:cover}.public-user-meta{min-width:0;flex:1}.public-user-name{font-size:22px;font-weight:900}.public-user-bio{margin-top:5px;color:var(--muted2);line-height:1.5;font-size:12px;white-space:pre-wrap}.public-user-stats{display:flex;gap:16px;margin-top:10px;color:var(--muted);font-size:11px}.public-user-stats b{color:var(--cream);font-size:14px}.public-user-head>.btn-sm{margin-left:auto;flex:none}.public-playlists{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}.public-playlist-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:var(--ink3);border:1px solid var(--wire);color:inherit;text-align:left;cursor:pointer}.public-playlist-card:hover{border-color:var(--wire3);background:var(--ink4)}.public-playlist-card b,.public-playlist-card span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.public-playlist-card span{font-size:10px;color:var(--muted);margin-top:3px}.public-playlist-card .playlist-cover{width:48px;height:48px;border-radius:10px;padding:0;flex:none}@media(max-width:600px){.public-user-head{flex-wrap:wrap}.public-user-head>.btn-sm{margin-left:88px}.public-playlists{grid-template-columns:1fr}}
 </style>
@@ -4045,5 +4313,233 @@ async function stopChatWhenLeaving(s){if(s!=='chat')stopChatPolling()}
       else apply();
     })();
     </script>
+<script id="venylV22SmartQueue">
+(function(){
+  const LS='venyl_queue_v2';
+  const persist=()=>{try{localStorage.setItem(LS,JSON.stringify((state.queue||[]).slice(0,100)))}catch{}};
+  const idsToExclude=()=>{
+    const ids=new Set([...(state.excludedTracks||[])].map(Number));
+    if(state.currentTrack)ids.add(Number(state.currentTrack.id));
+    (state.queue||[]).forEach(t=>ids.add(Number(t.id)));
+    return [...ids].filter(Boolean).slice(0,120);
+  };
+  let refillPromise=null;
+  async function refillSmartQueue(min=5){
+    if(!state.user) return [];
+    if((state.queue||[]).length>=min) return state.queue;
+    if(refillPromise)return refillPromise;
+    refillPromise=(async()=>{
+      try{
+        const ex=idsToExclude().join(',');
+        const d=await api('/api/recommendations'+(ex?'?exclude='+encodeURIComponent(ex):''));
+        const fresh=Array.isArray(d.tracks)?d.tracks:[];
+        const known=new Set((state.queue||[]).map(t=>Number(t.id)));
+        for(const t of fresh){if(known.has(Number(t.id)))continue;state.queue.push(t);known.add(Number(t.id));if(state.queue.length>=20)break;}
+        persist();
+        if(typeof renderNowPlayingQueue==='function')renderNowPlayingQueue();
+        return state.queue;
+      }catch{return state.queue||[]}
+      finally{refillPromise=null;}
+    })();
+    return refillPromise;
+  }
+  window.refillSmartQueue=refillSmartQueue;
+
+  const originalNext=window.nextTrack;
+  window.nextTrack=async function(){
+    const q=state.queue||[];
+    if(q.length){
+      const next=q.shift();
+      persist();
+      const list=[next,...q];
+      playTrackObject(next,0,list.length?list:[next]);
+      if(q.length<3)refillSmartQueue(5);
+      if(typeof renderNowPlayingQueue==='function')renderNowPlayingQueue();
+      return;
+    }
+    if(state.user){
+      const filled=await refillSmartQueue(1);
+      if(filled.length){
+        const next=state.queue.shift();
+        persist();
+        playTrackObject(next,0,[next,...state.queue]);
+        refillSmartQueue(5);
+        if(typeof renderNowPlayingQueue==='function')renderNowPlayingQueue();
+        return;
+      }
+    }
+    if(typeof originalNext==='function')return originalNext();
+  };
+
+  const originalPlay=window.playRecommendations;
+  window.playRecommendations=async function(){
+    const rec=state.user?await (window.fetchMyRecommendationsStage2?window.fetchMyRecommendationsStage2():[]):[];
+    if(!rec.length)return toast('Подборка пока пуста','err');
+    state.queue=rec.slice(1,20);persist();
+    playTrackObject(rec[0],0,[rec[0],...state.queue]);
+    if(typeof renderNowPlayingQueue==='function')renderNowPlayingQueue();
+    toast('Запускаю умную подборку','ok');
+  };
+
+  // Show recommendation reasons where the existing card renderer supports a secondary line.
+  const originalMini=window.miniTrackCard;
+  if(originalMini){
+    window.miniTrackCard=function(t,extra=''){
+      const reason=t?.reason||extra;
+      return originalMini(t,reason);
+    };
+  }
+
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.user&&(state.queue||[]).length<3)refillSmartQueue(5)});
+  setTimeout(()=>{if(state.user)refillSmartQueue(5)},1800);
+})();
+</script>
+<script id="venylV25AdvancedPlayer">
+(function(){
+  const RATE_KEY='venyl_playback_rate_v1', REPEAT_KEY='venyl_repeat_v1', RADIO_KEY='venyl_radio_v1', RECENT_KEY='venyl_radio_recent_v1';
+  const sleepBtn=document.getElementById('sleepTimerBtn');
+  const rateSelect=document.getElementById('playbackRateSelect');
+  let sleepTimer=null, sleepEndsAt=0, radioMode=false, radioGeneration=0;
+  const readNum=(k,d)=>{const v=Number(localStorage.getItem(k));return Number.isFinite(v)?v:d};
+  function persistRadio(){try{localStorage.setItem(RADIO_KEY,radioMode?'1':'0')}catch{}}
+  function recentIds(){try{const a=JSON.parse(localStorage.getItem(RECENT_KEY)||'[]');return Array.isArray(a)?a.map(Number).filter(Number.isFinite):[]}catch{return []}}
+  function rememberTrack(id){if(!id)return;const a=[Number(id),...recentIds().filter(x=>x!==Number(id))].slice(0,30);try{localStorage.setItem(RECENT_KEY,JSON.stringify(a))}catch{}}
+  function tokenize(v){return String(v||'').toLowerCase().split(/[,/&|]+/).map(x=>x.trim()).filter(Boolean)}
+  function scoreCandidate(base,t){
+    if(!t||!base||Number(t.id)===Number(base.id))return -9999;
+    const rec=new Set(recentIds()); let s=Math.random()*2;
+    const bg=tokenize(base.genre), tg=tokenize(t.genre);
+    const ba=tokenize(base.artist), ta=tokenize(t.artist);
+    const sharedGenre=bg.some(x=>tg.includes(x)||String(t.genre||'').toLowerCase().includes(x));
+    const sharedArtist=ba.some(x=>ta.includes(x)||String(t.artist||'').toLowerCase()===String(x));
+    if(sharedArtist)s+=9; else if(ba.some(x=>String(t.artist||'').toLowerCase().includes(x)))s+=5;
+    if(sharedGenre)s+=6;
+    if(state.favorites?.has(Number(t.id)))s+=4;
+    if(Number(t.play_count)>0)s+=Math.min(3,Math.log1p(Number(t.play_count)));
+    if(rec.includes(Number(t.id)))s-=8;
+    return s;
+  }
+  function radioCandidates(base,count=18){
+    const used=new Set([Number(base?.id),...(state.queue||[]).map(t=>Number(t.id)),...recentIds()]);
+    return (state.tracks||[]).filter(t=>!used.has(Number(t.id))).map(t=>({t,s:scoreCandidate(base,t)})).sort((a,b)=>b.s-a.s).slice(0,count).map(x=>x.t);
+  }
+  const persistQueue=()=>{try{localStorage.setItem('venyl_queue_v2',JSON.stringify((state.queue||[]).slice(0,100)))}catch{}};
+  function updateRadioButton(){const b=document.getElementById('radioBtn');if(b){b.classList.toggle('active',radioMode);b.title=radioMode?'Остановить Venyl Radio':'Venyl Radio'}}
+  function updateSleepButton(){if(!sleepBtn)return;sleepBtn.classList.toggle('active',!!sleepTimer);sleepBtn.textContent=sleepTimer?('⏱ '+Math.max(1,Math.ceil((sleepEndsAt-Date.now())/60000))+'m'):'⏱'}
+  window.setPlaybackRate=function(v){const rate=Math.max(.5,Math.min(2,Number(v)||1));audio.playbackRate=rate;try{localStorage.setItem(RATE_KEY,String(rate))}catch{};if(rateSelect)rateSelect.value=String(rate);toast('Скорость: '+rate+'×','ok')};
+  window.skipForward10=function(){if(!audio.duration)return;audio.currentTime=Math.min(audio.duration,audio.currentTime+10)};
+  window.skipBack10=function(){if(!audio.duration)return;audio.currentTime=Math.max(0,audio.currentTime-10)};
+  window.toggleSleepTimer=function(){
+    if(sleepTimer){clearInterval(sleepTimer);sleepTimer=null;sleepEndsAt=0;updateSleepButton();toast('Таймер сна выключен');return}
+    const mins=Number(prompt('Таймер сна: сколько минут?','30')); if(!Number.isFinite(mins)||mins<=0)return;
+    sleepEndsAt=Date.now()+Math.round(mins*60000); sleepTimer=setInterval(()=>{if(Date.now()>=sleepEndsAt){clearInterval(sleepTimer);sleepTimer=null;sleepEndsAt=0;audio.pause();updateSleepButton();toast('Таймер сна остановил музыку','ok')}else updateSleepButton()},1000); updateSleepButton(); toast('Таймер сна: '+mins+' мин','ok');
+  };
+  window.stopVenylRadio=function(){radioMode=false;radioGeneration++;persistRadio();updateRadioButton();toast('Venyl Radio остановлено')};
+  window.startVenylRadio=function(){
+    if(radioMode){stopVenylRadio();return}
+    const base=state.currentTrack || state.filtered?.[0];
+    if(!base)return toast('Сначала запусти трек','err');
+    const list=radioCandidates(base,20); if(!list.length)return toast('Не нашёл похожих треков','err');
+    radioMode=true; radioGeneration++; persistRadio(); state.queue=list.slice();
+    persistQueue();
+    playTrackObject(base,0,[base,...state.queue]);
+    if(typeof renderNowPlayingQueue==='function')renderNowPlayingQueue();
+    updateRadioButton(); toast('Venyl Radio запущено','ok');
+  };
+  function refillRadio(){
+    if(!radioMode)return;
+    const base=state.currentTrack; if(!base)return;
+    const fresh=radioCandidates(base,12); if(fresh.length){state.queue=[...(state.queue||[]),...fresh];persistQueue();if(typeof renderNowPlayingQueue==='function')renderNowPlayingQueue();}
+  }
+  const oldPlay=window.playTrackObject;
+  if(oldPlay)window.playTrackObject=function(t,idx,list){const r=oldPlay.apply(this,arguments);rememberTrack(t?.id);scheduleMedia(t);return r};
+  const oldUpdate=window.updatePlayerMeta;
+  if(oldUpdate)window.updatePlayerMeta=function(){const r=oldUpdate.apply(this,arguments);scheduleMedia(state.currentTrack);return r};
+  const originalEnded=window.nextTrack;
+  window.nextTrack=async function(){
+    if(radioMode){
+      if((state.queue||[]).length<3)refillRadio();
+      if((state.queue||[]).length){const next=state.queue.shift();persistQueue();playTrackObject(next,0,[next,...state.queue]);if(state.queue.length<5)refillRadio();if(typeof renderNowPlayingQueue==='function')renderNowPlayingQueue();return;}
+    }
+    return originalEnded.apply(this,arguments);
+  };
+  function mediaMeta(t){if(!t)return null;return{title:t.title||'Venyl',artist:t.artist||'Unknown artist',album:t.album||'Venyl',artwork:t.coverUrl?[{src:t.coverUrl,sizes:'512x512',type:'image/jpeg'}]:[]}}
+  function scheduleMedia(t){
+    if(!('mediaSession' in navigator)||!t)return;
+    try{navigator.mediaSession.metadata=new MediaMetadata(mediaMeta(t));
+      navigator.mediaSession.setActionHandler('play',()=>audio.play());
+      navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
+      navigator.mediaSession.setActionHandler('nexttrack',()=>nextTrack());
+      navigator.mediaSession.setActionHandler('previoustrack',()=>prevTrack());
+      navigator.mediaSession.setActionHandler('seekbackward',()=>skipBack10());
+      navigator.mediaSession.setActionHandler('seekforward',()=>skipForward10());
+      if(Number.isFinite(audio.duration))navigator.mediaSession.setPositionState({duration:Math.max(.01,audio.duration),playbackRate:audio.playbackRate,position:Math.min(audio.currentTime,audio.duration)});
+    }catch{}
+  }
+  audio.addEventListener('play',()=>{if('mediaSession' in navigator)try{navigator.mediaSession.playbackState='playing'}catch{};scheduleMedia(state.currentTrack)});
+  audio.addEventListener('pause',()=>{if('mediaSession' in navigator)try{navigator.mediaSession.playbackState='paused'}catch{}});
+  audio.addEventListener('timeupdate',()=>{if('mediaSession' in navigator&&Number.isFinite(audio.duration)&&audio.duration>0)try{navigator.mediaSession.setPositionState({duration:audio.duration,playbackRate:audio.playbackRate,position:Math.min(audio.currentTime,audio.duration)})}catch{}});
+  audio.addEventListener('ratechange',()=>scheduleMedia(state.currentTrack));
+  audio.addEventListener('loadedmetadata',()=>scheduleMedia(state.currentTrack));
+  document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(e.target?.tagName))return; if(e.key==='ArrowLeft'&&e.shiftKey){e.preventDefault();skipBack10()} if(e.key==='ArrowRight'&&e.shiftKey){e.preventDefault();skipForward10()}});
+  const savedRate=readNum(RATE_KEY,1); if(rateSelect)rateSelect.value=String(savedRate); audio.playbackRate=savedRate;
+  radioMode=localStorage.getItem(RADIO_KEY)==='1'; updateRadioButton();updateSleepButton();
+})();
+</script>
+
+<style id="venylV26StatsCollabCss">
+.v26-wrap{display:grid;gap:14px}.v26-hero{background:linear-gradient(135deg,rgba(200,169,110,.16),rgba(111,63,152,.08));border:1px solid var(--accent-border);border-radius:22px;padding:22px;position:relative;overflow:hidden}.v26-hero:after{content:'VENYL';position:absolute;right:-10px;bottom:-30px;font-size:120px;font-weight:900;color:rgba(255,255,255,.025);pointer-events:none}.v26-kicker{font-size:10px;letter-spacing:.16em;color:var(--accent);font-weight:900}.v26-title{font-size:36px;font-weight:900;margin:6px 0}.v26-sub{color:var(--muted2);font-size:12px;max-width:640px;line-height:1.6}.v26-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.v26-stat{background:var(--ink3);border:1px solid var(--wire);border-radius:16px;padding:16px}.v26-stat b{font-size:26px;display:block}.v26-stat span{font-size:10px;color:var(--muted);margin-top:4px;display:block}.v26-card{background:var(--ink2);border:1px solid var(--wire2);border-radius:18px;padding:16px}.v26-list{display:grid;gap:7px}.v26-item{display:flex;align-items:center;gap:10px;padding:9px;border:1px solid var(--wire);border-radius:12px;background:var(--ink3)}.v26-item strong{margin-left:auto;color:var(--accent);font-size:11px}.v26-rank{width:22px;color:var(--muted);font-size:11px;text-align:center}.v26-bar{height:6px;background:var(--ink4);border-radius:9px;overflow:hidden;flex:1}.v26-bar i{display:block;height:100%;background:var(--accent);border-radius:9px}.v26-collab{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.v26-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--ink4);overflow:hidden;color:var(--accent);font-size:10px;font-weight:900}.v26-avatar img{width:100%;height:100%;object-fit:cover}.v26-collab-row{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--wire);background:var(--ink3);padding:8px 10px;border-radius:10px}.v26-pill{font-size:9px;color:var(--accent);border:1px solid var(--accent-border);border-radius:999px;padding:3px 7px}.v26-share{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.v26-code{font-family:monospace;font-size:11px;padding:8px 10px;background:var(--ink3);border:1px solid var(--wire);border-radius:9px}
+@media(max-width:820px){.v26-grid{grid-template-columns:1fr}.v26-title{font-size:28px}}
+</style>
+
+<script id="venylV26StatsCollab">
+(function(){
+  function fmt(n){return new Intl.NumberFormat('ru-RU').format(Number(n)||0)}
+  async function loadWrapped(){
+    const box=document.getElementById('myMusicContent'); if(!box||!state.user)return;
+    try{
+      const d=await api('/api/me/wrapped'); const s=d.stats||{};
+      const topTracks=s.topTracks||[], topArtists=s.topArtists||[], topGenres=s.topGenres||[];
+      box.innerHTML=`<div class="v26-wrap">
+        <section class="v26-hero"><div class="v26-kicker">VENYL WRAPPED</div><div class="v26-title">Твой музыкальный год</div><div class="v26-sub">Персональная сводка по реальным прослушиваниям этого аккаунта. Чем больше ты слушаешь, тем интереснее становится статистика.</div><div class="v26-share"><button class="btn-primary" onclick="copyWrappedSummary()">↗ Скопировать итог</button><button class="btn-ghost" onclick="renderMyMusicPage('stats')">← Статистика</button></div></section>
+        <section class="v26-grid"><div class="v26-stat"><b>${fmt(s.plays)}</b><span>прослушиваний</span></div><div class="v26-stat"><b>${fmt(s.uniqueTracks)}</b><span>уникальных треков</span></div><div class="v26-stat"><b>${fmt(s.minutes)}</b><span>минут музыки</span></div><div class="v26-stat"><b>${fmt(s.favoriteCount)}</b><span>избранных треков</span></div><div class="v26-stat"><b>${esc(s.topGenres?.[0]?.name||'—')}</b><span>любимый жанр</span></div><div class="v26-stat"><b>${esc(s.topArtists?.[0]?.name||'—')}</b><span>топ артист</span></div></section>
+        <section class="v26-card"><div class="my-card-head"><div><h3>Топ треков</h3><p>То, к чему ты возвращался чаще всего</p></div></div><div class="v26-list">${topTracks.length?topTracks.map((t,i)=>`<button class="v26-item" onclick="playTrackById(${Number(t.id)})"><span class="v26-rank">${i+1}</span><div class="my-list-cover">${t.coverUrl?`<img src="${esc(t.coverUrl)}" alt="">`:'♫'}</div><div class="my-list-main"><b>${esc(t.title)}</b><span>${esc(t.artist||'—')}</span></div><strong>${fmt(t.plays)}</strong></button>`).join(''):'<div class="personal-empty compact">Пока мало прослушиваний.</div>'}</div></section>
+        <section class="v26-card"><div class="my-card-head"><div><h3>Топ артистов</h3></div></div><div class="v26-list">${topArtists.length?topArtists.map((a,i)=>{const max=topArtists[0].plays||1;return `<div class="v26-item"><span class="v26-rank">${i+1}</span><div style="min-width:110px">${esc(a.name)}</div><div class="v26-bar"><i style="width:${Math.round((a.plays/max)*100)}%"></i></div><strong>${fmt(a.plays)}</strong></div>`}).join(''):'<div class="personal-empty compact">Нет данных.</div>'}</div></section>
+        <section class="v26-card"><div class="my-card-head"><div><h3>Топ жанров</h3></div></div><div class="v26-list">${topGenres.length?topGenres.map((g,i)=>{const max=topGenres[0].plays||1;return `<div class="v26-item"><span class="v26-rank">${i+1}</span><div style="min-width:110px">${esc(g.name)}</div><div class="v26-bar"><i style="width:${Math.round((g.plays/max)*100)}%"></i></div><strong>${fmt(g.plays)}</strong></div>`}).join(''):'<div class="personal-empty compact">Нет данных.</div>'}</div></section>
+      </div>`;
+    }catch(e){toast(e.message||'Не удалось загрузить Wrapped','err')}
+  }
+  window.copyWrappedSummary=async function(){try{const d=await api('/api/me/wrapped');const s=d.stats||{};const txt=`Venyl Wrapped — ${s.plays||0} прослушиваний, ${s.minutes||0} минут, топ артист: ${s.topArtists?.[0]?.name||'—'}, топ жанр: ${s.topGenres?.[0]?.name||'—'}.`;await navigator.clipboard.writeText(txt);toast('Итог скопирован','ok')}catch{toast('Не удалось скопировать','err')}};
+  window.openVenylWrapped=loadWrapped;
+  const old=window.renderMyMusicPage; if(old)window.renderMyMusicPage=async function(tab='overview'){if(tab==='wrapped')return loadWrapped();return old.apply(this,arguments)};
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-open-wrapped]');if(b){e.preventDefault();loadWrapped()}});
+
+  window.openPlaylistCollaborators=async function(id){
+    if(!state.user)return showLogin();
+    try{const d=await api('/api/playlists/'+id+'/collaborators');
+      const existing=d.collaborators||[];
+      const existingIds=new Set(existing.map(u=>Number(u.userId)));
+      const html=`<div class="modal-backdrop open" id="v26CollabModal" onclick="if(event.target===this)closeV26Collab()"><div class="modal" style="max-width:560px"><div class="modal-head"><div><div class="modal-title">Совместный плейлист</div><div class="modal-sub">Найди пользователя по нику и добавь его как редактора.</div></div><button class="icon-btn" onclick="closeV26Collab()">×</button></div><div class="v26-card" style="padding:0;border:0;background:transparent"><div style="display:flex;gap:8px"><input id="v26CollabSearch" placeholder="Поиск по @нику" style="flex:1" autocomplete="off"><button class="btn-primary" onclick="searchV26Collaborators(${id})">Найти</button></div><div id="v26CollabResults" class="v26-list" style="margin-top:10px"></div><div id="v26CollabList" class="v26-list" style="margin-top:12px"><div style="font-size:10px;color:var(--muted);margin-bottom:5px">Участники</div>${existing.length?existing.map(u=>`<div class="v26-collab-row" data-user-id="${Number(u.userId)}"><span>${esc(u.name)}</span><button class="btn-sm" onclick="removeV26Collaborator(${id},${Number(u.userId)})">Удалить</button></div>`).join(''):'<div class="personal-empty compact">Участников пока нет.</div>'}</div></div></div></div>`;
+      document.body.insertAdjacentHTML('beforeend',html);
+      const inp=document.getElementById('v26CollabSearch');
+      let timer=null; if(inp){inp.addEventListener('input',()=>{clearTimeout(timer);const q=inp.value.trim();if(!q){document.getElementById('v26CollabResults').innerHTML='';return;}timer=setTimeout(()=>searchV26Collaborators(id),250);});inp.focus();}
+    }catch(e){toast(e.message||'Не удалось открыть совместный доступ','err')}
+  };
+  window.searchV26Collaborators=async function(id){
+    const input=document.getElementById('v26CollabSearch'); const box=document.getElementById('v26CollabResults'); if(!input||!box)return;
+    const q=input.value.trim(); if(q.length<1){box.innerHTML='';return;}
+    try{const d=await api('/api/users?q='+encodeURIComponent(q)); const existingIds=new Set([...document.querySelectorAll('#v26CollabList [data-user-id]')].map(x=>Number(x.dataset.userId))); const users=(d.users||[]).filter(u=>Number(u.id)!==Number(state.user?.id)).filter(u=>!existingIds.has(Number(u.id)));
+      box.innerHTML=users.length?users.slice(0,8).map(u=>`<button class="v26-collab-row" data-user-id="${Number(u.id)}" onclick="addV26CollaboratorById(${id},${Number(u.id)})"><span><b>${esc(u.name)}</b><small style="display:block;color:var(--muted);margin-top:2px">${Number(u.followerCount)||0} подписчиков</small></span><span class="v26-pill">Добавить</span></button>`).join(''):'<div class="personal-empty compact">Пользователь не найден.</div>';
+    }catch(e){box.innerHTML='<div class="personal-empty compact">Поиск временно недоступен.</div>';toast(e.message||'Не удалось найти пользователя','err')}
+  };
+  window.closeV26Collab=function(){document.getElementById('v26CollabModal')?.remove()};
+  window.addV26Collaborator=async function(id){return searchV26Collaborators(id)};
+  window.addV26CollaboratorById=async function(id,uid){try{await api('/api/playlists/'+id+'/collaborators',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:Number(uid)})});closeV26Collab();await openPlaylistCollaborators(id);toast('Участник добавлен','ok')}catch(e){toast(e.message||'Не удалось добавить участника','err')}};
+  window.removeV26Collaborator=async function(id,uid){try{await api('/api/playlists/'+id+'/collaborators/'+uid,{method:'DELETE'});closeV26Collab();openPlaylistCollaborators(id);toast('Участник удалён','ok')}catch(e){toast(e.message||'Не удалось удалить участника','err')}};
+  const oldOpen=window.openPlaylist; if(oldOpen)window.openPlaylist=async function(id){await oldOpen.apply(this,arguments);const pl=state.currentPlaylist?.playlist;if(pl){const actions=document.querySelector('#playlistProfileView .profile-actions');const owner=Number(pl.userId)===Number(state.user?.id);if(actions&&owner&&!actions.querySelector('.v26-collab-btn')){const b=document.createElement('button');b.className='btn-ghost v26-collab-btn';b.textContent='👥 Совместный доступ';b.onclick=()=>openPlaylistCollaborators(pl.id);actions.insertBefore(b,actions.lastElementChild)}}};
+  // Wrapped is implemented directly in renderMyMusicPage; keep a simple global opener.
+  window.openVenylWrapped=()=>window.renderMyMusicPage('wrapped');
+})();
+</script>
 </body>
 </html>

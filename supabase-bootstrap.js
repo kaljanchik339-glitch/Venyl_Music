@@ -16,6 +16,10 @@ const TABLES = [
 ];
 const COMPOSITE = { track_artists: ['track_id', 'artist_id'] };
 const BUCKETS = ['tracks','covers','artists','avatars','albums','playlists'];
+
+const OPTIONAL_TABLES = ['playlist_collaborators'];
+let optionalAvailable = { playlist_collaborators: false };
+
 const blank = () => Object.fromEntries(TABLES.map(k => [k, []]));
 
 function readLocal(){ try { return { ...blank(), ...JSON.parse(fs.readFileSync(JSON_PATH,'utf8')) }; } catch { return blank(); } }
@@ -33,14 +37,17 @@ async function fetchAll(table){ const out=[]; for(let offset=0;;offset+=1000){ c
 async function upsert(table,rows){ if(!rows.length)return; const conflict=COMPOSITE[table]?.join(',')||'id'; await request(table,{method:'POST',query:`?on_conflict=${encodeURIComponent(conflict)}`,prefer:'resolution=merge-duplicates,return=minimal',body:rows.map(r=>norm(table,r))}); }
 function key(table,row){ return COMPOSITE[table]?COMPOSITE[table].map(k=>String(row[k])).join(':'):String(row.id); }
 async function deleteMissing(table,oldRows,newRows){ if(!oldRows.length)return; const keep=new Set(newRows.map(r=>key(table,r))); for(const old of oldRows){ if(keep.has(key(table,old)))continue; if(COMPOSITE[table]){const [a,b]=COMPOSITE[table]; await request(table,{method:'DELETE',query:`?${a}=eq.${encodeURIComponent(old[a])}&${b}=eq.${encodeURIComponent(old[b])}`});} else if(old.id!=null)await request(table,{method:'DELETE',query:`?id=eq.${encodeURIComponent(old.id)}`}); } }
-async function sync(db,snapshot){ for(const table of TABLES){const current=Array.isArray(db[table])?db[table]:[];const old=Array.isArray(snapshot[table])?snapshot[table]:[];await deleteMissing(table,old,current);await upsert(table,current);} return JSON.parse(JSON.stringify(db)); }
+async function sync(db,snapshot){ for(const table of TABLES){const current=Array.isArray(db[table])?db[table]:[];const old=Array.isArray(snapshot[table])?snapshot[table]:[];await deleteMissing(table,old,current);await upsert(table,current);} for(const table of OPTIONAL_TABLES){if(!optionalAvailable[table])continue;const current=Array.isArray(db[table])?db[table]:[];const old=Array.isArray(snapshot[table])?snapshot[table]:[];await deleteMissing(table,old,current);await upsert(table,current);} return JSON.parse(JSON.stringify(db)); }
 
 async function main(){
   const local=readLocal();
+  local.playlist_collaborators = Array.isArray(local.playlist_collaborators)?local.playlist_collaborators:[];
   if(!CONFIGURED){ require('./server.js'); return; }
   console.log('[Venyl] Supabase storage configured.');
   let remote=blank();
+  remote.playlist_collaborators=[];
   for(const table of TABLES)remote[table]=await fetchAll(table);
+  for(const table of OPTIONAL_TABLES){try{remote[table]=await fetchAll(table); optionalAvailable[table]=true;}catch(e){remote[table]=[]; console.warn(`[Venyl] Optional Supabase table ${table} unavailable; run the migration SQL to enable it.`);}}
   const remoteHasData=remote.users.length||remote.artists.length||remote.tracks.length||remote.playlists.length;
   if(!remoteHasData){ console.log('[Venyl] Supabase is empty -> importing existing data/venyl.json.'); await sync(local,blank()); writeLocal(local); }
   else { console.log('[Venyl] Restoring database from Supabase.'); writeLocal(remote); }

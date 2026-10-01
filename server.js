@@ -1,6 +1,9 @@
 require('dotenv').config();
 
 const path = require('path');
+const { execFile } = require('child_process');
+const { promisify } = require('util');
+const execFileAsync = promisify(execFile);
 const fs = require('fs');
 const crypto = require('crypto');
 const express = require('express');
@@ -17,6 +20,10 @@ const APP_BASE_URL = (process.env.APP_BASE_URL || `http://localhost:${PORT}`).tr
 const ADMIN_EMAIL = String(process.env.ADMIN_EMAIL || '').trim().toLowerCase();
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
+// Render/Proxy + baseline security headers.
+app.set('trust proxy', 1);
+
+
 const rootDir = __dirname;
 const uploadsDir = path.join(rootDir, 'uploads');
 const tracksDir = path.join(uploadsDir, 'tracks');
@@ -25,11 +32,12 @@ const artistsDir = path.join(uploadsDir, 'artists');
 const avatarsDir = path.join(uploadsDir, 'avatars');
 const albumsDir = path.join(uploadsDir, 'albums');
 const playlistCoversDir = path.join(uploadsDir, 'playlists');
+const importsDir = path.join(uploadsDir, 'imports');
 const dataDir = path.join(rootDir, 'data');
 const jsonPath = path.join(dataDir, 'venyl.json');
-for (const dir of [uploadsDir, tracksDir, coversDir, artistsDir, avatarsDir, albumsDir, playlistCoversDir, dataDir]) fs.mkdirSync(dir, { recursive: true });
+for (const dir of [uploadsDir, tracksDir, coversDir, artistsDir, avatarsDir, albumsDir, playlistCoversDir, importsDir, dataDir]) fs.mkdirSync(dir, { recursive: true });
 
-const blank = () => ({ users: [], email_verification_tokens: [], artists: [], albums: [], tracks: [], track_artists: [], subscriptions: [], favorite_tracks: [], playlists: [], playlist_tracks: [], listen_history: [], comments: [], user_follows: [], playlist_likes: [], user_subscriptions: [], user_follow_dismissals: [], chat_messages: [] });
+const blank = () => ({ users: [], email_verification_tokens: [], artists: [], albums: [], tracks: [], track_artists: [], subscriptions: [], favorite_tracks: [], playlists: [], playlist_tracks: [], listen_history: [], comments: [], user_follows: [], playlist_likes: [], user_subscriptions: [], user_follow_dismissals: [], chat_messages: [], playlist_collaborators: [] });
 let db = blank();
 function loadDb(){
   try { db = { ...blank(), ...JSON.parse(fs.readFileSync(jsonPath, 'utf8')) }; }
@@ -109,17 +117,33 @@ function buildMailer() {
   const ok = process.env.SMTP_HOST && process.env.SMTP_PORT && process.env.SMTP_USER && process.env.SMTP_PASS && process.env.MAIL_FROM;
   if (!ok) return null;
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host: String(process.env.SMTP_HOST).trim(),
     port: Number(process.env.SMTP_PORT),
-    secure: String(process.env.SMTP_SECURE || 'false') === 'true',
+    secure: String(process.env.SMTP_SECURE || 'false').toLowerCase() === 'true',
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 20000,
   });
 }
 const mailer = buildMailer();
+const mailerStatus = { configured: Boolean(mailer), ready: false, error: '' };
+if (mailer) {
+  mailer.verify().then(() => {
+    mailerStatus.ready = true;
+    console.log('[Venyl mail] SMTP connection verified.');
+  }).catch(err => {
+    mailerStatus.error = String(err?.message || err);
+    console.error('[Venyl mail] SMTP verification failed:', mailerStatus.error);
+  });
+} else {
+  mailerStatus.error = 'SMTP environment variables are missing.';
+  console.warn('[Venyl mail] SMTP is not configured. Email verification is disabled.');
+}
 
 function createJwt(user) { return jwt.sign({ id: user.id, email: user.email, name: user.name, ver: user.token_version || 0 }, JWT_SECRET, { expiresIn: '30d' }); }
-function setAuthCookie(res, token) { res.cookie('venyl_token', token, { httpOnly: true, sameSite: 'lax', secure: IS_PRODUCTION }); }
-function publicUser(u){ if(!u) return null; const windows = getProfileWindows(u); const isAdmin = isAdminUser(u); return { id:u.id, name:u.name, email:u.email, role: normalizeRole(u.role || (ADMIN_EMAIL && String(u.email).toLowerCase() === ADMIN_EMAIL ? 'admin' : 'user')), avatarUrl: u.avatar_path ? `/uploads/avatars/${u.avatar_path}` : '', nicknameColor: u.nickname_color || '', isVerified: !!u.is_verified, isAdmin, lastNickChangeAt: windows.nickAt, lastAvatarChangeAt: windows.avatarAt, nicknameCanChangeAt: windows.nickNext, avatarCanChangeAt: windows.avatarNext, canChangeNickname: canChangeNickname(u), canChangeAvatar: canChangeAvatar(u) }; }
+function setAuthCookie(res, token) { res.cookie('venyl_token', token, { httpOnly: true, sameSite: 'lax', secure: IS_PRODUCTION, maxAge: 30*24*60*60*1000, path: '/' }); }
+function publicUser(u){ if(!u) return null; const windows = getProfileWindows(u); const isAdmin = isAdminUser(u); return { id:u.id, name:u.name, email:u.email, bio:u.bio||'', role: normalizeRole(u.role || (ADMIN_EMAIL && String(u.email).toLowerCase() === ADMIN_EMAIL ? 'admin' : 'user')), avatarUrl: u.avatar_path ? `/uploads/avatars/${u.avatar_path}` : '', nicknameColor: u.nickname_color || '', isVerified: !!u.is_verified, isAdmin, lastNickChangeAt: windows.nickAt, lastAvatarChangeAt: windows.avatarAt, nicknameCanChangeAt: windows.nickNext, avatarCanChangeAt: windows.avatarNext, canChangeNickname: canChangeNickname(u), canChangeAvatar: canChangeAvatar(u) }; }
 function adminUserRow(u){ return { id:u.id, name:u.name, email:u.email, role: normalizeRole(u.role || (ADMIN_EMAIL && String(u.email).toLowerCase() === ADMIN_EMAIL ? 'admin' : 'user')), createdAt:u.created_at || '', nicknameColor:u.nickname_color || '', bio:u.bio || '', avatarUrl:u.avatar_path ? `/uploads/avatars/${u.avatar_path}` : '', isVerified:!!u.is_verified, password:'Скрыт. Админ может задать новый пароль, но не посмотреть текущий.' }; }
 function authRequired(req, res, next) {
   try {
@@ -152,9 +176,25 @@ function adminOnly(req, res, next) {
   next();
 }
 async function sendVerificationEmail(user, token) {
-  if (!mailer) return;
+  if (!mailer) throw new Error('SMTP не настроен. Проверь SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS и MAIL_FROM.');
   const verifyUrl = `${APP_BASE_URL}/api/auth/verify-email?token=${encodeURIComponent(token)}`;
-  await mailer.sendMail({ from: process.env.MAIL_FROM, to: user.email, subject: 'Подтверди аккаунт Venyl', html: `<p>Привет, ${user.name}!</p><p><a href="${verifyUrl}">Подтвердить email</a></p><p>${verifyUrl}</p>` });
+  try {
+    const info = await mailer.sendMail({
+      from: process.env.MAIL_FROM,
+      to: user.email,
+      subject: 'Подтверди аккаунт Venyl',
+      html: `<p>Привет, ${user.name}!</p><p><a href="${verifyUrl}">Подтвердить email</a></p><p>Или открой ссылку:</p><p>${verifyUrl}</p>`,
+    });
+    mailerStatus.ready = true;
+    mailerStatus.error = '';
+    console.log(`[Venyl mail] Verification email sent to ${user.email}; messageId=${info.messageId || 'n/a'}`);
+    return info;
+  } catch (err) {
+    mailerStatus.ready = false;
+    mailerStatus.error = String(err?.message || err);
+    console.error(`[Venyl mail] Failed to send verification email to ${user.email}:`, mailerStatus.error);
+    throw err;
+  }
 }
 
 function sanitizeBase(name = '') { return String(name).normalize('NFKD').replace(/[^\w.\-]+/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '').toLowerCase() || 'file'; }
@@ -178,6 +218,70 @@ function fileFilter(req, file, cb) {
   cb(new Error('Неизвестный или неподдерживаемый тип файла.'));
 }
 const upload = multer({ storage, fileFilter, limits: { fileSize: 1024*1024*120 } });
+const zipStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, importsDir),
+  filename: (req, file, cb) => cb(null, `${Date.now()}_${sanitizeBase(path.basename(file.originalname || 'album', path.extname(file.originalname || ''))) || 'album'}.zip`),
+});
+const zipUpload = multer({
+  storage: zipStorage,
+  limits: { fileSize: 1024 * 1024 * 500 },
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname || '').toLowerCase();
+    cb(null, ext === '.zip' || String(file.mimetype || '').toLowerCase().includes('zip'));
+  },
+});
+function decodeId3Text(buf){
+  if(!buf || !buf.length) return '';
+  const enc=buf[0]; const body=buf.subarray(1);
+  if(enc===1){ try{return body.toString('utf16le').replace(/\u0000+$/g,'').replace(/^\uFEFF/,'').trim();}catch{} }
+  if(enc===2){ try{ const out=[]; for(let i=0;i+1<body.length;i+=2) out.push(String.fromCharCode(body[i]*256+body[i+1])); return out.join('').replace(/\u0000+$/g,'').replace(/^\uFEFF/,'').trim(); }catch{} }
+  return body.toString(enc===3?'utf8':'latin1').replace(/\u0000+$/g,'').trim();
+}
+function readId3Tags(filePath){
+  try{
+    const fd=fs.openSync(filePath,'r'); const head=Buffer.alloc(10); fs.readSync(fd,head,0,10,0);
+    if(head.toString('ascii',0,3)!=='ID3'){fs.closeSync(fd);return {};} 
+    const version=head[3]; const size=((head[6]&0x7f)<<21)|((head[7]&0x7f)<<14)|((head[8]&0x7f)<<7)|(head[9]&0x7f);
+    const max=Math.min(size, 1024*1024); const buf=Buffer.alloc(max); fs.readSync(fd,buf,0,max,10); fs.closeSync(fd);
+    const out={}; let pos=0;
+    while(pos+10<=buf.length){
+      const id=buf.toString('ascii',pos,pos+4); if(!/^[A-Z0-9]{4}$/.test(id) || /^\x00+$/.test(id)) break;
+      let frameSize=version>=4 ? ((buf[pos+4]&0x7f)<<21)|((buf[pos+5]&0x7f)<<14)|((buf[pos+6]&0x7f)<<7)|(buf[pos+7]&0x7f) : buf.readUInt32BE(pos+4);
+      if(!frameSize || pos+10+frameSize>buf.length) break;
+      const data=buf.subarray(pos+10,pos+10+frameSize);
+      const key={TIT2:'title',TPE1:'artist',TPE2:'albumArtist',TALB:'album',TRCK:'track',TPOS:'disc',TCON:'genre',TDRC:'year',TYER:'year'}[id];
+      if(key && !out[key]) out[key]=decodeId3Text(data);
+      pos += 10+frameSize;
+    }
+    return out;
+  }catch{return {};} 
+}
+async function listZipEntries(zipPath){
+  if(process.platform !== 'win32'){
+    const {stdout}=await execFileAsync('unzip',['-Z1',zipPath],{maxBuffer:2*1024*1024});
+    return stdout.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  }
+  const script=`Add-Type -AssemblyName System.IO.Compression.FileSystem; [IO.Compression.ZipFile]::OpenRead('${zipPath.replace(/'/g,"''")}').Entries | ForEach-Object { $_.FullName }`;
+  const {stdout}=await execFileAsync('powershell',['-NoProfile','-Command',script],{maxBuffer:2*1024*1024});
+  return stdout.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+}
+async function extractZipSafe(zipPath,targetDir){
+  const entries=await listZipEntries(zipPath);
+  for(const entry of entries){
+    const normalized=entry.replace(/\\/g,'/');
+    if(normalized.startsWith('/') || normalized.split('/').includes('..')) throw new Error('ZIP содержит небезопасный путь.');
+  }
+  if(process.platform !== 'win32') await execFileAsync('unzip',['-q','-o',zipPath,'-d',targetDir],{maxBuffer:2*1024*1024});
+  else await execFileAsync('powershell',['-NoProfile','-Command',`Expand-Archive -LiteralPath '${zipPath.replace(/'/g,"''")}' -DestinationPath '${targetDir.replace(/'/g,"''")}' -Force`],{maxBuffer:2*1024*1024});
+  return entries;
+}
+function walkFiles(dir){
+  const out=[]; for(const name of fs.readdirSync(dir,{withFileTypes:true})){ const p=path.join(dir,name.name); if(name.isDirectory()) out.push(...walkFiles(p)); else out.push(p); } return out;
+}
+function findFirstFile(files, names){
+  const wanted=new Set(names.map(x=>x.toLowerCase()));
+  return files.find(f=>wanted.has(path.basename(f).toLowerCase())) || files.find(f=>/\.(jpe?g|png|webp)$/i.test(f));
+}
 function deleteFileSafe(fullPath){ try { if (fullPath && fs.existsSync(fullPath)) fs.unlinkSync(fullPath); } catch {} }
 function cleanupRequestFiles(req){ const files = req.files ? (Array.isArray(req.files) ? req.files : Object.values(req.files).flat()) : []; for (const f of files) deleteFileSafe(f.path); if (req.file) deleteFileSafe(req.file.path); }
 
@@ -283,12 +387,26 @@ function getFavoriteTracksForUser(userId){
     .map(mapTrack);
 }
 
+function getPlaylistCollaborators(playlistId){
+  return db.playlist_collaborators.filter(x=>Number(x.playlist_id)===Number(playlistId));
+}
+function isPlaylistCollaborator(userId, playlistId){
+  return db.playlist_collaborators.find(x=>Number(x.playlist_id)===Number(playlistId) && Number(x.user_id)===Number(userId));
+}
 function mapPlaylist(row){
   const items = db.playlist_tracks.filter(x=>Number(x.playlist_id)===Number(row.id));
-  return { id: row.id, userId: row.user_id, name: row.name, isPublic: !!row.is_public, likeCount: db.playlist_likes.filter(x=>Number(x.playlist_id)===Number(row.id)).length, coverUrl: row.cover_path ? `/uploads/playlists/${row.cover_path}` : '', trackCount: items.length, createdAt: row.created_at || '', updatedAt: row.updated_at || '' };
+  const collaborators = getPlaylistCollaborators(row.id);
+  return { id: row.id, userId: row.user_id, name: row.name, isPublic: !!row.is_public, likeCount: db.playlist_likes.filter(x=>Number(x.playlist_id)===Number(row.id)).length, coverUrl: row.cover_path ? `/uploads/playlists/${row.cover_path}` : '', trackCount: items.length, collaboratorCount: collaborators.length, collaborative: collaborators.length > 0, createdAt: row.created_at || '', updatedAt: row.updated_at || '' };
 }
 function getUserPlaylist(userId, playlistId){
-  return db.playlists.find(p=>Number(p.id)===Number(playlistId) && Number(p.user_id)===Number(userId));
+  return db.playlists.find(p=>Number(p.id)===Number(playlistId) && (Number(p.user_id)===Number(userId) || !!isPlaylistCollaborator(userId, playlistId)));
+}
+function getEditablePlaylist(userId, playlistId){
+  const pl=db.playlists.find(p=>Number(p.id)===Number(playlistId));
+  if(!pl) return null;
+  if(Number(pl.user_id)===Number(userId)) return pl;
+  const c=isPlaylistCollaborator(userId, playlistId);
+  return c && String(c.role||'editor')==='editor' ? pl : null;
 }
 function getPlaylistTracks(playlistId){
   const items = db.playlist_tracks
@@ -305,6 +423,48 @@ function normalizePlaylistPositions(playlistId){
     .sort((a,b)=>(Number(a.position)||0)-(Number(b.position)||0) || (Number(a.id)||0)-(Number(b.id)||0));
   items.forEach((item, idx)=>{ item.position = idx + 1; });
 }
+function normalizeCompoundArtistProfiles(){
+  // Repair artist profiles created by older importers from collaboration strings
+  // such as `SLAVA MARLOW/MORGENSHTERN`. Real collaborations should be represented
+  // by multiple artist records + track_artists relations, not a new combined profile.
+  const compoundArtists=db.artists.filter(a=>/[\/]/.test(String(a.name||'')) || /\b(?:feat\.?|ft\.?|featuring)\b/i.test(String(a.name||'')));
+  for(const compound of compoundArtists){
+    const parts=splitArtists(compound.name);
+    if(parts.length<2) continue;
+    const individual=parts.map(ensureArtist);
+    const ids=new Set(individual.map(a=>Number(a.id)));
+    for(const t of db.tracks){
+      const rels=db.track_artists.filter(r=>Number(r.track_id)===Number(t.id));
+      const referencesCompound=Number(t.artist_id)===Number(compound.id) || rels.some(r=>Number(r.artist_id)===Number(compound.id)) || String(t.artist||'').toLocaleLowerCase('ru-RU').includes(String(compound.name).toLocaleLowerCase('ru-RU'));
+      if(!referencesCompound) continue;
+      const currentIds=rels.map(r=>Number(r.artist_id)).filter(id=>id && id!==Number(compound.id));
+      const current=currentIds.map(id=>db.artists.find(a=>Number(a.id)===id)).filter(Boolean);
+      const merged=[];
+      for(const a of [...individual,...current]) if(!merged.some(x=>Number(x.id)===Number(a.id))) merged.push(a);
+      const main=merged[0];
+      if(!main) continue;
+      t.artist_id=main.id;
+      t.artist=merged.map(a=>a.name).join(', ');
+      syncTrackArtists(t.id,merged);
+    }
+    for(const al of db.albums){
+      if(Number(al.artist_id)===Number(compound.id)) al.artist_id=individual[0].id;
+    }
+    // Preserve follows by moving them to all individual artists.
+    const subs=db.subscriptions.filter(x=>Number(x.artist_id)===Number(compound.id));
+    for(const sub of subs){
+      for(const a of individual){
+        if(!db.subscriptions.some(x=>Number(x.user_id)===Number(sub.user_id)&&Number(x.artist_id)===Number(a.id))){
+          db.subscriptions.push({id:nextId('subscriptions'),user_id:Number(sub.user_id),artist_id:a.id,created_at:sub.created_at||now()});
+        }
+      }
+    }
+    db.subscriptions=db.subscriptions.filter(x=>Number(x.artist_id)!==Number(compound.id));
+    const stillUsed=db.tracks.some(t=>Number(t.artist_id)===Number(compound.id)) || db.track_artists.some(r=>Number(r.artist_id)===Number(compound.id)) || db.albums.some(a=>Number(a.artist_id)===Number(compound.id));
+    if(!stillUsed) db.artists=db.artists.filter(a=>Number(a.id)!==Number(compound.id));
+  }
+}
+
 function reconcileRelations(){
   for (const u of db.users) {
     if (typeof u.avatar_path !== 'string') u.avatar_path = '';
@@ -317,6 +477,9 @@ function reconcileRelations(){
     if (typeof p.cover_path !== 'string') p.cover_path = '';
     if (!p.updated_at) p.updated_at = p.created_at || now();
   }
+  for (const c of db.playlist_collaborators) {
+    c.playlist_id=Number(c.playlist_id); c.user_id=Number(c.user_id); c.role=c.role==='editor'?'editor':'editor'; c.created_at=c.created_at||now();
+  }
   for (const t of db.tracks) {
     if (typeof t.play_count !== 'number') t.play_count = Number(t.play_count) || 0;
     const artists = ensureArtists(t.artist); const main = artists[0];
@@ -325,9 +488,19 @@ function reconcileRelations(){
   }
   saveDb();
 }
+normalizeCompoundArtistProfiles();
 reconcileRelations();
 
-app.use(express.json({ limit: '5mb' }));
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  if (IS_PRODUCTION) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  next();
+});
+app.use(express.json({ limit: '2mb' }));
 app.use(cookieParser());
 app.use('/uploads/tracks', express.static(tracksDir));
 app.use('/uploads/covers', express.static(coversDir));
@@ -338,22 +511,82 @@ app.use('/uploads/playlists', express.static(playlistCoversDir));
 app.use(express.static(path.join(rootDir, 'public')));
 
 const rateLimitStore = new Map();
-function rateLimit(maxRequests, windowMs) { return (req, res, next) => { const ip = req.ip || req.connection.remoteAddress || 'unknown'; const nowMs = Date.now(); const e = rateLimitStore.get(ip); if (!e || nowMs > e.resetAt) { rateLimitStore.set(ip, {count:1, resetAt:nowMs+windowMs}); return next(); } if (e.count >= maxRequests) return res.status(429).json({error:'Слишком много запросов. Подожди немного.'}); e.count++; next(); }; }
-const authLimiter = rateLimit(10, 15*60*1000);
+let rateLimitCleanupAt = 0;
+function rateLimit(maxRequests, windowMs, keyFn) {
+  return (req, res, next) => {
+    const nowMs = Date.now();
+    const key = String((keyFn ? keyFn(req) : (req.ip || req.connection.remoteAddress || 'unknown')) || 'unknown').slice(0, 200);
+    if (nowMs - rateLimitCleanupAt > 5*60*1000) {
+      for (const [k, v] of rateLimitStore) if (nowMs > v.resetAt) rateLimitStore.delete(k);
+      rateLimitCleanupAt = nowMs;
+    }
+    const e = rateLimitStore.get(key);
+    if (!e || nowMs > e.resetAt) { rateLimitStore.set(key, {count:1, resetAt:nowMs+windowMs}); return next(); }
+    if (e.count >= maxRequests) {
+      const retryAfter = Math.max(1, Math.ceil((e.resetAt-nowMs)/1000));
+      res.setHeader('Retry-After', String(retryAfter));
+      return res.status(429).json({error:'Слишком много запросов. Подожди немного.', retryAfter});
+    }
+    e.count++;
+    next();
+  };
+}
+const authLimiter = rateLimit(10, 15*60*1000, req => `${req.ip||'unknown'}:${String(req.body?.email||'').trim().toLowerCase()}`);
+const uploadLimiter = rateLimit(20, 60*60*1000);
+// Cover changes are lightweight metadata edits and should not consume the general upload quota.
+const coverUploadLimiter = rateLimit(120, 10*60*1000);
 
-app.get('/api/health', (req, res) => res.json({ ok: true, mode: 'json-db', mailerConfigured: Boolean(mailer), adminConfigured: Boolean(ADMIN_EMAIL) }));
+app.get('/api/health', (req, res) => res.json({
+  ok: true,
+  mode: 'json-db',
+  mailerConfigured: mailerStatus.configured,
+  mailerReady: mailerStatus.ready,
+  mailerError: mailerStatus.error || null,
+  appBaseUrl: APP_BASE_URL,
+  adminConfigured: Boolean(ADMIN_EMAIL),
+}));
 app.post('/api/auth/register', authLimiter, async (req, res) => {
   try { const requestedName = normalizeNickname(req.body.name); const email = String(req.body.email || '').trim().toLowerCase(); const password = String(req.body.password || '');
     if (!requestedName || !email || password.length < 8) return res.status(400).json({ error: 'Укажи ник, email и пароль минимум 8 символов.' });
     if (db.users.some(u => String(u.email).toLowerCase() === email)) return res.status(400).json({ error: 'Такой email уже зарегистрирован.' });
     if (isArtistNameTaken(requestedName)) return res.status(400).json({ error: 'Этот ник занят именем существующего артиста. Выбери другой ник.' });
     const name = makeUniqueNickname(requestedName);
-    const user = { id: nextId('users'), name, email, role: (ADMIN_EMAIL && email === ADMIN_EMAIL) ? 'admin' : 'user', password_hash: await bcrypt.hash(password, 10), avatar_path: '', nickname_color: '', last_nick_change_at: null, last_avatar_change_at: null, is_verified: mailer ? 0 : 1, token_version: 0, created_at: now() };
+    const user = { id: nextId('users'), name, email, role: (ADMIN_EMAIL && email === ADMIN_EMAIL) ? 'admin' : 'user', password_hash: await bcrypt.hash(password, 10), avatar_path: '', bio: '', nickname_color: '', last_nick_change_at: null, last_avatar_change_at: null, is_verified: mailer ? 0 : 1, token_version: 0, created_at: now() };
     db.users.push(user); const token = crypto.randomBytes(32).toString('hex'); if (mailer) db.email_verification_tokens.push({ id: nextId('email_verification_tokens'), user_id: user.id, token, expires_at: new Date(Date.now()+24*3600*1000).toISOString(), created_at: now() }); saveDb();
-    await sendVerificationEmail(user, token).catch(()=>{});
+    let verificationSent = false;
+    let verificationError = '';
+    if (mailer) {
+      try { await sendVerificationEmail(user, token); verificationSent = true; }
+      catch (err) { verificationError = String(err?.message || err); }
+    }
     setAuthCookie(res, createJwt(user));
-    res.json({ ok: true, user: publicUser(user), message: mailer ? 'Аккаунт создан. Проверь почту для подтверждения.' : 'Аккаунт создан. Email подтверждён автоматически, потому что SMTP не настроен.' });
+    res.json({
+      ok: true,
+      user: publicUser(user),
+      verificationSent,
+      message: !mailer
+        ? 'Аккаунт создан, но SMTP не настроен — письмо не отправлено.'
+        : verificationSent
+          ? 'Аккаунт создан. Проверь почту для подтверждения.'
+          : 'Аккаунт создан, но письмо не отправилось. Открой профиль и нажми «Отправить письмо повторно».',
+      mailError: verificationError || undefined,
+    });
   } catch(e){ res.status(500).json({ error: e.message || 'Не удалось зарегистрироваться.' }); }
+});
+const resendVerificationLimiter = rateLimit(3, 15*60*1000);
+app.post('/api/auth/resend-verification', authRequired, resendVerificationLimiter, async (req, res) => {
+  try {
+    if (req.user.is_verified) return res.status(400).json({ error: 'Email уже подтверждён.' });
+    if (!mailer) return res.status(503).json({ error: 'SMTP не настроен на сервере.' });
+    const token = crypto.randomBytes(32).toString('hex');
+    db.email_verification_tokens = db.email_verification_tokens.filter(t => Number(t.user_id) !== Number(req.user.id));
+    db.email_verification_tokens.push({ id: nextId('email_verification_tokens'), user_id: req.user.id, token, expires_at: new Date(Date.now()+24*3600*1000).toISOString(), created_at: now() });
+    saveDb();
+    await sendVerificationEmail(req.user, token);
+    res.json({ ok: true, message: 'Письмо с подтверждением отправлено повторно.' });
+  } catch (err) {
+    res.status(503).json({ error: `Не удалось отправить письмо: ${String(err?.message || err)}` });
+  }
 });
 app.get('/api/auth/verify-email', (req, res) => { const token = String(req.query.token || ''); const rec = db.email_verification_tokens.find(t => t.token === token); if (!rec) return res.status(400).send('Ссылка недействительна.'); const u = db.users.find(x => Number(x.id) === Number(rec.user_id)); if (u) u.is_verified = 1; db.email_verification_tokens = db.email_verification_tokens.filter(t => t.token !== token); saveDb(); res.redirect('/'); });
 app.post('/api/auth/login', authLimiter, async (req, res) => { const email = String(req.body.email || '').trim().toLowerCase(); const password = String(req.body.password || ''); const u = db.users.find(x => String(x.email).toLowerCase() === email); if (!u || !(await bcrypt.compare(password, u.password_hash))) return res.status(401).json({ error: 'Неверный email или пароль.' }); setAuthCookie(res, createJwt(u)); res.json({ ok:true, user: publicUser(u) }); });
@@ -561,9 +794,13 @@ app.delete('/api/admin/users/:id', authRequired, adminOnly, (req, res) => {
     for (const pl of db.playlists.filter(x => userPlaylistIds.has(Number(x.id)))) if (pl.cover_path) deleteFileSafe(path.join(playlistCoversDir, pl.cover_path));
     db.playlists = db.playlists.filter(x => !userPlaylistIds.has(Number(x.id)));
     db.playlist_tracks = db.playlist_tracks.filter(x => !userPlaylistIds.has(Number(x.playlist_id)));
+    db.playlist_collaborators = db.playlist_collaborators.filter(x => !userPlaylistIds.has(Number(x.playlist_id)));
     for (const p of db.playlists) {
     if (typeof p.cover_path !== 'string') p.cover_path = '';
     if (!p.updated_at) p.updated_at = p.created_at || now();
+  }
+  for (const c of db.playlist_collaborators) {
+    c.playlist_id=Number(c.playlist_id); c.user_id=Number(c.user_id); c.role=c.role==='editor'?'editor':'editor'; c.created_at=c.created_at||now();
   }
   for (const t of db.tracks) {
       if (Number(t.uploaded_by_user_id) === id) t.uploaded_by_user_id = null;
@@ -574,7 +811,7 @@ app.delete('/api/admin/users/:id', authRequired, adminOnly, (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message || 'Не удалось удалить пользователя.' }); }
 });
 
-app.put('/api/profile', authRequired, upload.single('avatar'), (req, res) => {
+app.put('/api/profile', authRequired, uploadLimiter, upload.single('avatar'), (req, res) => {
   try {
     const user = req.user;
     const isAdmin = isAdminUser(user);
@@ -624,6 +861,101 @@ app.put('/api/profile', authRequired, upload.single('avatar'), (req, res) => {
   }
 });
 
+
+function publicSocialUser(u){
+  if(!u) return null;
+  return {id:Number(u.id),name:u.name||'',avatarUrl:u.avatar_path?`/uploads/avatars/${u.avatar_path}`:'',nicknameColor:u.nickname_color||''};
+}
+function socialTrack(id){
+  const t=db.tracks.find(x=>Number(x.id)===Number(id));
+  return t ? mapTrack(t) : null;
+}
+function activitySortDesc(a,b){ return new Date(b.createdAt||0)-new Date(a.createdAt||0) || Number(b.id||0)-Number(a.id||0); }
+
+app.get('/api/social/feed', authRequired, (req,res)=>{
+  const me=Number(req.user.id);
+  const following=new Set(db.user_subscriptions.filter(r=>Number(r.user_id)===me).map(r=>Number(r.target_user_id)));
+  if(!following.size) return res.json({items:[]});
+  const items=[];
+  for(const row of db.listen_history){
+    const actor=Number(row.user_id);
+    if(!following.has(actor)) continue;
+    const track=socialTrack(row.track_id); const user=db.users.find(u=>Number(u.id)===actor);
+    if(!track||!user) continue;
+    items.push({id:`listen:${row.id}`,kind:'listen',createdAt:row.played_at,actor:publicSocialUser(user),track});
+  }
+  for(const row of db.favorite_tracks){
+    const actor=Number(row.user_id);
+    if(!following.has(actor)||actor===me) continue;
+    const track=socialTrack(row.track_id); const user=db.users.find(u=>Number(u.id)===actor);
+    if(!track||!user) continue;
+    items.push({id:`favorite:${row.id}`,kind:'favorite',createdAt:row.created_at,actor:publicSocialUser(user),track});
+  }
+  for(const row of db.comments){
+    const actor=Number(row.user_id);
+    if(!following.has(actor)||actor===me) continue;
+    const track=socialTrack(row.track_id); const user=db.users.find(u=>Number(u.id)===actor);
+    if(!track||!user) continue;
+    items.push({id:`comment:${row.id}`,kind:'comment',createdAt:row.created_at,actor:publicSocialUser(user),track,text:String(row.text||'').slice(0,180)});
+  }
+  for(const row of db.user_subscriptions){
+    const actor=Number(row.user_id), target=Number(row.target_user_id);
+    if(!following.has(actor)||actor===me) continue;
+    const actorUser=db.users.find(u=>Number(u.id)===actor), targetUser=db.users.find(u=>Number(u.id)===target);
+    if(!actorUser||!targetUser) continue;
+    items.push({id:`follow:${row.id}`,kind:'follow',createdAt:row.created_at,actor:publicSocialUser(actorUser),target:publicSocialUser(targetUser)});
+  }
+  res.json({items:items.sort(activitySortDesc).slice(0,40)});
+});
+
+app.get('/api/social/listening-now', authRequired, (req,res)=>{
+  const me=Number(req.user.id);
+  const following=new Set(db.user_subscriptions.filter(r=>Number(r.user_id)===me).map(r=>Number(r.target_user_id)));
+  const cutoff=Date.now()-20*60*1000;
+  const latest=new Map();
+  for(const row of db.listen_history){
+    const uid=Number(row.user_id), ts=new Date(row.played_at||0).getTime();
+    if(!uid||uid===me||!following.has(uid)||!ts||ts<cutoff) continue;
+    const prev=latest.get(uid); if(!prev||ts>prev.ts) latest.set(uid,{row,ts});
+  }
+  const users=[...latest.entries()].map(([uid,{row,ts}])=>{
+    const u=db.users.find(x=>Number(x.id)===uid), track=socialTrack(row.track_id);
+    if(!u||!track) return null;
+    return {user:publicSocialUser(u),track,playedAt:new Date(ts).toISOString()};
+  }).filter(Boolean).sort((a,b)=>new Date(b.playedAt)-new Date(a.playedAt));
+  res.json({users:users.slice(0,20)});
+});
+
+app.get('/api/social/notifications', authRequired, (req,res)=>{
+  const me=Number(req.user.id);
+  const items=[];
+  const seen=new Set();
+  const push=(item)=>{ if(!item||seen.has(item.id))return;seen.add(item.id);items.push(item); };
+  db.user_subscriptions.filter(r=>Number(r.target_user_id)===me).forEach(r=>{
+    const actor=db.users.find(u=>Number(u.id)===Number(r.user_id)); if(!actor)return;
+    push({id:`follow:${r.id}`,kind:'follow',createdAt:r.created_at,actor:publicSocialUser(actor),text:`${actor.name} подписался на тебя.`});
+  });
+  const myTrackIds=new Set(db.tracks.filter(t=>Number(t.uploaded_by_user_id)===me).map(t=>Number(t.id)));
+  db.comments.filter(c=>myTrackIds.has(Number(c.track_id))&&Number(c.user_id)!==me).forEach(c=>{
+    const actor=db.users.find(u=>Number(u.id)===Number(c.user_id)), track=socialTrack(c.track_id); if(!actor||!track)return;
+    push({id:`comment:${c.id}`,kind:'comment',createdAt:c.created_at,actor:publicSocialUser(actor),track,text:`${actor.name} прокомментировал «${track.title}».`});
+  });
+  db.favorite_tracks.filter(f=>myTrackIds.has(Number(f.track_id))&&Number(f.user_id)!==me).forEach(f=>{
+    const actor=db.users.find(u=>Number(u.id)===Number(f.user_id)), track=socialTrack(f.track_id); if(!actor||!track)return;
+    push({id:`favorite:${f.id}`,kind:'favorite',createdAt:f.created_at,actor:publicSocialUser(actor),track,text:`${actor.name} добавил «${track.title}» в избранное.`});
+  });
+  db.playlist_likes.filter(l=>Number(l.user_id)!==me).forEach(l=>{
+    const pl=db.playlists.find(p=>Number(p.id)===Number(l.playlist_id)&&Number(p.user_id)===me), actor=db.users.find(u=>Number(u.id)===Number(l.user_id)); if(!pl||!actor)return;
+    push({id:`playlist-like:${l.id}`,kind:'playlist_like',createdAt:l.created_at,actor:publicSocialUser(actor),playlist:{id:pl.id,name:pl.name},text:`${actor.name} лайкнул плейлист «${pl.name}».`});
+  });
+  db.chat_messages.filter(m=>Number(m.to_user_id)===me&&!m.read_at).forEach(m=>{
+    const actor=db.users.find(u=>Number(u.id)===Number(m.from_user_id)); if(!actor)return;
+    push({id:`chat:${m.id}`,kind:'chat',createdAt:m.created_at,actor:publicSocialUser(actor),text:`Новое сообщение от ${actor.name}.`});
+  });
+  items.sort(activitySortDesc);
+  res.json({items:items.slice(0,60),unreadChat:items.filter(x=>x.kind==='chat').length, total:items.length});
+});
+
 app.get('/api/tracks', (req, res) => res.json({ tracks: sortTracksByPopularity(db.tracks).map(mapTrack) }));
 app.post('/api/tracks/:id/listen', rateLimit(120, 60*1000), (req,res)=>{ const id=Number(req.params.id); const t=db.tracks.find(x=>Number(x.id)===id); if(!t) return res.status(404).json({error:'Трек не найден.'}); t.play_count=Number(t.play_count)||0; t.play_count += 1; const user=getOptionalUser(req); db.listen_history.push({id:nextId('listen_history'),user_id:user?.id||null,track_id:id,played_at:now()}); if(db.listen_history.length>50000) db.listen_history=db.listen_history.slice(-50000); saveDb(); res.json({ok:true, playCount:t.play_count}); });
 app.get('/api/favorites', authRequired, (req,res)=>{
@@ -648,10 +980,245 @@ app.post('/api/tracks/:id/favorite', authRequired, (req,res)=>{
   const favoriteTrackIds = [...getFavoriteTrackIdsForUser(req.user.id)];
   res.json({ ok:true, favorited, track: mapTrack(track), favorites, favoriteTrackIds });
 });
-app.post('/api/tracks/upload', authRequired, adminOnly, upload.fields([{name:'audio',maxCount:1},{name:'cover',maxCount:1}]), (req,res)=>{ try{ const title=String(req.body.title||'').trim(), artistName=String(req.body.artist||'').trim(), albumName=String(req.body.album||'').trim(), genre=String(req.body.genre||'').trim(); const audioFile=req.files?.audio?.[0], coverFile=req.files?.cover?.[0]; if(!title||!artistName||!audioFile){ cleanupRequestFiles(req); return res.status(400).json({error:'Укажи название, артиста и аудиофайл.'}); } const artists=ensureArtists(artistName), main=artists[0], album=albumName?ensureAlbum(main.id, albumName):null; const tr={id:nextId('tracks'), title, artist:artists.map(a=>a.name).join(', '), artist_id:main.id, album:album?album.name:albumName, album_id:album?album.id:null, genre, play_count:0, cover_path:coverFile?path.basename(coverFile.filename):(album?.cover_path||''), audio_path:path.basename(audioFile.filename), uploaded_by_user_id:req.user.id, created_at:now()}; db.tracks.push(tr); syncTrackArtists(tr.id, artists); saveDb(); res.json({ok:true, track:mapTrack(tr)}); }catch(e){ cleanupRequestFiles(req); res.status(500).json({error:e.message||'Не удалось загрузить трек.'}); } });
-app.delete('/api/tracks/:id', authRequired, adminOnly, (req,res)=>{ const id=Number(req.params.id); const t=db.tracks.find(x=>Number(x.id)===id); if(!t) return res.status(404).json({error:'Трек не найден.'}); deleteFileSafe(path.join(tracksDir,t.audio_path)); if(t.cover_path){ deleteFileSafe(path.join(coversDir,t.cover_path)); invalidateCoverCache(t.cover_path); } db.tracks=db.tracks.filter(x=>Number(x.id)!==id); db.track_artists=db.track_artists.filter(x=>Number(x.track_id)!==id); db.favorite_tracks=db.favorite_tracks.filter(x=>Number(x.track_id)!==id); db.playlist_tracks=db.playlist_tracks.filter(x=>Number(x.track_id)!==id); db.listen_history=db.listen_history.filter(x=>Number(x.track_id)!==id); db.comments=db.comments.filter(x=>Number(x.track_id)!==id); saveDb(); res.json({ok:true}); });
-app.put('/api/tracks/:id', authRequired, adminOnly, (req,res)=>{ const id=Number(req.params.id); const t=db.tracks.find(x=>Number(x.id)===id); if(!t) return res.status(404).json({error:'Трек не найден.'}); const title=String(req.body.title||t.title).trim(), artistNames=String(req.body.artist||t.artist).trim(), albumName=String(req.body.album||'').trim(), genre=String(req.body.genre||'').trim(); const artists=ensureArtists(artistNames), main=artists[0], album=albumName?ensureAlbum(main.id, albumName):null; Object.assign(t,{title, artist:artists.map(a=>a.name).join(', '), artist_id:main.id, album:album?album.name:albumName, album_id:album?album.id:null, genre, cover_path:t.cover_path||(album?.cover_path||'')}); syncTrackArtists(id, artists); saveDb(); res.json({ok:true, track:mapTrack(t)}); });
 
+const bulkPreviewStore = new Map();
+const BULK_PREVIEW_TTL_MS = 30 * 60 * 1000;
+function cleanupBulkPreviews(){
+  const cutoff=Date.now()-BULK_PREVIEW_TTL_MS;
+  for(const [id,p] of bulkPreviewStore){
+    if(p.createdAt < cutoff){
+      try{if(p.zipPath)fs.unlinkSync(p.zipPath);}catch{}
+      try{if(p.tempDir)fs.rmSync(p.tempDir,{recursive:true,force:true});}catch{}
+      bulkPreviewStore.delete(id);
+    }
+  }
+}
+setInterval(cleanupBulkPreviews, 5*60*1000).unref();
+function cleanMetaText(v){ return String(v||'').replace(/\0/g,'').trim(); }
+const BULK_BAD_ALBUM_NAMES = new Set([
+  'mp3lav.com','mp3fly.net','mp3fly','unknown','unknown album','новая музыка','new music','single','singles'
+]);
+function isUsefulAlbumName(value){
+  const clean=cleanMetaText(value);
+  if(!clean) return false;
+  return !BULK_BAD_ALBUM_NAMES.has(clean.toLocaleLowerCase('ru-RU')) && !/^(?:https?:\/\/)?(?:www\.)?(mp3lav|mp3fly)\./i.test(clean);
+}
+function splitArtists(value){
+  const raw=cleanMetaText(value);
+  if(!raw) return [];
+  // Collaboration credits should point to individual artist records.
+  // Many downloaded tags use `Artist A/Artist B` for a collaboration.
+  // Keep well-known slash-containing names such as AC/DC intact.
+  const protectedNames=[];
+  let normalized=raw
+    .replace(/\bAC\s*\/\s*DC\b/ig, m=>{ const token=`__VENYL_ARTIST_${protectedNames.length}__`; protectedNames.push(m.replace(/\s*\/\s*/g,'/')); return token; })
+    .replace(/\s+(?:feat\.?|ft\.?|featuring)\s+/ig, ', ')
+    .replace(/\s*\b(?:x|with)\s*/ig, ', ')
+    .replace(/\s*[&+]\s*/g, ', ')
+    .replace(/\s*\/\s*/g, ', ');
+  normalized=normalized.replace(/__VENYL_ARTIST_(\d+)__/g,(_,i)=>protectedNames[Number(i)]);
+  return normalized
+    .split(/[,;|]+/)
+    .map(x=>x.trim())
+    .filter(Boolean)
+    .filter((x,i,a)=>a.findIndex(y=>y.toLocaleLowerCase('ru-RU')===x.toLocaleLowerCase('ru-RU'))===i);
+}
+
+function splitTitleAndFeaturedArtists(title){
+  const raw=cleanMetaText(title);
+  const m=raw.match(/^(.*?)(?:\s*\((?:feat\.?|ft\.?|featuring)\s+([^()]+)\)|\s*\[(?:feat\.?|ft\.?|featuring)\s+([^\]]+)\]|\s+(?:feat\.?|ft\.?|featuring)\s+(.+))$/i);
+  if(!m) return {title:raw,featured:[]};
+  return {title:cleanMetaText(m[1]),featured:splitArtists(m[2]||m[3]||m[4]||'')};
+}
+function parseFilenameArtistsAndTitle(file){
+  const base=path.basename(file,path.extname(file));
+  const clean=base.replace(/[_]+/g,' ').replace(/\s+/g,' ').trim();
+  const m=clean.match(/^(.+?)\s+-\s+(.+)$/);
+  if(!m) return {artists:[],title:clean};
+  const rawArtists=m[1].replace(/\s+(?:feat\.?|ft\.?|featuring)\s+/ig, ', ');
+  const parsedTitle=splitTitleAndFeaturedArtists(m[2]);
+  return {artists:splitArtists(rawArtists).concat(parsedTitle.featured),title:parsedTitle.title};
+}
+function relativeCoverForAudio(audioFile, allFiles){
+  const dir=path.dirname(audioFile);
+  const names=['cover.jpg','cover.jpeg','cover.png','cover.webp','folder.jpg','folder.jpeg','folder.png','folder.webp','front.jpg','front.jpeg','front.png','front.webp'];
+  const local=names.map(n=>path.join(dir,n)).find(f=>fs.existsSync(f));
+  if(local)return local;
+  const root=names.map(n=>allFiles.find(f=>path.basename(f).toLowerCase()===n)).find(Boolean);
+  return root || findFirstFile(allFiles,names);
+}
+function parseBulkLibrary(files){
+  const audioFiles=files.filter(f=>/\.(mp3|wav|flac|ogg|m4a)$/i.test(f));
+  const items=audioFiles.map(file=>{
+    const meta=readId3Tags(file)||{};
+    const fn=parseFilenameArtistsAndTitle(file);
+    const metaTitle=cleanMetaText(meta.title);
+    const titleParts=splitTitleAndFeaturedArtists(metaTitle || fn.title);
+    const rawArtist=cleanMetaText(meta.artist||meta.albumArtist||'');
+    let artists=splitArtists(rawArtist);
+    if(!artists.length) artists=fn.artists.slice(0);
+    artists=[...new Map(artists.concat(titleParts.featured, metaTitle ? [] : fn.artists).map(x=>[x.toLocaleLowerCase('ru-RU'),x])).values()];
+    const primaryArtist=artists[0]||'Unknown Artist';
+    const albumArtist=cleanMetaText(meta.albumArtist) && !/^(?:mp3lav|mp3fly)/i.test(cleanMetaText(meta.albumArtist)) ? splitArtists(meta.albumArtist)[0] : primaryArtist;
+    const albumCandidate=cleanMetaText(meta.album);
+    const album=isUsefulAlbumName(albumCandidate) ? albumCandidate : '';
+    const title=titleParts.title || fn.title || path.basename(file,path.extname(file));
+    const trackNumber=parseInt(String(meta.track||'').split('/')[0],10)||0;
+    const discNumber=parseInt(String(meta.disc||'').split('/')[0],10)||0;
+    const cover=relativeCoverForAudio(file,files);
+    return {file,title,artists,artist:primaryArtist,albumArtist,album,genre:cleanMetaText(meta.genre),year:cleanMetaText(meta.year),trackNumber,discNumber,cover,relative:path.relative(path.dirname(files[0]||file),file)};
+  });
+
+  // Only create an album when a meaningful album tag exists AND at least two tracks
+  // actually share that same album/album artist. Otherwise these are imported as tracks/singles.
+  const albumCandidates=new Map();
+  for(const item of items){
+    if(!item.album) continue;
+    const key=`${item.albumArtist.toLocaleLowerCase('ru-RU')}\u0000${item.album.toLocaleLowerCase('ru-RU')}`;
+    if(!albumCandidates.has(key)) albumCandidates.set(key,[]);
+    albumCandidates.get(key).push(item);
+  }
+  const validAlbumKeys=new Set([...albumCandidates.entries()].filter(([,arr])=>arr.length>=2).map(([k])=>k));
+  for(const item of items){
+    const key=`${item.albumArtist.toLocaleLowerCase('ru-RU')}\u0000${item.album.toLocaleLowerCase('ru-RU')}`;
+    if(!validAlbumKeys.has(key)) item.album='';
+  }
+
+  const groups=new Map();
+  for(const item of items){
+    const key=item.album ? `album\u0000${item.albumArtist.toLocaleLowerCase('ru-RU')}\u0000${item.album.toLocaleLowerCase('ru-RU')}` : `single\u0000${item.file}`;
+    if(!groups.has(key)) groups.set(key,{key,artist:item.albumArtist,album:item.album,genre:item.genre,cover:item.cover,tracks:[]});
+    const g=groups.get(key);
+    if(!g.cover&&item.cover)g.cover=item.cover;
+    if(!g.genre&&item.genre)g.genre=item.genre;
+    g.tracks.push(item);
+  }
+  for(const g of groups.values()) g.tracks.sort((a,b)=>a.discNumber-b.discNumber||a.trackNumber-b.trackNumber||a.file.localeCompare(b.file,'ru'));
+  const warnings=[];
+  const missingArtist=items.filter(x=>x.artist==='Unknown Artist').length;
+  if(missingArtist)warnings.push(`${missingArtist} треков без исполнителя — будет создан Unknown Artist.`);
+  const realAlbums=[...new Set(items.filter(x=>x.album).map(x=>`${x.albumArtist}\u0000${x.album}`))].length;
+  warnings.push(`Импортировано как треки: ${items.length}. Реальных альбомных групп: ${realAlbums}. Одиночные треки альбом не создают.`);
+  const seen=new Set(),duplicates=[];
+  for(const x of items){
+    const key=[x.artist,x.album,x.title].map(v=>v.toLocaleLowerCase('ru-RU')).join('\u0000');
+    if(seen.has(key))duplicates.push(x); else seen.add(key);
+  }
+  if(duplicates.length)warnings.push(`${duplicates.length} возможных дубликатов внутри архива.`);
+  return {items,groups:[...groups.values()],warnings};
+}
+function bulkPreviewResponse(parsed){
+  return {
+    totalTracks:parsed.items.length,
+    artists:[...new Set(parsed.items.map(x=>x.albumArtist))].sort((a,b)=>a.localeCompare(b,'ru')),
+    albums:parsed.groups.map(g=>({artist:g.artist,album:g.album,count:g.tracks.length,cover:!!g.cover,tracks:g.tracks.map(t=>({title:t.title,artist:t.artists.join(', '),album:t.album,genre:t.genre,trackNumber:t.trackNumber,discNumber:t.discNumber}))})),
+    warnings:parsed.warnings
+  };
+}
+async function receiveBulkZip(req,res,next){
+  zipUpload.single('album_zip')(req,res,err=>{ if(err)return res.status(400).json({error:err.message||'Не удалось загрузить ZIP.'}); next(); });
+}
+
+app.post('/api/albums/import-preview', authRequired, adminOnly, receiveBulkZip, async (req,res)=>{
+  const zipPath=req.file?.path; let tempDir='';
+  try{
+    if(!zipPath)return res.status(400).json({error:'Выбери ZIP-архив.'});
+    tempDir=path.join(importsDir,`preview_${Date.now()}_${Math.random().toString(36).slice(2,8)}`); fs.mkdirSync(tempDir,{recursive:true});
+    await extractZipSafe(zipPath,tempDir);
+    const files=walkFiles(tempDir), parsed=parseBulkLibrary(files);
+    if(!parsed.items.length)throw new Error('В ZIP не найдено аудио.');
+    const previewId=crypto.randomUUID();
+    bulkPreviewStore.set(previewId,{createdAt:Date.now(),zipPath,tempDir,parsed});
+    res.json({ok:true,previewId,preview:bulkPreviewResponse(parsed)});
+    tempDir='';
+  }catch(e){res.status(400).json({error:e.message||'Не удалось прочитать ZIP.'}); try{if(zipPath)fs.unlinkSync(zipPath);}catch{} try{if(tempDir)fs.rmSync(tempDir,{recursive:true,force:true});}catch{}}
+});
+
+async function importBulkPreview(previewId, userId){
+  const entry=bulkPreviewStore.get(previewId);
+  if(!entry)throw new Error('Предпросмотр устарел. Выбери ZIP ещё раз.');
+  const {parsed,tempDir}=entry;
+  const created=[], skipped=[], createdGroups=[];
+  for(const group of parsed.groups){
+    const artistNames=splitArtists(group.artist||'Unknown Artist');
+    const albumArtistName=artistNames[0]||'Unknown Artist';
+    const mainArtist=ensureArtist(albumArtistName);
+    let album=group.album ? ensureAlbum(mainArtist.id,group.album,'') : null;
+    let groupCoverPath='';
+    if(group.cover){
+      const ext=path.extname(group.cover).toLowerCase()||'.jpg';
+      const coverName=`${Date.now()}_${sanitizeBase(`${albumArtistName}-${group.album}`)}${ext}`;
+      const coverDir=album ? albumsDir : coversDir;
+      fs.copyFileSync(group.cover,path.join(coverDir,coverName));
+      groupCoverPath=coverName;
+      if(album)album.cover_path=coverName;
+    }
+    if(album)createdGroups.push({artist:mainArtist.name,album:album.name,count:group.tracks.length});
+    for(const item of group.tracks){
+      const artists=[...new Map((item.artists.length?item.artists:[albumArtistName]).map(name=>[String(name).toLocaleLowerCase('ru-RU'),ensureArtist(name)])).values()];
+      const main=artists[0]||mainArtist;
+      const duplicate=db.tracks.find(t=>String(t.title||'').toLocaleLowerCase('ru-RU')===item.title.toLocaleLowerCase('ru-RU') && String(t.artist||'').toLocaleLowerCase('ru-RU')===artists.map(a=>a.name).join(', ').toLocaleLowerCase('ru-RU') && String(t.album||'').toLocaleLowerCase('ru-RU')===String(group.album||'').toLocaleLowerCase('ru-RU'));
+      if(duplicate){skipped.push({title:item.title,artist:item.artists.join(', '),reason:'Уже существует'});continue;}
+      const ext=path.extname(item.file).toLowerCase()||'.mp3';
+      const destName=`${Date.now()}_${Math.random().toString(36).slice(2,8)}_${sanitizeBase(`${item.trackNumber||created.length+1}-${item.title}`)}${ext}`;
+      const dest=path.join(tracksDir,destName); fs.copyFileSync(item.file,dest);
+      const tr={id:nextId('tracks'),title:item.title,artist:artists.map(a=>a.name).join(', '),artist_id:main.id,album:album?album.name:'',album_id:album?album.id:null,genre:item.genre||group.genre||'',play_count:0,cover_path:album?.cover_path||groupCoverPath||'',audio_path:destName,uploaded_by_user_id:userId,created_at:now()};
+      db.tracks.push(tr);syncTrackArtists(tr.id,artists);created.push(mapTrack(tr));
+    }
+  }
+  saveDb();
+  return {created,skipped,groups:createdGroups,total:parsed.items.length};
+}
+
+app.post('/api/albums/import-preview/commit', authRequired, adminOnly, async (req,res)=>{
+  try{
+    const previewId=String(req.body.previewId||''); if(!previewId)return res.status(400).json({error:'Предпросмотр не найден.'});
+    const result=await importBulkPreview(previewId,req.user.id);
+    const entry=bulkPreviewStore.get(previewId); bulkPreviewStore.delete(previewId);
+    try{if(entry?.zipPath)fs.unlinkSync(entry.zipPath);}catch{} try{if(entry?.tempDir)fs.rmSync(entry.tempDir,{recursive:true,force:true});}catch{}
+    res.json({ok:true,count:result.created.length,skipped:result.skipped.length,groups:result.groups,tracks:result.created,skippedTracks:result.skipped,total:result.total});
+  }catch(e){res.status(400).json({error:e.message||'Не удалось импортировать музыку.'});}
+});
+
+// Backwards-compatible endpoint: direct ZIP import now uses the same universal grouping engine.
+app.post('/api/albums/import-zip', authRequired, adminOnly, receiveBulkZip, async (req,res)=>{
+  const zipPath=req.file?.path; let tempDir='';
+  try{
+    if(!zipPath)return res.status(400).json({error:'Выбери ZIP-архив.'});
+    tempDir=path.join(importsDir,`direct_${Date.now()}_${Math.random().toString(36).slice(2,8)}`); fs.mkdirSync(tempDir,{recursive:true}); await extractZipSafe(zipPath,tempDir);
+    const parsed=parseBulkLibrary(walkFiles(tempDir)); if(!parsed.items.length)throw new Error('В ZIP не найдено аудио.');
+    const id=crypto.randomUUID(); bulkPreviewStore.set(id,{createdAt:Date.now(),zipPath,tempDir,parsed});
+    const result=await importBulkPreview(id,req.user.id); bulkPreviewStore.delete(id);
+    res.json({ok:true,count:result.created.length,skipped:result.skipped.length,groups:result.groups,tracks:result.created,skippedTracks:result.skipped,total:result.total});
+    tempDir='';
+  }catch(e){res.status(400).json({error:e.message||'Не удалось импортировать музыку.'});}
+  finally{try{if(zipPath)fs.unlinkSync(zipPath);}catch{} try{if(tempDir)fs.rmSync(tempDir,{recursive:true,force:true});}catch{}}
+});
+
+app.post('/api/tracks/upload', authRequired, adminOnly, uploadLimiter, upload.fields([{name:'audio',maxCount:1},{name:'cover',maxCount:1}]), (req,res)=>{ try{ const title=String(req.body.title||'').trim(), artistName=String(req.body.artist||'').trim(), albumName=String(req.body.album||'').trim(), genre=String(req.body.genre||'').trim(); const audioFile=req.files?.audio?.[0], coverFile=req.files?.cover?.[0]; if(!title||!artistName||!audioFile){ cleanupRequestFiles(req); return res.status(400).json({error:'Укажи название, артиста и аудиофайл.'}); } const artists=ensureArtists(artistName), main=artists[0], album=albumName?ensureAlbum(main.id, albumName):null; const tr={id:nextId('tracks'), title, artist:artists.map(a=>a.name).join(', '), artist_id:main.id, album:album?album.name:albumName, album_id:album?album.id:null, genre, play_count:0, cover_path:coverFile?path.basename(coverFile.filename):(album?.cover_path||''), audio_path:path.basename(audioFile.filename), uploaded_by_user_id:req.user.id, created_at:now()}; db.tracks.push(tr); syncTrackArtists(tr.id, artists); saveDb(); res.json({ok:true, track:mapTrack(tr)}); }catch(e){ cleanupRequestFiles(req); res.status(500).json({error:e.message||'Не удалось загрузить трек.'}); } });
+app.delete('/api/tracks/:id', authRequired, adminOnly, (req,res)=>{ const id=Number(req.params.id); const t=db.tracks.find(x=>Number(x.id)===id); if(!t) return res.status(404).json({error:'Трек не найден.'}); deleteFileSafe(path.join(tracksDir,t.audio_path)); if(t.cover_path){ deleteFileSafe(path.join(coversDir,t.cover_path)); invalidateCoverCache(t.cover_path); } db.tracks=db.tracks.filter(x=>Number(x.id)!==id); db.track_artists=db.track_artists.filter(x=>Number(x.track_id)!==id); db.favorite_tracks=db.favorite_tracks.filter(x=>Number(x.track_id)!==id); db.playlist_tracks=db.playlist_tracks.filter(x=>Number(x.track_id)!==id); db.listen_history=db.listen_history.filter(x=>Number(x.track_id)!==id); db.comments=db.comments.filter(x=>Number(x.track_id)!==id); saveDb(); res.json({ok:true}); });
+app.put('/api/tracks/:id', authRequired, adminOnly, coverUploadLimiter, upload.single('cover'), (req,res)=>{ const id=Number(req.params.id); const t=db.tracks.find(x=>Number(x.id)===id); if(!t){ if(req.file) deleteFileSafe(req.file.path); return res.status(404).json({error:'Трек не найден.'}); } const title=String(req.body.title||t.title).trim(), artistNames=String(req.body.artist||t.artist).trim(), albumName=String(req.body.album||'').trim(), genre=String(req.body.genre||'').trim(); const artists=ensureArtists(artistNames), main=artists[0], album=albumName?ensureAlbum(main.id, albumName):null; const oldCover=t.cover_path||''; const oldAlbumId=t.album_id||null; Object.assign(t,{title, artist:artists.map(a=>a.name).join(', '), artist_id:main.id, album:album?album.name:albumName, album_id:album?album.id:null, genre}); if(req.file){ if(oldCover && (!oldAlbumId || !db.albums.some(a=>Number(a.id)===Number(oldAlbumId) && String(a.cover_path||'')===String(oldCover)))) { deleteFileSafe(path.join(coversDir,oldCover)); invalidateCoverCache(oldCover); } t.cover_path=path.basename(req.file.filename); } else if(!t.cover_path && album?.cover_path) t.cover_path=album.cover_path; syncTrackArtists(id, artists); saveDb(); res.json({ok:true, track:mapTrack(t)}); });
+
+
+
+app.get('/api/discover', rateLimit(60, 60*1000), (req,res)=>{
+  const limit=(n,arr)=>arr.slice(0,n);
+  const tracks=[...db.tracks].sort((a,b)=>(Number(b.play_count)||0)-(Number(a.play_count)||0)||Number(b.id)-Number(a.id));
+  const newTracks=[...db.tracks].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0)||Number(b.id)-Number(a.id));
+  const artistPlayCounts=new Map();
+  for(const t of db.tracks){
+    const count=Number(t.play_count)||0;
+    getTrackArtistsForMap(t).forEach(a=>artistPlayCounts.set(Number(a.id),(artistPlayCounts.get(Number(a.id))||0)+count));
+  }
+  const artists=[...db.artists].sort((a,b)=>(artistPlayCounts.get(Number(b.id))||0)-(artistPlayCounts.get(Number(a.id))||0)||Number(b.id)-Number(a.id)).slice(0,12).map(mapArtist);
+  const albums=[...db.albums].map(a=>({row:a,plays:db.tracks.filter(t=>Number(t.album_id)===Number(a.id)).reduce((n,t)=>n+(Number(t.play_count)||0),0)})).sort((a,b)=>b.plays-a.plays||Number(b.row.id)-Number(a.row.id)).slice(0,12).map(x=>mapAlbum(x.row));
+  res.json({
+    trending:limit(12,tracks).map(t=>mapTrack(t)),
+    newReleases:limit(12,newTracks).map(t=>mapTrack(t)),
+    popularArtists:artists,
+    popularAlbums:albums
+  });
+});
 
 app.get('/api/search', rateLimit(60, 60*1000), (req,res)=>{
   const q=String(req.query.q||'').trim().toLowerCase();
@@ -690,47 +1257,111 @@ app.get('/api/me/stats', authRequired, (req,res)=>{
   }
   const estimatedMinutes=Math.round(rows.length*3.5);
   res.json({stats:{plays:rows.length,uniqueTracks:byTrack.size,minutes:estimatedMinutes,minutesEstimated:true,genres:[...byGenre.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8).map(([name,plays])=>({name,plays}))}});
+
+});
+
+app.get('/api/me/wrapped', authRequired, (req,res)=>{
+  const uid=Number(req.user.id);
+  const history=db.listen_history.filter(h=>Number(h.user_id)===uid);
+  const byTrack=new Map(db.tracks.map(t=>[Number(t.id),t]));
+  const counts=new Map(); for(const h of history){const id=Number(h.track_id); counts.set(id,(counts.get(id)||0)+1);}
+  const topTracks=[...counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5).map(([id,plays])=>{const t=byTrack.get(id);return t?{...mapTrack(t),plays}:null}).filter(Boolean);
+  const artistCounts=new Map(); for(const [id,plays] of counts){const t=byTrack.get(id); if(!t)continue; artistCounts.set(t.artist,(artistCounts.get(t.artist)||0)+plays);}
+  const topArtists=[...artistCounts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5).map(([name,plays])=>({name,plays}));
+  const genreCounts=new Map(); for(const [id,plays] of counts){const t=byTrack.get(id); if(!t)continue; const g=String(t.genre||'').split(',')[0].trim(); if(g)genreCounts.set(g,(genreCounts.get(g)||0)+plays);}
+  const topGenres=[...genreCounts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5).map(([name,plays])=>({name,plays}));
+  const minutes=Math.round(history.reduce((sum,h)=>sum+Number(byTrack.get(Number(h.track_id))?.duration_seconds||180),0)/60);
+  const favoriteCount=db.favorite_tracks.filter(f=>Number(f.user_id)===uid).length;
+  const days=new Map(); history.forEach(h=>{const d=String(h.played_at||'').slice(0,10); if(d)days.set(d,(days.get(d)||0)+1);});
+  const bestDay=[...days.entries()].sort((a,b)=>b[1]-a[1])[0]?.[0]||null;
+  res.json({stats:{plays:history.length,uniqueTracks:counts.size,minutes,favoriteCount,bestDay,topTracks,topArtists,topGenres}});
 });
 
 app.get('/api/recommendations', authRequired, (req,res)=>{
-  const favIds=getFavoriteTrackIdsForUser(req.user.id);
-  const history=db.listen_history.filter(x=>Number(x.user_id)===Number(req.user.id)).sort((a,b)=>new Date(a.played_at||0)-new Date(b.played_at||0));
-  const genreScore=new Map(), artistScore=new Map(), seen=new Set();
+  const userId=Number(req.user.id);
+  const favIds=getFavoriteTrackIdsForUser(userId);
+  const history=db.listen_history
+    .filter(x=>Number(x.user_id)===userId)
+    .sort((a,b)=>new Date(a.played_at||0)-new Date(b.played_at||0));
+  const genreScore=new Map(), artistScore=new Map(), playCounts=new Map();
+  const seen=new Set();
+
+  const addSignals=(t,genreWeight,artistWeight)=>{
+    for(const g of String(t.genre||'').split(',').map(v=>v.trim()).filter(Boolean)) genreScore.set(g,(genreScore.get(g)||0)+genreWeight);
+    for(const a of getTrackArtistsForMap(t)) artistScore.set(Number(a.id),(artistScore.get(Number(a.id))||0)+artistWeight);
+  };
+
   for(const id of favIds){
-    const t=db.tracks.find(x=>Number(x.id)===Number(id)); if(!t) continue;
+    const t=db.tracks.find(x=>Number(x.id)===Number(id));
+    if(!t) continue;
     seen.add(Number(t.id));
-    for(const g of String(t.genre||'').split(',').map(v=>v.trim()).filter(Boolean)) genreScore.set(g,(genreScore.get(g)||0)+6);
-    for(const a of getTrackArtistsForMap(t)) artistScore.set(Number(a.id),(artistScore.get(Number(a.id))||0)+7);
+    addSignals(t,7,9);
   }
-  const recent=history.slice(-100);
-  recent.forEach((row,idx)=>{
-    const t=db.tracks.find(x=>Number(x.id)===Number(row.track_id)); if(!t) return;
-    seen.add(Number(t.id));
-    const recency=1+(idx/Math.max(1,recent.length))*2;
-    for(const g of String(t.genre||'').split(',').map(v=>v.trim()).filter(Boolean)) genreScore.set(g,(genreScore.get(g)||0)+recency);
-    for(const a of getTrackArtistsForMap(t)) artistScore.set(Number(a.id),(artistScore.get(Number(a.id))||0)+recency*2.5);
+
+  history.forEach((row,idx)=>{
+    const t=db.tracks.find(x=>Number(x.id)===Number(row.track_id));
+    if(!t) return;
+    const id=Number(t.id);
+    playCounts.set(id,(playCounts.get(id)||0)+1);
+    seen.add(id);
+    const recency=1+(idx/Math.max(1,history.length))*3;
+    addSignals(t,recency,recency*2.4);
   });
-  const excludeRaw=String(req.query.exclude||'').split(',').map(Number).filter(Boolean);
-  const exclude=new Set(excludeRaw);
-  const candidates=db.tracks.filter(t=>!favIds.has(Number(t.id))&&!exclude.has(Number(t.id))).map(t=>{
-    let score=Math.log1p(Number(t.play_count)||0)*0.7;
-    for(const g of String(t.genre||'').split(',').map(v=>v.trim()).filter(Boolean)) score+=(genreScore.get(g)||0)*1.8;
-    for(const a of getTrackArtistsForMap(t)) score+=artistScore.get(Number(a.id))||0;
-    if(seen.has(Number(t.id))) score-=2;
+
+  const exclude=new Set(String(req.query.exclude||'').split(',').map(Number).filter(Boolean));
+  const genreTop=[...genreScore.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8).map(([name])=>name);
+  const genreSet=new Set(genreTop.map(x=>String(x).toLowerCase()));
+  const coldStart=history.length===0 && favIds.size===0;
+
+  const candidates=db.tracks.filter(t=>{
+    const id=Number(t.id);
+    return !exclude.has(id) && !favIds.has(id);
+  }).map(t=>{
+    const id=Number(t.id);
+    const genres=String(t.genre||'').split(',').map(v=>v.trim()).filter(Boolean);
+    const artists=getTrackArtistsForMap(t).map(a=>Number(a.id)).filter(Boolean);
+    let score=Math.log1p(Number(t.play_count)||0)*0.8;
+    const reasons=[];
+    let matchedGenre=false, matchedArtist=false;
+    if(coldStart){
+      score += Math.min(10,Math.log1p(Number(t.play_count)||0)*1.8);
+      reasons.push('Популярно в Venyl');
+    }
+    for(const g of genres){
+      const gs=genreScore.get(g)||0;
+      if(gs>0){score+=gs*1.9; matchedGenre=true;}
+      if(genreSet.has(String(g).toLowerCase())) score+=2.5;
+    }
+    for(const a of artists){
+      const as=artistScore.get(a)||0;
+      if(as>0){score+=as; matchedArtist=true;}
+    }
+    const repeats=playCounts.get(id)||0;
+    if(repeats) score-=Math.min(7,repeats*1.8);
+    if(seen.has(id)) score-=3.2;
     const ageDays=Math.max(0,(Date.now()-new Date(t.created_at||Date.now()).getTime())/86400000);
-    if(ageDays<30) score+=Math.max(0,5-ageDays/6);
-    return {t,score};
+    if(ageDays<45){score+=Math.max(0,6-ageDays/8); if(!coldStart) reasons.push('Новый релиз');}
+    if(matchedArtist) reasons.push('Похожий артист');
+    else if(matchedGenre) reasons.push('Твой жанр');
+    return {t,score,reasons};
   }).sort((a,b)=>b.score-a.score || (Number(b.t.play_count)||0)-(Number(a.t.play_count)||0) || Number(b.t.id)-Number(a.t.id));
-  const picked=[], artistCounts=new Map();
+
+  const picked=[], artistCounts=new Map(), genreCounts=new Map();
   for(const item of candidates){
     const artists=getTrackArtistsForMap(item.t).map(a=>Number(a.id)).filter(Boolean);
+    const genres=String(item.t.genre||'').split(',').map(v=>v.trim()).filter(Boolean);
     const maxArtist=artists.reduce((m,id)=>Math.max(m,artistCounts.get(id)||0),0);
-    if(maxArtist>=3 && picked.length<12) continue;
-    picked.push(mapTrack(item.t));
+    const topGenreCount=genres.reduce((m,g)=>Math.max(m,genreCounts.get(g)||0),0);
+    if(picked.length<12 && maxArtist>=3) continue;
+    if(picked.length<10 && topGenreCount>=5) continue;
+    const track=mapTrack(item.t);
+    track.reason=item.reasons[0]||'Подобрано для тебя';
+    picked.push(track);
     artists.forEach(id=>artistCounts.set(id,(artistCounts.get(id)||0)+1));
+    genres.forEach(g=>genreCounts.set(g,(genreCounts.get(g)||0)+1));
     if(picked.length>=20) break;
   }
-  res.json({tracks:picked});
+  res.json({tracks:picked,meta:{coldStart,topGenres:genreTop}});
 });
 
 app.get('/api/tracks/:id/comments', (req,res)=>{
@@ -756,12 +1387,12 @@ app.delete('/api/comments/:id', authRequired, (req,res)=>{
 
 app.get('/api/playlists', authRequired, (req,res)=>{
   const playlists = db.playlists
-    .filter(p=>Number(p.user_id)===Number(req.user.id))
+    .filter(p=>Number(p.user_id)===Number(req.user.id) || !!isPlaylistCollaborator(req.user.id,p.id))
     .sort((a,b)=>new Date(b.updated_at||b.created_at||0)-new Date(a.updated_at||a.created_at||0) || (Number(b.id)||0)-(Number(a.id)||0))
     .map(mapPlaylist);
   res.json({ playlists });
 });
-app.post('/api/playlists', authRequired, upload.single('playlist_cover'), (req,res)=>{
+app.post('/api/playlists', authRequired, uploadLimiter, upload.single('playlist_cover'), (req,res)=>{
   try{
     const name=String(req.body.name||'').trim();
     if(!name){ if(req.file) deleteFileSafe(req.file.path); return res.status(400).json({error:'Укажи название плейлиста.'}); }
@@ -775,14 +1406,18 @@ app.get('/api/playlists/:id', authRequired, (req,res)=>{
   if(!pl) return res.status(404).json({error:'Плейлист не найден или недоступен.'});
   res.json({ playlist:mapPlaylist(pl), tracks:getPlaylistTracks(pl.id) });
 });
-app.put('/api/playlists/:id', authRequired, upload.single('playlist_cover'), (req,res)=>{
+app.put('/api/playlists/:id', authRequired, uploadLimiter, upload.single('playlist_cover'), (req,res)=>{
   try{
-    const pl=getUserPlaylist(req.user.id, req.params.id);
+    const pl=getEditablePlaylist(req.user.id, req.params.id);
     if(!pl){ if(req.file) deleteFileSafe(req.file.path); return res.status(404).json({error:'Плейлист не найден или недоступен.'}); }
     const name=String(req.body.name??pl.name).trim();
     if(!name){ if(req.file) deleteFileSafe(req.file.path); return res.status(400).json({error:'Название плейлиста не может быть пустым.'}); }
     pl.name=name;
     if(req.file){ if(pl.cover_path) deleteFileSafe(path.join(playlistCoversDir, pl.cover_path)); pl.cover_path=path.basename(req.file.filename); }
+    if(Object.prototype.hasOwnProperty.call(req.body,'isPublic')){
+      const raw=String(req.body.isPublic).toLowerCase();
+      pl.is_public=raw==='true'||raw==='1'||raw==='on';
+    }
     pl.updated_at=now(); saveDb();
     res.json({ok:true, playlist:mapPlaylist(pl), tracks:getPlaylistTracks(pl.id)});
   }catch(e){ if(req.file) deleteFileSafe(req.file.path); res.status(500).json({error:e.message||'Не удалось обновить плейлист.'}); }
@@ -794,10 +1429,11 @@ app.delete('/api/playlists/:id', authRequired, (req,res)=>{
   db.playlist_tracks=db.playlist_tracks.filter(x=>Number(x.playlist_id)!==Number(pl.id));
   db.playlists=db.playlists.filter(x=>Number(x.id)!==Number(pl.id));
   db.playlist_likes=db.playlist_likes.filter(x=>Number(x.playlist_id)!==Number(pl.id));
+  db.playlist_collaborators=db.playlist_collaborators.filter(x=>Number(x.playlist_id)!==Number(pl.id));
   saveDb(); res.json({ok:true, playlists:db.playlists.filter(p=>Number(p.user_id)===Number(req.user.id)).map(mapPlaylist)});
 });
 app.post('/api/playlists/:id/tracks', authRequired, express.json(), (req,res)=>{
-  const pl=getUserPlaylist(req.user.id, req.params.id);
+  const pl=getEditablePlaylist(req.user.id, req.params.id);
   if(!pl) return res.status(404).json({error:'Плейлист не найден или недоступен.'});
   const trackId=Number(req.body.trackId);
   const track=db.tracks.find(t=>Number(t.id)===trackId);
@@ -812,14 +1448,14 @@ app.post('/api/playlists/:id/tracks', authRequired, express.json(), (req,res)=>{
   res.json({ok:true, playlist:mapPlaylist(pl), tracks:getPlaylistTracks(pl.id)});
 });
 app.delete('/api/playlists/:id/tracks/:trackId', authRequired, (req,res)=>{
-  const pl=getUserPlaylist(req.user.id, req.params.id);
+  const pl=getEditablePlaylist(req.user.id, req.params.id);
   if(!pl) return res.status(404).json({error:'Плейлист не найден или недоступен.'});
   db.playlist_tracks=db.playlist_tracks.filter(x=>!(Number(x.playlist_id)===Number(pl.id) && Number(x.track_id)===Number(req.params.trackId)));
   normalizePlaylistPositions(pl.id); pl.updated_at=now(); saveDb();
   res.json({ok:true, playlist:mapPlaylist(pl), tracks:getPlaylistTracks(pl.id)});
 });
 app.put('/api/playlists/:id/reorder', authRequired, express.json(), (req,res)=>{
-  const pl=getUserPlaylist(req.user.id, req.params.id);
+  const pl=getEditablePlaylist(req.user.id, req.params.id);
   if(!pl) return res.status(404).json({error:'Плейлист не найден или недоступен.'});
   const ids=Array.isArray(req.body.trackIds)?req.body.trackIds.map(Number).filter(Boolean):[];
   const current=db.playlist_tracks.filter(x=>Number(x.playlist_id)===Number(pl.id));
@@ -830,6 +1466,37 @@ app.put('/api/playlists/:id/reorder', authRequired, express.json(), (req,res)=>{
   res.json({ok:true, playlist:mapPlaylist(pl), tracks:getPlaylistTracks(pl.id)});
 });
 
+
+
+app.get('/api/playlists/:id/collaborators', authRequired, (req,res)=>{
+  const pl=db.playlists.find(x=>Number(x.id)===Number(req.params.id));
+  if(!pl) return res.status(404).json({error:'Плейлист не найден.'});
+  const me=Number(req.user.id);
+  if(Number(pl.user_id)!==me && !isPlaylistCollaborator(me,pl.id)) return res.status(403).json({error:'Нет доступа.'});
+  const owner=db.users.find(u=>Number(u.id)===Number(pl.user_id));
+  const collaborators=getPlaylistCollaborators(pl.id).map(c=>{const u=db.users.find(x=>Number(x.id)===Number(c.user_id)); return {userId:c.user_id,name:u?.name||'Пользователь',avatarUrl:u?.avatar_path?`/uploads/avatars/${u.avatar_path}`:'',role:'editor',createdAt:c.created_at||''};});
+  res.json({owner:owner?{userId:owner.id,name:owner.name,avatarUrl:owner.avatar_path?`/uploads/avatars/${owner.avatar_path}`:''}:null,collaborators});
+});
+app.post('/api/playlists/:id/collaborators', authRequired, express.json(), (req,res)=>{
+  const pl=db.playlists.find(x=>Number(x.id)===Number(req.params.id));
+  if(!pl) return res.status(404).json({error:'Плейлист не найден.'});
+  if(Number(pl.user_id)!==Number(req.user.id)) return res.status(403).json({error:'Только владелец может добавлять участников.'});
+  const targetId=Number(req.body.userId);
+  const target=db.users.find(u=>Number(u.id)===targetId);
+  if(!target || targetId===Number(pl.user_id)) return res.status(400).json({error:'Пользователь не найден или уже является владельцем.'});
+  if(isPlaylistCollaborator(targetId,pl.id)) return res.status(409).json({error:'Пользователь уже участник.'});
+  db.playlist_collaborators.push({id:nextId('playlist_collaborators'),playlist_id:Number(pl.id),user_id:targetId,role:'editor',created_at:now()});
+  pl.updated_at=now(); saveDb();
+  res.json({ok:true,collaborators:getPlaylistCollaborators(pl.id)});
+});
+app.delete('/api/playlists/:id/collaborators/:userId', authRequired, (req,res)=>{
+  const pl=db.playlists.find(x=>Number(x.id)===Number(req.params.id));
+  if(!pl) return res.status(404).json({error:'Плейлист не найден.'});
+  const me=Number(req.user.id), targetId=Number(req.params.userId);
+  if(me!==Number(pl.user_id)) return res.status(403).json({error:'Только владелец может управлять участниками.'});
+  db.playlist_collaborators=db.playlist_collaborators.filter(c=>!(Number(c.playlist_id)===Number(pl.id)&&Number(c.user_id)===targetId));
+  pl.updated_at=now(); saveDb(); res.json({ok:true});
+});
 
 app.get('/api/users/:id/public-playlists', (req,res)=>{
   const id=Number(req.params.id); if(!db.users.some(u=>Number(u.id)===id)) return res.status(404).json({error:'Пользователь не найден.'});
@@ -905,12 +1572,12 @@ app.get('/api/albums/:id', (req,res)=>{
   const totalPlays=tracks.reduce((sum,t)=>sum+(Number(t.play_count)||0),0);
   res.json({ album: mapAlbum(album), artist: artist ? mapArtist(artist) : null, tracks, totalPlays });
 });
-app.post('/api/artists', authRequired, adminOnly, upload.single('photo'), (req,res)=>{ try{ const name=String(req.body.name||'').trim(), bio=String(req.body.bio||'').trim(); if(!name){ if(req.file) deleteFileSafe(req.file.path); return res.status(400).json({error:'Укажи имя артиста.'}); } if(db.artists.some(a=>String(a.name).toLowerCase()===name.toLowerCase())){ if(req.file) deleteFileSafe(req.file.path); return res.status(400).json({error:'Такой артист уже есть.'}); } const a={id:nextId('artists'), name, bio, photo_path:req.file?path.basename(req.file.filename):'', created_at:now()}; db.artists.push(a); saveDb(); res.json({ok:true, artist:mapArtist(a)}); }catch(e){ if(req.file) deleteFileSafe(req.file.path); res.status(500).json({error:e.message||'Не удалось создать артиста.'}); } });
-app.put('/api/artists/:id', authRequired, adminOnly, upload.single('photo'), (req,res)=>{ const id=Number(req.params.id); const a=db.artists.find(x=>Number(x.id)===id); if(!a){ if(req.file) deleteFileSafe(req.file.path); return res.status(404).json({error:'Артист не найден.'}); } const old=a.name; a.name=String(req.body.name||a.name).trim(); a.bio=String(req.body.bio??a.bio??'').trim(); if(req.file){ if(a.photo_path) deleteFileSafe(path.join(artistsDir,a.photo_path)); a.photo_path=path.basename(req.file.filename); } for(const t of db.tracks) if(Number(t.artist_id)===id || String(t.artist).toLowerCase()===old.toLowerCase()) t.artist=a.name; saveDb(); res.json({ok:true, artist:mapArtist(a)}); });
+app.post('/api/artists', authRequired, adminOnly, uploadLimiter, upload.single('photo'), (req,res)=>{ try{ const name=String(req.body.name||'').trim(), bio=String(req.body.bio||'').trim(); if(!name){ if(req.file) deleteFileSafe(req.file.path); return res.status(400).json({error:'Укажи имя артиста.'}); } if(db.artists.some(a=>String(a.name).toLowerCase()===name.toLowerCase())){ if(req.file) deleteFileSafe(req.file.path); return res.status(400).json({error:'Такой артист уже есть.'}); } const a={id:nextId('artists'), name, bio, photo_path:req.file?path.basename(req.file.filename):'', created_at:now()}; db.artists.push(a); saveDb(); res.json({ok:true, artist:mapArtist(a)}); }catch(e){ if(req.file) deleteFileSafe(req.file.path); res.status(500).json({error:e.message||'Не удалось создать артиста.'}); } });
+app.put('/api/artists/:id', authRequired, adminOnly, uploadLimiter, upload.single('photo'), (req,res)=>{ const id=Number(req.params.id); const a=db.artists.find(x=>Number(x.id)===id); if(!a){ if(req.file) deleteFileSafe(req.file.path); return res.status(404).json({error:'Артист не найден.'}); } const old=a.name; a.name=String(req.body.name||a.name).trim(); a.bio=String(req.body.bio??a.bio??'').trim(); if(req.file){ if(a.photo_path) deleteFileSafe(path.join(artistsDir,a.photo_path)); a.photo_path=path.basename(req.file.filename); } for(const t of db.tracks) if(Number(t.artist_id)===id || String(t.artist).toLowerCase()===old.toLowerCase()) t.artist=a.name; saveDb(); res.json({ok:true, artist:mapArtist(a)}); });
 app.delete('/api/artists/:id', authRequired, adminOnly, (req,res)=>{ const id=Number(req.params.id); const a=db.artists.find(x=>Number(x.id)===id); if(!a) return res.status(404).json({error:'Артист не найден.'}); for(const t of db.tracks.filter(t=>Number(t.artist_id)===id||String(t.artist).toLowerCase()===String(a.name).toLowerCase())){ deleteFileSafe(path.join(tracksDir,t.audio_path)); if(t.cover_path) deleteFileSafe(path.join(coversDir,t.cover_path)); } for(const al of db.albums.filter(x=>Number(x.artist_id)===id)) if(al.cover_path) deleteFileSafe(path.join(albumsDir,al.cover_path)); if(a.photo_path) deleteFileSafe(path.join(artistsDir,a.photo_path)); const deletedTrackIds = new Set(db.tracks.filter(t=>Number(t.artist_id)===id||String(t.artist).toLowerCase()===String(a.name).toLowerCase()).map(t=>Number(t.id))); db.tracks=db.tracks.filter(t=>!deletedTrackIds.has(Number(t.id))); db.albums=db.albums.filter(x=>Number(x.artist_id)!==id); db.artists=db.artists.filter(x=>Number(x.id)!==id); db.track_artists=db.track_artists.filter(x=>Number(x.artist_id)!==id && !deletedTrackIds.has(Number(x.track_id))); db.subscriptions=db.subscriptions.filter(x=>Number(x.artist_id)!==id); db.favorite_tracks=db.favorite_tracks.filter(x=>!deletedTrackIds.has(Number(x.track_id))); db.playlist_tracks=db.playlist_tracks.filter(x=>!deletedTrackIds.has(Number(x.track_id))); saveDb(); res.json({ok:true}); });
-app.post('/api/artists/:id/tracks/upload', authRequired, adminOnly, upload.fields([{name:'audio',maxCount:1},{name:'cover',maxCount:1}]), (req,res)=>{ try{ const artistId=Number(req.params.id); const artist=db.artists.find(a=>Number(a.id)===artistId); if(!artist){ cleanupRequestFiles(req); return res.status(404).json({error:'Артист не найден.'}); } const title=String(req.body.title||'').trim(), albumName=String(req.body.album||'').trim(), genre=String(req.body.genre||'').trim(); const audioFile=req.files?.audio?.[0], coverFile=req.files?.cover?.[0]; if(!title||!audioFile){ cleanupRequestFiles(req); return res.status(400).json({error:'Укажи название и аудиофайл.'}); } const artists=[artist,...ensureArtists(req.body.featured_artists).filter(a=>Number(a.id)!==artist.id)], album=albumName?ensureAlbum(artist.id,albumName):null; const tr={id:nextId('tracks'), title, artist:artists.map(a=>a.name).join(', '), artist_id:artist.id, album:album?album.name:albumName, album_id:album?album.id:null, genre, play_count:0, cover_path:coverFile?path.basename(coverFile.filename):(album?.cover_path||''), audio_path:path.basename(audioFile.filename), uploaded_by_user_id:req.user.id, created_at:now()}; db.tracks.push(tr); syncTrackArtists(tr.id, artists); saveDb(); res.json({ok:true, track:mapTrack(tr)}); }catch(e){ cleanupRequestFiles(req); res.status(500).json({error:e.message||'Не удалось добавить трек артисту.'}); } });
-app.post('/api/artists/:id/albums/create', authRequired, adminOnly, upload.fields([{name:'album_cover',maxCount:1},{name:'audios',maxCount:30}]), (req,res)=>{ try{ const artistId=Number(req.params.id); const artist=db.artists.find(a=>Number(a.id)===artistId); if(!artist){ cleanupRequestFiles(req); return res.status(404).json({error:'Артист не найден.'}); } const albumName=String(req.body.name||'').trim(), description=String(req.body.description||'').trim(); const audios=req.files?.audios||[]; if(!albumName||!audios.length){ cleanupRequestFiles(req); return res.status(400).json({error:'Укажи название альбома и добавь аудиофайлы.'}); } let meta=JSON.parse(String(req.body.tracks_meta||'[]')); const cover=req.files?.album_cover?.[0]; const album=ensureAlbum(artist.id, albumName, cover?path.basename(cover.filename):'', description); const created=[]; audios.forEach((file,i)=>{ const m=meta[i]||{}; const title=String(m.title||'').trim()||path.basename(file.originalname,path.extname(file.originalname)); const artists=[artist,...ensureArtists(m.artists).filter(a=>Number(a.id)!==artist.id)]; const tr={id:nextId('tracks'), title, artist:artists.map(a=>a.name).join(', '), artist_id:artist.id, album:album.name, album_id:album.id, genre:String(m.genre||'').trim(), play_count:0, cover_path:album.cover_path||'', audio_path:path.basename(file.filename), uploaded_by_user_id:req.user.id, created_at:now()}; db.tracks.push(tr); syncTrackArtists(tr.id, artists); created.push(mapTrack(tr)); }); saveDb(); res.json({ok:true, album:mapAlbum(album), tracks:created}); }catch(e){ cleanupRequestFiles(req); res.status(500).json({error:e.message||'Не удалось создать альбом.'}); } });
-app.put('/api/albums/:id', authRequired, adminOnly, upload.single('album_cover'), (req,res)=>{ const id=Number(req.params.id); const al=db.albums.find(x=>Number(x.id)===id); if(!al){ if(req.file) deleteFileSafe(req.file.path); return res.status(404).json({error:'Альбом не найден.'}); } al.name=String(req.body.name||al.name).trim(); al.description=String(req.body.description??al.description??'').trim(); if(req.file){ if(al.cover_path) deleteFileSafe(path.join(albumsDir,al.cover_path)); invalidateCoverCache(al.cover_path); al.cover_path=path.basename(req.file.filename); } for(const t of db.tracks.filter(t=>Number(t.album_id)===id)){ t.album=al.name; if(al.cover_path) t.cover_path=al.cover_path; } saveDb(); res.json({ok:true, album:mapAlbum(al)}); });
+app.post('/api/artists/:id/tracks/upload', authRequired, adminOnly, uploadLimiter, upload.fields([{name:'audio',maxCount:1},{name:'cover',maxCount:1}]), (req,res)=>{ try{ const artistId=Number(req.params.id); const artist=db.artists.find(a=>Number(a.id)===artistId); if(!artist){ cleanupRequestFiles(req); return res.status(404).json({error:'Артист не найден.'}); } const title=String(req.body.title||'').trim(), albumName=String(req.body.album||'').trim(), genre=String(req.body.genre||'').trim(); const audioFile=req.files?.audio?.[0], coverFile=req.files?.cover?.[0]; if(!title||!audioFile){ cleanupRequestFiles(req); return res.status(400).json({error:'Укажи название и аудиофайл.'}); } const artists=[artist,...ensureArtists(req.body.featured_artists).filter(a=>Number(a.id)!==artist.id)], album=albumName?ensureAlbum(artist.id,albumName):null; const tr={id:nextId('tracks'), title, artist:artists.map(a=>a.name).join(', '), artist_id:artist.id, album:album?album.name:albumName, album_id:album?album.id:null, genre, play_count:0, cover_path:coverFile?path.basename(coverFile.filename):(album?.cover_path||''), audio_path:path.basename(audioFile.filename), uploaded_by_user_id:req.user.id, created_at:now()}; db.tracks.push(tr); syncTrackArtists(tr.id, artists); saveDb(); res.json({ok:true, track:mapTrack(tr)}); }catch(e){ cleanupRequestFiles(req); res.status(500).json({error:e.message||'Не удалось добавить трек артисту.'}); } });
+app.post('/api/artists/:id/albums/create', authRequired, adminOnly, uploadLimiter, upload.fields([{name:'album_cover',maxCount:1},{name:'audios',maxCount:30}]), (req,res)=>{ try{ const artistId=Number(req.params.id); const artist=db.artists.find(a=>Number(a.id)===artistId); if(!artist){ cleanupRequestFiles(req); return res.status(404).json({error:'Артист не найден.'}); } const albumName=String(req.body.name||'').trim(), description=String(req.body.description||'').trim(); const audios=req.files?.audios||[]; if(!albumName||!audios.length){ cleanupRequestFiles(req); return res.status(400).json({error:'Укажи название альбома и добавь аудиофайлы.'}); } let meta=JSON.parse(String(req.body.tracks_meta||'[]')); const cover=req.files?.album_cover?.[0]; const album=ensureAlbum(artist.id, albumName, cover?path.basename(cover.filename):'', description); const created=[]; audios.forEach((file,i)=>{ const m=meta[i]||{}; const title=String(m.title||'').trim()||path.basename(file.originalname,path.extname(file.originalname)); const artists=[artist,...ensureArtists(m.artists).filter(a=>Number(a.id)!==artist.id)]; const tr={id:nextId('tracks'), title, artist:artists.map(a=>a.name).join(', '), artist_id:artist.id, album:album.name, album_id:album.id, genre:String(m.genre||'').trim(), play_count:0, cover_path:album.cover_path||'', audio_path:path.basename(file.filename), uploaded_by_user_id:req.user.id, created_at:now()}; db.tracks.push(tr); syncTrackArtists(tr.id, artists); created.push(mapTrack(tr)); }); saveDb(); res.json({ok:true, album:mapAlbum(album), tracks:created}); }catch(e){ cleanupRequestFiles(req); res.status(500).json({error:e.message||'Не удалось создать альбом.'}); } });
+app.put('/api/albums/:id', authRequired, adminOnly, coverUploadLimiter, upload.single('album_cover'), (req,res)=>{ const id=Number(req.params.id); const al=db.albums.find(x=>Number(x.id)===id); if(!al){ if(req.file) deleteFileSafe(req.file.path); return res.status(404).json({error:'Альбом не найден.'}); } al.name=String(req.body.name||al.name).trim(); al.description=String(req.body.description??al.description??'').trim(); if(req.file){ if(al.cover_path) deleteFileSafe(path.join(albumsDir,al.cover_path)); invalidateCoverCache(al.cover_path); al.cover_path=path.basename(req.file.filename); } for(const t of db.tracks.filter(t=>Number(t.album_id)===id)){ t.album=al.name; if(al.cover_path) t.cover_path=al.cover_path; } saveDb(); res.json({ok:true, album:mapAlbum(al)}); });
 app.delete('/api/albums/:id', authRequired, adminOnly, (req,res)=>{ const id=Number(req.params.id); const al=db.albums.find(x=>Number(x.id)===id); if(!al) return res.status(404).json({error:'Альбом не найден.'}); if(al.cover_path) deleteFileSafe(path.join(albumsDir,al.cover_path)); db.albums=db.albums.filter(x=>Number(x.id)!==id); for(const t of db.tracks.filter(t=>Number(t.album_id)===id)){ t.album=''; t.album_id=null; } saveDb(); res.json({ok:true}); });
 
 app.use((err, req, res, next)=>{
