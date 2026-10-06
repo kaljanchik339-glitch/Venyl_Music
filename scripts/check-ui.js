@@ -27,7 +27,7 @@ const declared=new Set([
   ...[...html.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/g)].map(m=>m[1]),
   ...[...html.matchAll(/\bwindow\.([A-Za-z_$][\w$]*)\s*=/g)].map(m=>m[1])
 ]);
-const ignore=new Set(['if','for','while','switch','catch','find','replace','stringify','stopPropagation','preventDefault','focus','select','click']);
+const ignore=new Set(['if','for','while','switch','catch','find','replace','stringify','stopPropagation','preventDefault','focus','select','click','Number','String','Boolean','Array','Object','Date','JSON','Math','parseInt','parseFloat','encodeURIComponent','decodeURIComponent','setTimeout','clearTimeout','confirm']);
 const unresolved=[...called].filter(x=>!declared.has(x)&&!ignore.has(x));
 if(unresolved.length) throw new Error('Unresolved inline handlers: '+unresolved.sort().join(', '));
 
