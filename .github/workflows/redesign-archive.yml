@@ -1,0 +1,31 @@
+name: Build Venyl redesign archive
+
+on:
+  push:
+    branches:
+      - redesign/venyl-ui-2026-10-06
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build source archive
+        run: |
+          mkdir -p dist/Venyl_Music-redesign
+          rsync -a ./ dist/Venyl_Music-redesign/ \
+            --exclude '.git/' \
+            --exclude 'uploads/' \
+            --exclude '.env' \
+            --exclude 'dist/'
+          mkdir -p dist/Venyl_Music-redesign/uploads/tracks dist/Venyl_Music-redesign/uploads/covers dist/Venyl_Music-redesign/uploads/avatars
+          cd dist
+          zip -qr Venyl_Music-redesign.zip Venyl_Music-redesign
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Venyl_Music-redesign
+          path: dist/Venyl_Music-redesign.zip
+          if-no-files-found: error
