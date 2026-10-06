@@ -5069,6 +5069,16 @@ async function stopChatWhenLeaving(s){if(s!=='chat')stopChatPolling()}
     root.querySelectorAll('.modal').forEach(modal=>{modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');});
   }
 
+  if(typeof window.playTrackById!=='function'){
+    window.playTrackById=(id)=>{
+      const track=typeof findTrackById==='function'?findTrackById(Number(id)):(state.tracks||[]).find(t=>Number(t.id)===Number(id));
+      if(!track)return typeof toast==='function'?toast('Трек не найден','err'):undefined;
+      const list=(state.tracks||[]).length?state.tracks:[track];
+      const index=Math.max(0,list.findIndex(t=>Number(t.id)===Number(track.id)));
+      return playTrackObject(track,index,list);
+    };
+  }
+
   window.toggleMobileMenu=()=>{
     const sheet=document.getElementById('mobileMenuSheet');if(!sheet)return;
     const willOpen=!sheet.classList.contains('open');
