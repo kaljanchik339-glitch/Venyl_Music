@@ -1,0 +1,41 @@
+name: Build Venyl iPhone
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "ios/**"
+      - ".github/workflows/build-iphone.yml"
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: ios
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install project generator
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        run: xcodegen generate --spec project.yml
+      - name: Build for iPhone without signing
+        run: >-
+          xcodebuild -project Venyl.xcodeproj -scheme Venyl
+          -configuration Release -sdk iphoneos
+          -destination 'generic/platform=iOS' -derivedDataPath build
+          CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
+          CODE_SIGN_IDENTITY='' build
+      - name: Package IPA
+        run: |
+          mkdir -p output/Payload
+          cp -R build/Build/Products/Release-iphoneos/Venyl.app output/Payload/
+          cd output
+          zip -r Venyl-unsigned.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Venyl-iPhone-unsigned
+          path: ios/output/Venyl-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 14
