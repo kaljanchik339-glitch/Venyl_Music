@@ -3098,7 +3098,7 @@
       "album": "",
       "album_id": null,
       "genre": "Hip-Hop/Rap",
-      "play_count": 5,
+      "play_count": 6,
       "cover_path": "1790849283835_500x500.jpg",
       "audio_path": "1790844770868_clqtzi_1-cristal.mp3",
       "uploaded_by_user_id": 4,
@@ -4770,6 +4770,12 @@
       "user_id": 4,
       "track_id": 9,
       "played_at": "2026-10-01 10:32:18"
+    },
+    {
+      "id": 52,
+      "user_id": 4,
+      "track_id": 189,
+      "played_at": "2026-10-06 07:49:28"
     }
   ],
   "comments": [
