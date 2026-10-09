@@ -3,9 +3,14 @@ import {readFileSync,writeFileSync} from 'node:fs';
 // Restore the actual latest full Venyl UI on the root route.
 // The experimental mobile shell remains available at /mobile-preview.
 writeFileSync('app/route.ts', `import html from '../lib/ui.js';
+import {mobileHtml} from '../lib/mobile-ui.js';
 export const dynamic='force-dynamic';
-export async function GET(){
- return new Response(html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
+export async function GET(request:Request){
+ const ua=request.headers.get('user-agent')||'';
+ const chMobile=request.headers.get('sec-ch-ua-mobile')||'';
+ const isMobile=chMobile==='?1'||/iPhone|iPod|Android.*Mobile|Windows Phone|webOS|BlackBerry|Opera Mini|IEMobile/i.test(ua);
+ const body=isMobile?mobileHtml():html;
+ return new Response(body,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store, no-cache, must-revalidate','Pragma':'no-cache','Vary':'User-Agent, Sec-CH-UA-Mobile','X-Content-Type-Options':'nosniff'}});
 }
 `);
 
