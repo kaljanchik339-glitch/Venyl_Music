@@ -128,3 +128,5 @@ patch('public/assets/mobile/mobile.css', s => s + `
 .v-auth-secondary button,.v-auth-cancel{border:0;background:transparent;color:var(--v-muted);font:inherit;font-size:12px;padding:7px;cursor:pointer}
 `);
 
+
+await import('./apply-email-auth.mjs');
