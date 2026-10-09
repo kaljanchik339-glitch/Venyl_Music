@@ -1,0 +1,42 @@
+name: Venyl iOS unsigned IPA
+on:
+  workflow_dispatch:
+  push:
+    branches: [venyl-ios-build]
+    paths: ['ios-native/**', '.github/workflows/venyl-ios.yml']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: ios-native
+      - name: Install project generator
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        run: xcodegen generate --spec ios-native/project.yml
+      - name: Build ARM64 device application
+        run: >-
+          xcodebuild -project ios-native/Venyl.xcodeproj -scheme Venyl
+          -configuration Release -sdk iphoneos -destination 'generic/platform=iOS'
+          -derivedDataPath build/ios CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+      - name: Package unsigned IPA
+        shell: bash
+        run: |
+          set -euo pipefail
+          app=build/ios/Build/Products/Release-iphoneos/Venyl.app
+          test -x "$app/Venyl"
+          xcrun lipo -verify_arch arm64 "$app/Venyl"
+          mkdir -p build/package/Payload
+          cp -R "$app" build/package/Payload/Venyl.app
+          cd build/package
+          /usr/bin/zip -qry ../Venyl-unsigned.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Venyl-unsigned-IPA
+          path: build/Venyl-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 7

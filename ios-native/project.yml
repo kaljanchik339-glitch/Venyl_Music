@@ -1,0 +1,29 @@
+name: Venyl
+options:
+  bundleIdPrefix: se.venyl
+  deploymentTarget:
+    iOS: '16.0'
+targets:
+  Venyl:
+    type: application
+    platform: iOS
+    sources: [Venyl]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: se.venyl.music
+        PRODUCT_NAME: Venyl
+        SWIFT_VERSION: '5.0'
+        TARGETED_DEVICE_FAMILY: '1,2'
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Venyl
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_NSCameraUsageDescription: Выбрать фотографию для обложки или профиля Venyl.
+        MARKETING_VERSION: '1.0.0'
+        CURRENT_PROJECT_VERSION: '1'
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+schemes:
+  Venyl:
+    build:
+      targets:
+        Venyl: all
