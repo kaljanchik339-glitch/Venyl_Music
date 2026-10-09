@@ -9,6 +9,7 @@ declare global { interface Window { VenylAuth?: any } }
 
 export default function SetPassword(){
   const [loaded,setLoaded]=useState(false);
+  const [signedIn,setSignedIn]=useState(false);
   const [password,setPassword]=useState('');
   const [confirm,setConfirm]=useState('');
   const [message,setMessage]=useState('');
@@ -18,7 +19,7 @@ export default function SetPassword(){
   useEffect(()=>{
     const script=document.createElement('script');
     script.src='/assets/venyl-auth.js?v=set-password-1';
-    script.onload=()=>setLoaded(true);
+    script.onload=async()=>{setLoaded(true);try{const token=await window.VenylAuth?.currentAccessToken?.();setSignedIn(!!token);}catch{setSignedIn(false);}};
     script.onerror=()=>setMessage('Не удалось загрузить авторизацию Venyl.');
     document.head.appendChild(script);
     return()=>{script.remove()};
@@ -47,7 +48,8 @@ export default function SetPassword(){
   return <main className="wrap"><section className="card">
     <div className="brand">VENYL</div><h1>Задать пароль</h1>
     <p>Для уже существующего Google-аккаунта Venyl. Почта не нужна.</p>
-    {!done&&<form onSubmit={submit}>
+    {!done&&!signedIn&&<button className="google" disabled={!loaded} onClick={()=>window.VenylAuth?.signIn?.('google','/set-password')}>{loaded?'Продолжить с Google':'Загружаю…'}</button>}
+    {!done&&signedIn&&<form onSubmit={submit}>
       <label>Новый пароль<input type="password" autoComplete="new-password" value={password} onChange={e=>setPassword(e.target.value)} minLength={8} required /></label>
       <label>Повтори пароль<input type="password" autoComplete="new-password" value={confirm} onChange={e=>setConfirm(e.target.value)} minLength={8} required /></label>
       <button disabled={!loaded||loading}>{loading?'Сохраняю…':loaded?'Установить пароль':'Загружаю…'}</button>
@@ -61,7 +63,7 @@ export default function SetPassword(){
       form{display:grid;gap:16px}label{display:grid;gap:8px;color:#bdb5a7;font-size:14px}input{width:100%;min-height:54px;border-radius:15px;border:1px solid #38352e;background:#0d0d0b;color:#fff;padding:0 15px;font-size:16px;outline:none}
       input:focus{border-color:#d8bb83;box-shadow:0 0 0 3px #d8bb8318}button{min-height:54px;border:0;border-radius:999px;background:#d8bb83;color:#171511;font-size:17px;font-weight:650}button:disabled{opacity:.6}
       .msg{margin-top:18px;padding:14px;border:1px solid #773d3d;border-radius:14px;color:#ffb4b4;background:#271717;line-height:1.45}.msg.ok{border-color:#49634b;color:#c8e7c9;background:#172018}
-      a{display:block;margin-top:22px;color:#d8bb83;text-decoration:none;text-align:center}
+      .google{width:100%;margin:4px 0 2px;background:#f3eee4;color:#171511}.google:disabled{opacity:.6}a{display:block;margin-top:22px;color:#d8bb83;text-decoration:none;text-align:center}
     `}</style>
   </section></main>
 }
