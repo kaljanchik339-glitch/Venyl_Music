@@ -129,4 +129,28 @@ patch('public/assets/mobile/mobile.css', s => s + `
 `);
 
 
-await import('./apply-email-auth.mjs');
+// VENYL_ADMIN_AUTH_MAPPING_V1
+// Grant admin capabilities only to the Supabase Auth user configured server-side on Render.
+patch('lib/backend.js', code => code
+  .replace(
+    "  const isOwner=db._meta.sitesOwnerId===identity.userId||String(user.role||'').toLowerCase()==='admin';",
+    "  const configuredAdmin=!!env.VENYL_ADMIN_AUTH_USER_ID&&identity.userId===env.VENYL_ADMIN_AUTH_USER_ID;\n  const effectiveUser=configuredAdmin?{...user,role:'admin',is_verified:1}:user;\n  const isOwner=configuredAdmin||db._meta.sitesOwnerId===identity.userId||String(effectiveUser.role||'').toLowerCase()==='admin';"
+  )
+  .replace(
+    "return handleSmartImport({request,identity,env,state,user,isOwner,bridge});",
+    "return handleSmartImport({request,identity,env,state,user:effectiveUser,isOwner,bridge});"
+  )
+  .replace(
+    "  const legacy=makeLegacyApp(db,user,context);",
+    "  const legacy=makeLegacyApp(db,effectiveUser,context);"
+  )
+  .replace(
+    "incomingFiles:parsed.incomingFiles,ip:identity.userId,user,get(k)",
+    "incomingFiles:parsed.incomingFiles,ip:identity.userId,user:effectiveUser,get(k)"
+  )
+);
+
+patch('app/api/[...path]/route.ts', code => code.replace(
+  "const env={VENYL_BRIDGE_TOKEN:process.env.VENYL_RENDER_BRIDGE_TOKEN||''};",
+  "const env={VENYL_BRIDGE_TOKEN:process.env.VENYL_RENDER_BRIDGE_TOKEN||'',VENYL_ADMIN_AUTH_USER_ID:process.env.VENYL_ADMIN_AUTH_USER_ID||''};"
+));
