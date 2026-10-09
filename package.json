@@ -6,7 +6,7 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "postinstall": "node scripts/unpack-source.mjs && node scripts/cache-bust.mjs && node scripts/build-smart-import.mjs && next build",
+    "postinstall": "node scripts/unpack-source.mjs && node scripts/cache-bust.mjs && node scripts/fix-mobile-auth-ui.mjs && node scripts/build-smart-import.mjs && next build",
     "dev": "next dev",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p ${PORT:-3000}",
