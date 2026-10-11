@@ -154,7 +154,7 @@ patch('public/assets/mobile/app.js',s=>{
  const releaseLabel=k=>k==='single'?'Сингл':k==='ep'?'EP':'Альбом';
  const releaseDateText=x=>{const d=releaseStamp(x);if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(d))return releaseYear(x);try{return new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric'}).format(new Date(d+'T12:00:00'));}catch{return d;}};
  function artistReleases(d){const tracks=d.tracks||[],counts=new Map();for(const t of tracks)if(t.albumId)counts.set(Number(t.albumId),(counts.get(Number(t.albumId))||0)+1);const out=(d.albums||[]).map(a=>({...a,nav:'album',title:a.name,artist:d.artist?.name||'',releaseType:releaseKind(a,counts.get(Number(a.id))||0),releaseDate:a.releaseDate||tracks.find(t=>Number(t.albumId)===Number(a.id))?.releaseDate||a.createdAt||''}));for(const t of tracks)if(!t.albumId)out.push({...t,nav:'single-release',name:t.title,title:t.title,releaseType:'single',releaseDate:t.releaseDate||t.createdAt||''});return out.sort((a,b)=>Date.parse(releaseStamp(b)||0)-Date.parse(releaseStamp(a)||0)||Number(b.id)-Number(a.id));}
- function releaseCards(items){return '<div class="v-release-grid">'+items.map(r=>'<button class="v-release-card" data-v="'+r.nav+'" data-id="'+r.id+'">'+art(r.coverUrl,'v-release-art')+'<span class="v-copy"><b>'+esc(r.title||r.name)+'</b><small>'+esc(releaseLabel(r.releaseType)+(releaseYear(r)?' · '+releaseYear(r):''))+'</small></span></button>').join('')+'</div>';}
+ function releaseCards(items){return '<div class="v-release-list">'+items.map(r=>'<button class="v-release-card" data-v="'+r.nav+'" data-id="'+r.id+'">'+art(r.coverUrl,'v-release-art')+'<span class="v-copy"><b>'+esc(r.title||r.name)+'</b><small>'+esc(releaseLabel(r.releaseType)+(releaseYear(r)?' · '+releaseYear(r):''))+'</small></span></button>').join('')+'</div>';}
  function releaseFilters(artistId,active=''){return '<div class="v-release-filters">'+[['single','Треки'],['ep','EP'],['album','Альбомы']].map(([k,l])=>'<button class="v-filter '+(active===k?'active':'')+'" data-v="release-filter" data-id="'+artistId+'" data-filter="'+k+'" aria-pressed="'+(active===k)+'">'+l+'</button>').join('')+'</div>';}
  function artistScreen(d){const x=d.artist;pageTracks=remember(d.tracks||[]);const rels=artistReleases(d),latest=rels.slice(0,4);screen.innerHTML='<div class="v-hero v-artist">'+art(x.photoUrl,'v-art',true)+'<div class="v-kicker">АРТИСТ</div><h1>'+esc(x.name)+'</h1><p class="v-sub">'+pageTracks.length+' треков</p>'+(x.bio?'<p class="v-sub">'+esc(x.bio)+'</p>':'')+'<button class="v-button" data-v="follow-artist" data-id="'+x.id+'">'+(x.isSubscribed?'Вы подписаны':'Подписаться')+'</button></div>'+section('Популярное',rows([...pageTracks].sort((a,b)=>b.playCount-a.playCount).slice(0,6),true))+section('Последние релизы',latest.length?releaseCards(latest):empty('Релизов пока нет'),rels.length?'<button class="v-text-button" data-v="artist-releases" data-id="'+x.id+'">Показать все</button>':'');}
  function discographyScreen(d,filter=''){const rels=artistReleases(d),shown=filter?rels.filter(r=>r.releaseType===filter):rels;screen.innerHTML='<div class="v-kicker">ДИСКОГРАФИЯ</div><h1>'+esc(d.artist.name)+'</h1>'+releaseFilters(d.artist.id,filter)+(shown.length?releaseCards(shown):empty('Здесь пока нет релизов'));}
@@ -223,26 +223,27 @@ patch('client/mobile-upload.js',s=>{
 patch('public/assets/mobile/mobile.css',s=>{
  if(!s.includes('VENYL_RELEASE_SYSTEM_CSS_V1'))s+=String.raw`
 /* VENYL_RELEASE_SYSTEM_CSS_V1 */
-.v-release-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}
-.v-release-card{display:flex;flex-direction:column;gap:9px;text-align:left;border:0;background:transparent;color:var(--v-text);padding:0;min-width:0}
-.v-release-art{width:100%;aspect-ratio:1;border-radius:12px;object-fit:cover;background:var(--v-surface)}
-.v-release-card .v-copy b{font-size:15px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.v-release-card .v-copy small{margin-top:4px;color:var(--v-secondary)}
+.v-release-list{display:flex;flex-direction:column;gap:14px;margin-top:12px}
+.v-release-card{width:100%;display:grid;grid-template-columns:104px minmax(0,1fr);align-items:center;gap:16px;text-align:left;border:0;background:transparent;color:var(--v-text);padding:0;min-width:0}
+.v-release-art{width:104px!important;height:104px!important;aspect-ratio:1;border-radius:10px;object-fit:cover;background:var(--v-surface)}
+.v-release-card .v-copy{min-width:0}
+.v-release-card .v-copy b{font-size:17px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.v-release-card .v-copy small{display:block;margin-top:6px;color:var(--v-secondary);font-size:14px}
 .v-release-filters{display:flex;gap:8px;overflow-x:auto;padding:4px 0 18px;scrollbar-width:none}
 .v-release-filters::-webkit-scrollbar{display:none}
 .v-filter{flex:0 0 auto;border:1px solid var(--v-line);background:var(--v-surface);color:var(--v-text);border-radius:999px;padding:9px 15px;font-size:14px;font-weight:700}
 .v-filter.active{background:var(--v-text);color:var(--v-bg);border-color:var(--v-text)}
 .v-date-line{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px}
 .v-date-line .v-text-button{white-space:nowrap}
-@media(max-width:390px){.v-release-grid{gap:11px}.v-date-line{grid-template-columns:1fr}.v-date-line .v-text-button{text-align:left;padding-left:0}}
+@media(max-width:390px){.v-release-list{gap:12px}.v-release-card{grid-template-columns:92px minmax(0,1fr);gap:13px}.v-release-art{width:92px!important;height:92px!important}.v-date-line{grid-template-columns:1fr}.v-date-line .v-text-button{text-align:left;padding-left:0}}
 `;
  return s;
 });
 
 patch('lib/mobile-ui.js',s=>s
- .replace(/\/assets\/mobile\/mobile\.css\?v=[^"']+/g,'/assets/mobile/mobile.css?v=releases-1')
- .replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=releases-1')
- .replace(/\/assets\/mobile\/upload\.js\?v=[^"']+/g,'/assets/mobile/upload.js?v=releases-1')
+ .replace(/\/assets\/mobile\/mobile\.css\?v=[^"']+/g,'/assets/mobile/mobile.css?v=releases-2')
+ .replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=releases-2')
+ .replace(/\/assets\/mobile\/upload\.js\?v=[^"']+/g,'/assets/mobile/upload.js?v=releases-2')
 );
 
 console.log('Release system installed.');
