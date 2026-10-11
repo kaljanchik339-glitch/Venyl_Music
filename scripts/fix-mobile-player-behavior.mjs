@@ -8,16 +8,16 @@ function patch(path,fn){
 patch('public/assets/mobile/app.js', s => {
   // The mini-player must never open the artist/album chooser.
   s=s.replaceAll('class="v-mini-meta" data-v="mini-meta" role="button" tabindex="0"','class="v-mini-meta"');
-  s=s.replace(/else if\(act==='mini-meta'\)\{[\s\S]*?return;\}\s*else if\(act==='player'\)\{/,'else if(act=\'player\'){');
+  s=s.replace(/else if\(act==='mini-meta'\)\{[\s\S]*?return;\}\s*else if\(act==='player'\)\{/,'else if(act===\'player\'){');
 
   // iOS: the existing player swipe must consume the gesture so Safari cannot pull-to-refresh.
   const oldMove="$('v-player').addEventListener('touchmove',e=>{if(!vPlayerTouchY)return;vPlayerDelta=Math.max(0,e.touches[0].clientY-vPlayerTouchY);if(vPlayerDelta)$('v-player').style.transform='translateY('+Math.min(vPlayerDelta,180)+'px)';},{passive:true});";
   const newMove="$('v-player').addEventListener('touchmove',e=>{if(!vPlayerTouchY)return;vPlayerDelta=Math.max(0,e.touches[0].clientY-vPlayerTouchY);if(vPlayerDelta){e.preventDefault();$('v-player').style.transform='translateY('+Math.min(vPlayerDelta,180)+'px)';}},{passive:false});";
   if(s.includes(oldMove))s=s.replace(oldMove,newMove);
 
-  if(!s.includes('VENYL_MINI_PLAYER_OPEN_FIX_V4')){
+  if(!s.includes('VENYL_MINI_PLAYER_OPEN_FIX_V5')){
     s += `
-// VENYL_MINI_PLAYER_OPEN_FIX_V4
+// VENYL_MINI_PLAYER_OPEN_FIX_V5
 (()=>{
   const mini=document.getElementById('v-mini');
   const player=document.getElementById('v-player');
@@ -79,8 +79,8 @@ patch('public/assets/mobile/app.js', s => {
 });
 
 patch('public/assets/mobile/mobile.css', s => {
-  if(!s.includes('VENYL_MINI_PLAYER_OPEN_FIX_V4'))s += `
-/* VENYL_MINI_PLAYER_OPEN_FIX_V4 */
+  if(!s.includes('VENYL_MINI_PLAYER_OPEN_FIX_V5'))s += `
+/* VENYL_MINI_PLAYER_OPEN_FIX_V5 */
 html.v-fullplayer-lock,body.v-fullplayer-lock{overflow:hidden!important;overscroll-behavior:none!important;}
 body.v-fullplayer-lock{touch-action:none;}
 #v-player{overscroll-behavior:contain;will-change:transform;}
@@ -91,8 +91,8 @@ body.v-fullplayer-lock{touch-action:none;}
 });
 
 patch('lib/mobile-ui.js', s => s
-  .replace(/\/assets\/mobile\/mobile\.css\?v=[^"']+/g,'/assets/mobile/mobile.css?v=mini-open-4')
-  .replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=mini-open-4')
+  .replace(/\/assets\/mobile\/mobile\.css\?v=[^"']+/g,'/assets/mobile/mobile.css?v=mini-open-5')
+  .replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=mini-open-5')
 );
 
-console.log('Mini-player open + fullscreen scroll behavior fixed v4.');
+console.log('Mini-player open + fullscreen scroll behavior fixed v5.');
