@@ -36,8 +36,8 @@ patch('public/assets/mobile/mobile.css', s => {
 });
 
 patch('lib/mobile-ui.js', s => s
-  .replace(/\\/assets\\/mobile\\/mobile\\.css\\?v=[^"']+/g,'/assets/mobile/mobile.css?v=player-gesture-3')
-  .replace(/\\/assets\\/mobile\\/app\\.js\\?v=[^"']+/g,'/assets/mobile/app.js?v=player-gesture-3')
+  .replaceAll('/assets/mobile/mobile.css?v=sites-final-1943','/assets/mobile/mobile.css?v=player-gesture-3')
+  .replaceAll('/assets/mobile/app.js?v=sites-final-1943','/assets/mobile/app.js?v=player-gesture-3')
 );
 
 console.log('Mini-player and fullscreen gesture behavior fixed.');
