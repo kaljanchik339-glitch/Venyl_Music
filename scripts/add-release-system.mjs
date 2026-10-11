@@ -195,15 +195,7 @@ patch('public/assets/mobile/app.js',s=>{
       " async function loadCatalog(){const [tracks,artists]=await Promise.all([api('/api/tracks'),api('/api/artists')]);s.tracks=remember(tracks.tracks||[]);s.artists=artists.artists||[];const byId=new Map();for(const t of s.tracks){if(!t.albumId)continue;let a=byId.get(t.albumId);if(!a){a={id:t.albumId,name:t.album,artist:s.artists.find(a=>a.id===t.artistId)?.name||t.artist,coverUrl:t.coverUrl,releaseType:t.releaseType,createdAt:t.createdAt};byId.set(t.albumId,a);}if(Date.parse(t.createdAt)>Date.parse(a.createdAt))a.createdAt=t.createdAt;}albums=[...byId.values()];}",
       " async function loadCatalog(){const [tracks,artists]=await Promise.all([api('/api/tracks'),api('/api/artists')]);s.tracks=remember(tracks.tracks||[]);s.artists=artists.artists||[];const byId=new Map();for(const t of s.tracks){if(!t.albumId)continue;let a=byId.get(t.albumId);if(!a){a={id:t.albumId,name:t.album,artist:s.artists.find(a=>a.id===t.artistId)?.name||t.artist,coverUrl:t.coverUrl,releaseType:t.releaseType,releaseDate:t.releaseDate||'',createdAt:t.createdAt};byId.set(t.albumId,a);}if(t.releaseDate&&!a.releaseDate)a.releaseDate=t.releaseDate;if(Date.parse(t.createdAt)>Date.parse(a.createdAt))a.createdAt=t.createdAt;}albums=[...byId.values()].sort((a,b)=>Date.parse(releaseStamp(b)||0)-Date.parse(releaseStamp(a)||0));}",
       'catalog release date');
-
-
-
-    const initCall=s.lastIndexOf('await initialize();');
-    if(initCall<0)throw new Error('[release-system] target missing: initialize call');
-    const backfillBoot=`async function releaseDateBackfill(){if(window.__venylReleaseBackfill||!s.isAdmin)return;window.__venylReleaseBackfill=true;try{for(let i=0;i<320;i++){if(!navigator.onLine)break;let d;try{d=await api('/api/admin/release-dates/backfill',{});}catch(e){if(e.status===409){await new Promise(r=>setTimeout(r,1500));continue;}break;}if(d.done){window.__venylReleaseBackfillDone=true;break;}await new Promise(r=>setTimeout(r,1200));}await loadCatalog();if(route.startsWith('artist/'))navigate();}finally{window.__venylReleaseBackfill=false;}}
- const releaseBackfillBoot=setInterval(()=>{if(window.__venylReleaseBackfillDone){clearInterval(releaseBackfillBoot);return;}if(s.isAdmin){clearInterval(releaseBackfillBoot);setTimeout(()=>releaseDateBackfill(),1200);}},1500);setTimeout(()=>clearInterval(releaseBackfillBoot),60000);
- `;
-    s=s.slice(0,initCall)+backfillBoot+s.slice(initCall);
+    // Release-date backfill is handled server-side on Render.
   }
   return s;
 });
