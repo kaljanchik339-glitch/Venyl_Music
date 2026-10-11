@@ -69,11 +69,11 @@ export async function lookupReleaseDate(input){
  const mbDate=fullDate(mbResult?.date||'');
  const it=await fromItunes({title,artist,album},yearOf(mbDate));
  const itDate=fullDate(it?.date||'');
- const currentYear=new Date().getUTCFullYear();
  if(mbDate&&itDate){
-  const y1=Number(yearOf(mbDate)),y2=Number(yearOf(itDate)),date=mbDate<itDate?mbDate:itDate;
-  const sameEra=Math.abs(y1-y2)<=1, recent=Number(yearOf(date))>=currentYear-3;
-  return {date,verified:!!(sameEra&&recent),source:sameEra?(recent?'musicbrainz+itunes':'metadata-old-suggestion'):'metadata-conflict',confidence:sameEra?Math.min(Number(mbResult?.confidence)||0,Number(it?.confidence)||0):0,matchedTitle:mbResult?.matchedTitle||it?.matchedTitle||'',matchedArtist:mbResult?.matchedArtist||it?.matchedArtist||''};
+  const date=mbDate<itDate?mbDate:itDate;
+  const dayGap=Math.abs(Date.parse(mbDate+'T00:00:00Z')-Date.parse(itDate+'T00:00:00Z'))/86400000;
+  const agreed=yearOf(mbDate)===yearOf(itDate)&&dayGap<=45;
+  return {date,verified:agreed,source:agreed?'musicbrainz+itunes':'metadata-conflict',confidence:agreed?Math.min(Number(mbResult?.confidence)||0,Number(it?.confidence)||0):0,matchedTitle:mbResult?.matchedTitle||it?.matchedTitle||'',matchedArtist:mbResult?.matchedArtist||it?.matchedArtist||''};
  }
  const one=mbDate?{...mbResult,date:mbDate}:{...it,date:itDate};
  if(one.date)return {...one,verified:false,source:(one.source||'metadata')+'-suggestion'};
