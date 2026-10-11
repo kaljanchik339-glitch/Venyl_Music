@@ -120,21 +120,26 @@ patch('lib/backend.js',s=>{
   return Response.json(found,{headers:{'Cache-Control':'no-store'}});
  }
 ${anchor}`,'metadata route');
-  const importAnchor="  if(url.pathname.startsWith('/api/import/'))return handleSmartImport({request,identity,env,state,user,isOwner,bridge});";
-  if(!s.includes("/api/admin/release-dates/backfill"))s=must(s,importAnchor,
-`  if(url.pathname==='/api/admin/release-dates/backfill'&&request.method==='POST'){
-   if(!isOwner&&user?.role!=='admin')return Response.json({error:'Только владелец'},{status:403});
-   db._meta.releaseDateLookup??={};const checked=db._meta.releaseDateLookup;
-   const pending=db.tracks.filter(t=>!t.release_date&&(!checked[t.id]||Date.now()-Date.parse(checked[t.id].checkedAt||0)>30*86400000));
-   if(!pending.length){const remaining=db.tracks.filter(t=>!t.release_date).length;return Response.json({done:true,remaining});}
-   const t=pending[0];const found=await lookupReleaseDate({title:t.title,artist:t.artist,album:t.album||t.title});
-   if(found.date){t.release_date=found.date;if(t.album_id){const al=db.albums.find(a=>Number(a.id)===Number(t.album_id));if(al&&!al.release_date)al.release_date=found.date;}}
-   checked[t.id]={checkedAt:new Date().toISOString(),date:found.date||'',partialDate:found.partialDate||'',source:found.source||'none',confidence:Number(found.confidence)||0};
-   const r=await bridge(env,'commit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({revision:state.revision,payload:db})});
-   if(r.status===409)return Response.json({error:'Каталог изменился. Повтори.'},{status:409});if(!r.ok)throw Error('Не удалось сохранить дату релиза');
-   const remaining=db.tracks.filter(x=>!x.release_date).length;return Response.json({done:false,updated:!!found.date,trackId:t.id,date:found.date||'',source:found.source||'',remaining});
+  if(!s.includes("/api/admin/release-dates/backfill")){
+    const parseMatch=s.match(/(^|\n)([ \t]*)const parsed=await parseBody\(request\);/);
+    if(!parseMatch)throw new Error('[release-system] target missing: backfill route');
+    const parsePos=s.indexOf(parseMatch[0])+parseMatch[1].length;
+    const indent=parseMatch[2]||' ';
+    const block=`${indent}if(url.pathname==='/api/admin/release-dates/backfill'&&request.method==='POST'){
+${indent} if(!isOwner&&user?.role!=='admin')return Response.json({error:'Только владелец'},{status:403});
+${indent} db._meta.releaseDateLookup??={};const checked=db._meta.releaseDateLookup;
+${indent} const pending=db.tracks.filter(t=>!t.release_date&&(!checked[t.id]||Date.now()-Date.parse(checked[t.id].checkedAt||0)>30*86400000));
+${indent} if(!pending.length){const remaining=db.tracks.filter(t=>!t.release_date).length;return Response.json({done:true,remaining});}
+${indent} const t=pending[0];const found=await lookupReleaseDate({title:t.title,artist:t.artist,album:t.album||t.title});
+${indent} if(found.date){t.release_date=found.date;if(t.album_id){const al=db.albums.find(a=>Number(a.id)===Number(t.album_id));if(al&&!al.release_date)al.release_date=found.date;}}
+${indent} checked[t.id]={checkedAt:new Date().toISOString(),date:found.date||'',partialDate:found.partialDate||'',source:found.source||'none',confidence:Number(found.confidence)||0};
+${indent} const r=await bridge(env,'commit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({revision:state.revision,payload:db})});
+${indent} if(r.status===409)return Response.json({error:'Каталог изменился. Повтори.'},{status:409});if(!r.ok)throw Error('Не удалось сохранить дату релиза');
+${indent} const remaining=db.tracks.filter(x=>!x.release_date).length;return Response.json({done:false,updated:!!found.date,trackId:t.id,date:found.date||'',source:found.source||'',remaining});
+${indent}}
+`;
+    s=s.slice(0,parsePos)+block+s.slice(parsePos);
   }
-${importAnchor}`,'backfill route');
   return s;
 });
 
