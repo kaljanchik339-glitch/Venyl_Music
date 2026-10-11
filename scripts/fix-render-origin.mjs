@@ -4,7 +4,7 @@ const path='lib/backend.js';
 let s=readFileSync(path,'utf8');
 
 const urlLine=" const url=new URL(request.url);";
-if(!s.includes(" const publicOrigin=")){
+if(!s.includes(" let publicOrigin=")){
   if(!s.includes(urlLine))throw new Error('handleApi URL line not found');
   s=s.replace(urlLine, ` const url=new URL(request.url);
  const forwardedHost=String(request.headers.get('x-forwarded-host')||request.headers.get('host')||'').split(',')[0].trim();
@@ -28,7 +28,7 @@ s=s.replace(
   "const req={method:request.method,path:url.pathname,url:url.pathname+url.search,origin:publicOrigin,"
 );
 
-if(!s.includes(" const publicOrigin="))throw new Error('publicOrigin was not inserted');
+if(!s.includes(" let publicOrigin="))throw new Error('publicOrigin was not inserted');
 if(!s.includes("requestOrigin!==publicOrigin"))throw new Error('origin validation was not patched');
 
 writeFileSync(path,s);
