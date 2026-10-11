@@ -206,6 +206,16 @@ patch('public/assets/mobile/app.js',s=>{
       " async function loadCatalog(){const [tracks,artists]=await Promise.all([api('/api/tracks'),api('/api/artists')]);s.tracks=remember(tracks.tracks||[]);s.artists=artists.artists||[];const byId=new Map();for(const t of s.tracks){if(!t.albumId)continue;let a=byId.get(t.albumId);if(!a){a={id:t.albumId,name:t.album,artist:s.artists.find(a=>a.id===t.artistId)?.name||t.artist,coverUrl:t.coverUrl,releaseType:t.releaseType,createdAt:t.createdAt};byId.set(t.albumId,a);}if(Date.parse(t.createdAt)>Date.parse(a.createdAt))a.createdAt=t.createdAt;}albums=[...byId.values()];}",
       " async function loadCatalog(){const [tracks,artists]=await Promise.all([api('/api/tracks'),api('/api/artists')]);s.tracks=remember(tracks.tracks||[]);s.artists=artists.artists||[];const byId=new Map();for(const t of s.tracks){if(!t.albumId)continue;let a=byId.get(t.albumId);if(!a){a={id:t.albumId,name:t.album,artist:s.artists.find(a=>a.id===t.artistId)?.name||t.artist,coverUrl:t.coverUrl,releaseType:t.releaseType,releaseDate:t.releaseDate||'',createdAt:t.createdAt};byId.set(t.albumId,a);}if(t.releaseDate&&!a.releaseDate)a.releaseDate=t.releaseDate;if(Date.parse(t.createdAt)>Date.parse(a.createdAt))a.createdAt=t.createdAt;}albums=[...byId.values()].sort((a,b)=>Date.parse(releaseStamp(b)||0)-Date.parse(releaseStamp(a)||0));}",
       'catalog release date');
+    s=must(s,
+      " function home(){pageTracks=s.tracks;const now=Date.now();const fresh=albums.filter(a=>{const n=Date.parse(a.createdAt);return n<=now&&n>now-604800000;});const singles=s.tracks.filter(t=>!t.albumId&&Date.parse(t.createdAt)>now-604800000&&Date.parse(t.createdAt)<=now);const releases=[...fresh.map(a=>({...a,type:'album'})),...singles.map(t=>({...t,type:'track'}))].sort((a,b)=>Date.parse(b.createdAt)-Date.parse(a.createdAt));",
+      " function home(){pageTracks=s.tracks;const now=Date.now();const fresh=albums.filter(a=>{const n=Date.parse(a.releaseDate||0);return n<=now&&n>now-604800000;});const singles=s.tracks.filter(t=>!t.albumId&&Date.parse(t.releaseDate||0)>now-604800000&&Date.parse(t.releaseDate||0)<=now);const releases=[...fresh.map(a=>({...a,type:'album'})),...singles.map(t=>({...t,type:'track'}))].sort((a,b)=>Date.parse(b.releaseDate||0)-Date.parse(a.releaseDate||0)||Number(b.id)-Number(a.id));",
+      'home new releases real date');
+
+    s=must(s,
+      "+section('Недавно добавлено',rows([...s.tracks].sort((a,b)=>Date.parse(b.createdAt)-Date.parse(a.createdAt)).slice(0,8)));",
+      "+section('Недавно вышедшие',rows([...s.tracks].sort((a,b)=>Date.parse(b.releaseDate||0)-Date.parse(a.releaseDate||0)||Number(b.id)-Number(a.id)).slice(0,8)));",
+      'home recently released');
+
     // Release-date backfill is handled server-side on Render.
   }
   return s;
