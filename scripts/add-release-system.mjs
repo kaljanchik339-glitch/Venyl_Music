@@ -64,13 +64,20 @@ async function fromItunes({title,artist,album},expectedYear=''){
 }
 export async function lookupReleaseDate(input){
  const title=String(input?.title||'').trim(),artist=String(input?.artist||'').trim(),album=String(input?.album||'').trim();
- if(!title||!artist)return {date:'',source:'none',confidence:0};
+ if(!title||!artist)return {date:'',source:'none',confidence:0,verified:false};
  const mbResult=await fromMusicBrainz({title,artist,album});
- if(mbResult&&fullDate(mbResult.date))return {...mbResult,date:fullDate(mbResult.date)};
- const expectedYear=yearOf(mbResult?.date||'');
- const it=await fromItunes({title,artist,album},expectedYear);
- if(it&&(!expectedYear||yearOf(it.date)===expectedYear))return it;
- return {date:'',partialDate:mbResult?.date||'',source:mbResult?.source||'none',confidence:mbResult?.confidence||0};
+ const mbDate=fullDate(mbResult?.date||'');
+ const it=await fromItunes({title,artist,album},yearOf(mbDate));
+ const itDate=fullDate(it?.date||'');
+ const currentYear=new Date().getUTCFullYear();
+ if(mbDate&&itDate){
+  const y1=Number(yearOf(mbDate)),y2=Number(yearOf(itDate)),date=mbDate<itDate?mbDate:itDate;
+  const sameEra=Math.abs(y1-y2)<=1, recent=Number(yearOf(date))>=currentYear-3;
+  return {date,verified:!!(sameEra&&recent),source:sameEra?(recent?'musicbrainz+itunes':'metadata-old-suggestion'):'metadata-conflict',confidence:sameEra?Math.min(Number(mbResult?.confidence)||0,Number(it?.confidence)||0):0,matchedTitle:mbResult?.matchedTitle||it?.matchedTitle||'',matchedArtist:mbResult?.matchedArtist||it?.matchedArtist||''};
+ }
+ const one=mbDate?{...mbResult,date:mbDate}:{...it,date:itDate};
+ if(one.date)return {...one,verified:false,source:(one.source||'metadata')+'-suggestion'};
+ return {date:'',partialDate:mbResult?.date||'',source:mbResult?.source||'none',confidence:mbResult?.confidence||0,verified:false};
 }
 `);
 
@@ -90,7 +97,7 @@ patch('lib/smart-import.js',s=>{
     'smart track release date');
   s=must(s,
     "   const t=validateItem(body);const duplicate=findDuplicate(db.tracks,t);if(duplicate)return respond({skipped:true,trackId:duplicate.id});",
-    "   const t=validateItem(body);const duplicate=findDuplicate(db.tracks,t);if(duplicate)return respond({skipped:true,trackId:duplicate.id});if(!t.releaseDate){const found=await lookupReleaseDate(t);if(found.date)t.releaseDate=found.date;}",
+    "   const t=validateItem(body);const duplicate=findDuplicate(db.tracks,t);if(duplicate)return respond({skipped:true,trackId:duplicate.id});if(!t.releaseDate){const knownAlbum=albumFor(db,t);if(knownAlbum?.release_date)t.releaseDate=knownAlbum.release_date;else{const found=await lookupReleaseDate(t);if(found.date&&found.verified)t.releaseDate=found.date;}}",
     'smart auto lookup');
   return s;
 });
@@ -116,7 +123,11 @@ patch('lib/backend.js',s=>{
   const anchor=" // Reject unsupported archive endpoints before reading any request bytes.";
   if(!s.includes("url.pathname==='/api/metadata/release-date'"))s=must(s,anchor,
 ` if(url.pathname==='/api/metadata/release-date'&&request.method==='GET'){
-  const found=await lookupReleaseDate({title:url.searchParams.get('title')||'',artist:url.searchParams.get('artist')||'',album:url.searchParams.get('album')||''});
+  const title=url.searchParams.get('title')||'',artist=url.searchParams.get('artist')||'',album=url.searchParams.get('album')||'';
+  const norm=v=>String(v||'').trim().toLocaleLowerCase('ru').replace(/[^a-zа-яё0-9]+/gi,'');
+  const known=album?db.albums.find(a=>a.release_date&&norm(a.name)===norm(album)):null;
+  if(known)return Response.json({date:known.release_date,verified:true,source:'venyl-catalog',confidence:100},{headers:{'Cache-Control':'no-store'}});
+  const found=await lookupReleaseDate({title,artist,album});
   return Response.json(found,{headers:{'Cache-Control':'no-store'}});
  }
 ${anchor}`,'metadata route');
@@ -131,11 +142,11 @@ ${indent} db._meta.releaseDateLookup??={};const checked=db._meta.releaseDateLook
 ${indent} const pending=db.tracks.filter(t=>!t.release_date&&(!checked[t.id]||Date.now()-Date.parse(checked[t.id].checkedAt||0)>30*86400000));
 ${indent} if(!pending.length){const remaining=db.tracks.filter(t=>!t.release_date).length;return Response.json({done:true,remaining});}
 ${indent} const t=pending[0];const found=await lookupReleaseDate({title:t.title,artist:t.artist,album:t.album||t.title});
-${indent} if(found.date){t.release_date=found.date;if(t.album_id){const al=db.albums.find(a=>Number(a.id)===Number(t.album_id));if(al&&!al.release_date)al.release_date=found.date;}}
+${indent} if(found.date&&found.verified){t.release_date=found.date;if(t.album_id){const al=db.albums.find(a=>Number(a.id)===Number(t.album_id));if(al&&!al.release_date)al.release_date=found.date;}}
 ${indent} checked[t.id]={checkedAt:new Date().toISOString(),date:found.date||'',partialDate:found.partialDate||'',source:found.source||'none',confidence:Number(found.confidence)||0};
 ${indent} const r=await bridge(env,'commit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({revision:state.revision,payload:db})});
 ${indent} if(r.status===409)return Response.json({error:'Каталог изменился. Повтори.'},{status:409});if(!r.ok)throw Error('Не удалось сохранить дату релиза');
-${indent} const remaining=db.tracks.filter(x=>!x.release_date).length;return Response.json({done:false,updated:!!found.date,trackId:t.id,date:found.date||'',source:found.source||'',remaining});
+${indent} const remaining=db.tracks.filter(x=>!x.release_date).length;return Response.json({done:false,updated:!!(found.date&&found.verified),trackId:t.id,date:found.date||'',source:found.source||'',verified:!!found.verified,remaining});
 ${indent}}
 `;
     s=s.slice(0,parsePos)+block+s.slice(parsePos);
@@ -208,14 +219,14 @@ patch('client/mobile-upload.js',s=>{
       'upload lookup button');
     s=must(s,
       "for(const key of ['title','artist','album','kind'])fields[key].value=row[key]||'';show('Теги прочитаны. Проверь название и артистов перед загрузкой.'+(embedded?' Встроенная обложка найдена.':''));",
-      "for(const key of ['title','artist','album','kind'])fields[key].value=row[key]||'';show('Теги прочитаны. Ищем дату релиза…');try{const q=new URLSearchParams({title:fields.title.value,artist:fields.artist.value,album:fields.album.value});const found=await api('/api/metadata/release-date?'+q);if(found.date)fields.releaseDate.value=found.date;show(found.date?'Дата релиза найдена: '+found.date+'. Проверь данные перед загрузкой.':'Теги прочитаны. Дату релиза не нашли автоматически — укажи её вручную.'+(embedded?' Встроенная обложка найдена.':''),false);}catch{show('Теги прочитаны. Дату релиза укажи вручную.'+(embedded?' Встроенная обложка найдена.':''));}",
+      "for(const key of ['title','artist','album','kind'])fields[key].value=row[key]||'';show('Теги прочитаны. Ищем дату релиза…');try{const q=new URLSearchParams({title:fields.title.value,artist:fields.artist.value,album:fields.album.value});const found=await api('/api/metadata/release-date?'+q);if(found.date)fields.releaseDate.value=found.date;show(found.date?(found.verified?'Дата релиза подтверждена: '+found.date+'.':'Найдена возможная дата: '+found.date+'. Проверь её перед загрузкой.'):'Теги прочитаны. Дату релиза не нашли автоматически — укажи её вручную.'+(embedded?' Встроенная обложка найдена.':''),false);}catch{show('Теги прочитаны. Дату релиза укажи вручную.'+(embedded?' Встроенная обложка найдена.':''));}",
       'auto lookup after tags');
     s=must(s,
       "const metadata=cleanImportRow({...row,title:fields.title.value,artist:fields.artist.value,album:fields.album.value,kind:fields.kind.value});",
       "const metadata=cleanImportRow({...row,title:fields.title.value,artist:fields.artist.value,album:fields.album.value,kind:fields.kind.value,releaseDate:fields.releaseDate.value});",
       'submit release date');
     s=s.replace(" form.addEventListener('input',e=>{if(e.target!==fields.audio){pending=null;onDirty(true);}});",
-      " if(lookup)lookup.onclick=async()=>{try{lookup.disabled=true;show('Ищем дату релиза…');const q=new URLSearchParams({title:fields.title.value,artist:fields.artist.value,album:fields.album.value});const found=await api('/api/metadata/release-date?'+q);if(found.date){fields.releaseDate.value=found.date;pending=null;onDirty(true);show('Дата найдена: '+found.date);}else show('Точную дату автоматически найти не удалось. Укажи её вручную.',true);}catch(e){show(e.message||'Не удалось найти дату.',true);}finally{lookup.disabled=false;}};\n form.addEventListener('input',e=>{if(e.target!==fields.audio){pending=null;onDirty(true);}});");
+      " if(lookup)lookup.onclick=async()=>{try{lookup.disabled=true;show('Ищем дату релиза…');const q=new URLSearchParams({title:fields.title.value,artist:fields.artist.value,album:fields.album.value});const found=await api('/api/metadata/release-date?'+q);if(found.date){fields.releaseDate.value=found.date;pending=null;onDirty(true);show(found.verified?'Дата подтверждена: '+found.date:'Найдена возможная дата: '+found.date+'. Проверь её перед загрузкой.');}else show('Точную дату автоматически найти не удалось. Укажи её вручную.',true);}catch(e){show(e.message||'Не удалось найти дату.',true);}finally{lookup.disabled=false;}};\n form.addEventListener('input',e=>{if(e.target!==fields.audio){pending=null;onDirty(true);}});");
   }
   return s;
 });
@@ -241,9 +252,9 @@ patch('public/assets/mobile/mobile.css',s=>{
 });
 
 patch('lib/mobile-ui.js',s=>s
- .replace(/\/assets\/mobile\/mobile\.css\?v=[^"']+/g,'/assets/mobile/mobile.css?v=releases-4')
- .replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=releases-4')
- .replace(/\/assets\/mobile\/upload\.js\?v=[^"']+/g,'/assets/mobile/upload.js?v=releases-4')
+ .replace(/\/assets\/mobile\/mobile\.css\?v=[^"']+/g,'/assets/mobile/mobile.css?v=releases-5')
+ .replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=releases-5')
+ .replace(/\/assets\/mobile\/upload\.js\?v=[^"']+/g,'/assets/mobile/upload.js?v=releases-5')
 );
 
 console.log('Release system installed.');
