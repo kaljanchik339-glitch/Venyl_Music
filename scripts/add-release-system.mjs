@@ -198,11 +198,12 @@ patch('public/assets/mobile/app.js',s=>{
 
 
 
-    const initAnchor=" async function initialize(){try{";
-    s=must(s,initAnchor,
-` async function releaseDateBackfill(){if(window.__venylReleaseBackfill||!s.isAdmin)return;window.__venylReleaseBackfill=true;try{for(let i=0;i<320;i++){if(!navigator.onLine)break;let d;try{d=await api('/api/admin/release-dates/backfill',{});}catch(e){if(e.status===409){await new Promise(r=>setTimeout(r,1500));continue;}break;}if(d.done){window.__venylReleaseBackfillDone=true;break;}await new Promise(r=>setTimeout(r,1200));}await loadCatalog();if(route.startsWith('artist/'))navigate();}finally{window.__venylReleaseBackfill=false;}}
+    const initCall=s.lastIndexOf('await initialize();');
+    if(initCall<0)throw new Error('[release-system] target missing: initialize call');
+    const backfillBoot=`async function releaseDateBackfill(){if(window.__venylReleaseBackfill||!s.isAdmin)return;window.__venylReleaseBackfill=true;try{for(let i=0;i<320;i++){if(!navigator.onLine)break;let d;try{d=await api('/api/admin/release-dates/backfill',{});}catch(e){if(e.status===409){await new Promise(r=>setTimeout(r,1500));continue;}break;}if(d.done){window.__venylReleaseBackfillDone=true;break;}await new Promise(r=>setTimeout(r,1200));}await loadCatalog();if(route.startsWith('artist/'))navigate();}finally{window.__venylReleaseBackfill=false;}}
  const releaseBackfillBoot=setInterval(()=>{if(window.__venylReleaseBackfillDone){clearInterval(releaseBackfillBoot);return;}if(s.isAdmin){clearInterval(releaseBackfillBoot);setTimeout(()=>releaseDateBackfill(),1200);}},1500);setTimeout(()=>clearInterval(releaseBackfillBoot),60000);
-${initAnchor}`,'background backfill');
+ `;
+    s=s.slice(0,initCall)+backfillBoot+s.slice(initCall);
   }
   return s;
 });
