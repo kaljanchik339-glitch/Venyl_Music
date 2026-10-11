@@ -196,14 +196,12 @@ patch('public/assets/mobile/app.js',s=>{
       " async function loadCatalog(){const [tracks,artists]=await Promise.all([api('/api/tracks'),api('/api/artists')]);s.tracks=remember(tracks.tracks||[]);s.artists=artists.artists||[];const byId=new Map();for(const t of s.tracks){if(!t.albumId)continue;let a=byId.get(t.albumId);if(!a){a={id:t.albumId,name:t.album,artist:s.artists.find(a=>a.id===t.artistId)?.name||t.artist,coverUrl:t.coverUrl,releaseType:t.releaseType,releaseDate:t.releaseDate||'',createdAt:t.createdAt};byId.set(t.albumId,a);}if(t.releaseDate&&!a.releaseDate)a.releaseDate=t.releaseDate;if(Date.parse(t.createdAt)>Date.parse(a.createdAt))a.createdAt=t.createdAt;}albums=[...byId.values()].sort((a,b)=>Date.parse(releaseStamp(b)||0)-Date.parse(releaseStamp(a)||0));}",
       'catalog release date');
 
-    s=must(s,
-      "s.user=result[1].status==='fulfilled'?result[1].value.user:null;s.isAdmin=!!s.user?.isAdmin;",
-      "s.user=result[1].status==='fulfilled'?result[1].value.user:null;s.isAdmin=!!s.user?.isAdmin;if(s.isAdmin)setTimeout(()=>releaseDateBackfill(),2500);",
-      'start backfill');
+
 
     const initAnchor=" async function initialize(){try{";
     s=must(s,initAnchor,
-` async function releaseDateBackfill(){if(window.__venylReleaseBackfill||!s.isAdmin)return;window.__venylReleaseBackfill=true;try{for(let i=0;i<320;i++){if(!navigator.onLine)break;let d;try{d=await api('/api/admin/release-dates/backfill',{});}catch(e){if(e.status===409){await new Promise(r=>setTimeout(r,1500));continue;}break;}if(d.done)break;await new Promise(r=>setTimeout(r,1200));}await loadCatalog();if(route.startsWith('artist/'))navigate();}finally{window.__venylReleaseBackfill=false;}}
+` async function releaseDateBackfill(){if(window.__venylReleaseBackfill||!s.isAdmin)return;window.__venylReleaseBackfill=true;try{for(let i=0;i<320;i++){if(!navigator.onLine)break;let d;try{d=await api('/api/admin/release-dates/backfill',{});}catch(e){if(e.status===409){await new Promise(r=>setTimeout(r,1500));continue;}break;}if(d.done){window.__venylReleaseBackfillDone=true;break;}await new Promise(r=>setTimeout(r,1200));}await loadCatalog();if(route.startsWith('artist/'))navigate();}finally{window.__venylReleaseBackfill=false;}}
+ const releaseBackfillBoot=setInterval(()=>{if(window.__venylReleaseBackfillDone){clearInterval(releaseBackfillBoot);return;}if(s.isAdmin){clearInterval(releaseBackfillBoot);setTimeout(()=>releaseDateBackfill(),1200);}},1500);setTimeout(()=>clearInterval(releaseBackfillBoot),60000);
 ${initAnchor}`,'background backfill');
   }
   return s;
