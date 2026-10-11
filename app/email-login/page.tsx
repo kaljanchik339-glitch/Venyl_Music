@@ -31,7 +31,7 @@ export default function EmailLogin(){
       let data:any={};try{data=await r.json();}catch{}
       if(!r.ok){
         const raw=String(data?.error_description||data?.msg||data?.message||data?.error||'');
-        if(/invalid login credentials/i.test(raw)) throw new Error('Неверный email или пароль. Если раньше входил только через Google — нажми «Задать пароль через Google».');
+        if(/invalid login credentials/i.test(raw)) throw new Error('Для этого аккаунта пароль ещё не привязан к Supabase или введён неверно. Нажми «Привязать мой старый пароль» ниже.');
         throw new Error(raw||'Не удалось войти.');
       }
       saveSession(data);
@@ -67,7 +67,7 @@ export default function EmailLogin(){
 
     <div className="links">
       <a href="/forgot-password">Забыли пароль?</a>
-      <a href="/set-password">Задать пароль через Google</a>
+      <a href="/set-password">Привязать мой старый пароль</a>
     </div>
     <a className="back" href="/">← Назад</a>
     <style>{`
