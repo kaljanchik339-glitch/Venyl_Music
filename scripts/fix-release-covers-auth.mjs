@@ -9,6 +9,10 @@ function patch(path,fn){
 
 patch('lib/legacy.js',s=>{
   s=s.replace(
+    "coverUrl: row.cover_path ? `/uploads/covers/${row.cover_path}` : '', releaseType:",
+    "coverUrl: row.cover_path ? `/uploads/${row.cover_bucket==='albums'?'albums':'covers'}/${row.cover_path}` : '', releaseType:"
+  );
+  s=s.replace(
     "function mapAlbum(row){ return { id: row.id, artistId: row.artist_id, name: row.name, releaseType: row.release_type || '', releaseDate: row.release_date || '', description: row.description || '', coverUrl: row.cover_path ? `/uploads/albums/${row.cover_path}` : '', createdAt: row.created_at }; }",
     "function mapAlbum(row){ const bucket=row.cover_bucket==='covers'?'covers':'albums'; return { id: row.id, artistId: row.artist_id, name: row.name, releaseType: row.release_type || '', releaseDate: row.release_date || '', description: row.description || '', coverUrl: row.cover_path ? `/uploads/${bucket}/${row.cover_path}` : '', createdAt: row.created_at }; }"
   );
