@@ -9,7 +9,7 @@
     "postinstall": "node scripts/unpack-source.mjs && node scripts/fix-render-origin.mjs && node scripts/cache-bust.mjs && node scripts/fix-mobile-auth-ui.mjs && node scripts/fix-recovery-save.mjs && node scripts/use-standalone-password-pages.mjs && node scripts/fix-password-reset-ux.mjs && node scripts/restore-full-latest-root.mjs && node scripts/apply-final-sites-mobile.mjs && node scripts/fix-mobile-player-behavior.mjs && node scripts/add-release-system.mjs && node scripts/fix-release-details.mjs && node scripts/fix-full-player-release-links.mjs && node scripts/fix-release-covers-auth.mjs && node scripts/build-smart-import.mjs && next build",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -H 0.0.0.0 -p ${PORT:-3000}",
+    "start": "node scripts/restore-official-album-covers-once.mjs && next start -H 0.0.0.0 -p ${PORT:-3000}",
     "lint": "eslint . --ignore-pattern .next",
     "test:mobile": "node tests/mobile-playback.test.mjs"
   },
