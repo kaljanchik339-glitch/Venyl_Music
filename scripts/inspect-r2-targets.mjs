@@ -1,6 +1,6 @@
 import {readFileSync} from 'node:fs';
 
-for(const path of ['lib/backend.js','public/assets/mobile/upload.js','lib/legacy.js']){
+for(const path of ['lib/backend.js','public/assets/mobile/upload.js','lib/legacy.js','app/uploads/[...path]/route.ts']){
   try{
     const s=readFileSync(path,'utf8');
     console.log('\n===== INSPECT '+path+' =====');
