@@ -79,9 +79,11 @@ async function migrate(item) {
     await pipeline(stream, createWriteStream(temp));
     if (item.size >= 0 && bytes !== item.size) throw new Error(`Source size mismatch: expected ${item.size}, got ${bytes}`);
     // Single PutObject supports up to 5 GiB, far above expected Venyl audio files.
-    const { createReadStream } = await import('node:fs');
+    // R2 uploads need a replayable request body for signing and retries.
+    // A file stream is non-retryable in the AWS SDK and can fail before upload.
+    const uploadBody = readFileSync(temp);
     await r2.send(new PutObjectCommand({
-      Bucket: destBucket, Key: item.key, Body: createReadStream(temp),
+      Bucket: destBucket, Key: item.key, Body: uploadBody,
       ContentLength: bytes, ContentType: item.contentType,
       Metadata: { sha256: hash.digest('hex') },
     }));
