@@ -60,3 +60,15 @@ patch('lib/mobile-ui.js',s=>s
 );
 
 console.log('Release covers + email auth routing fixed.');
+
+
+// VENYL_R2_PLAYBACK_V1: serve migrated audio directly from Cloudflare R2.
+// Supabase remains responsible for authentication, catalog and artwork.
+patch('lib/legacy.js',s=>{
+  const publicBase='https://pub-83b1a4dba0ee44ff829e3e405b0b1ea3.r2.dev';
+  const old='audioUrl: \`/uploads/tracks/\${row.audio_path}\`';
+  const replacement='audioUrl: row.audio_path ? '+JSON.stringify(publicBase)+' + \'/\' + String(row.audio_path).split(\'/\').map(encodeURIComponent).join(\'/\') : \'\'';
+  if(!s.includes(old)&&!s.includes(replacement))throw new Error('[R2] audioUrl mapping not found');
+  return s.replaceAll(old,replacement);
+});
+console.log('Cloudflare R2 playback URL configured.');
