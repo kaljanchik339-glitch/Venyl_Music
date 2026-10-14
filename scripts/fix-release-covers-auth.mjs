@@ -143,10 +143,4 @@ patch('public/assets/mobile/app.js',js=>{
   return js.replace(/(<input\b[^>]*\bname=["']audio["'][^>]*\btype=["']file["'][^>]*\baccept=["'])audio\/\*(['"])/g,'$1'+accept+'$2')
            .replace(/(<input\b[^>]*\btype=["']file["'][^>]*\bname=["']audio["'][^>]*\baccept=["'])audio\/\*(['"])/g,'$1'+accept+'$2');
 });
-patch('lib/mobile-ui.js',s=>{
-  if(s.includes('VENYL_ARCHIVE_PWA_META_V1'))return s;
-  return s.replace("html=html.replace('</head>',",String.raw\`
- // VENYL_ARCHIVE_PWA_META_V1: retain standalone app settings from 2026-10-09 archive.
- html=html.replace('</head>',\`);
-});
-console.log('Archived mobile MP3 chooser and PWA metadata merged without replacing current Venyl.');
+console.log('Archived iPhone audio file chooser merged without replacing current Venyl.');
