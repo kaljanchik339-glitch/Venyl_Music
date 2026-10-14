@@ -77,18 +77,18 @@ console.log('Cloudflare R2 playback URL configured.');
 // VENYL_MOBILE_NATIVE_FEEL_V1: preserve visuals, suppress browser-only gestures.
 patch('public/assets/mobile/mobile.css',css=>{
   if(css.includes('VENYL_MOBILE_NATIVE_FEEL_V1'))return css;
-  return css+String.raw\`
+  return css+String.raw`
 /* VENYL_MOBILE_NATIVE_FEEL_V1 */
 html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none;}
 body{-webkit-touch-callout:none;overscroll-behavior-y:none;}
 img,svg{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none;}
 button,a,[role="button"],.v-mini-meta{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 input,textarea,[contenteditable="true"]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;}
-\`;
+`;
 });
 patch('public/assets/mobile/app.js',js=>{
   if(js.includes('VENYL_MOBILE_NATIVE_FEEL_V1'))return js;
-  return js+String.raw\`
+  return js+String.raw`
 // VENYL_MOBILE_NATIVE_FEEL_V1
 (()=> {
   // Prevent iOS double-tap zoom without blocking normal scrolling or controls.
@@ -126,7 +126,7 @@ patch('public/assets/mobile/app.js',js=>{
   document.addEventListener('play',bind,true);
   document.addEventListener('loadedmetadata',bind,true);
 })();
-\`;
+`;
 });
 patch('lib/mobile-ui.js',s=>s
  .replace(/\/assets\/mobile\/mobile\.css\?v=[^"']+/g,'/assets/mobile/mobile.css?v=native-feel-1')
