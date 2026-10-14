@@ -107,7 +107,11 @@ for (const [index, item] of selected.entries()) {
   for (let attempt = 1; attempt <= 3; attempt++) {
     try { result = await migrate(item); break; }
     catch (err) {
-      if (attempt === 3) result = { key: item.key, status: 'failed', error: String(err.message) };
+      if (attempt === 3) {
+        const details = [err.name, err.message, err.$metadata?.httpStatusCode && `HTTP ${err.$metadata.httpStatusCode}`, err.cause?.message].filter(Boolean).join(' | ');
+        console.error(`[${index + 1}/${selected.length}] upload error: ${details}`);
+        result = { key: item.key, status: 'failed', error: details };
+      }
       else await sleep(attempt * 1000);
     }
   }
