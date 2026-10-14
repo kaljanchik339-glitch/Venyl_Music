@@ -133,3 +133,20 @@ patch('lib/mobile-ui.js',s=>s
  .replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=native-feel-1')
 );
 console.log('Venyl mobile native-feel enhancements applied.');
+
+
+// VENYL_ARCHIVE_MERGE_20261009_V1
+// Non-destructive port of the archived iOS audio-file chooser and PWA metadata.
+// Existing catalog, R2 audio mapping, login and UI remain authoritative.
+patch('public/assets/mobile/app.js',js=>{
+  const accept='.mp3,.m4a,.wav,.flac,.ogg,.opus,.aac,.aif,.aiff,audio/mpeg,audio/mp4,audio/x-m4a,audio/wav,audio/flac';
+  return js.replace(/(<input\b[^>]*\bname=["']audio["'][^>]*\btype=["']file["'][^>]*\baccept=["'])audio\/\*(['"])/g,'$1'+accept+'$2')
+           .replace(/(<input\b[^>]*\btype=["']file["'][^>]*\bname=["']audio["'][^>]*\baccept=["'])audio\/\*(['"])/g,'$1'+accept+'$2');
+});
+patch('lib/mobile-ui.js',s=>{
+  if(s.includes('VENYL_ARCHIVE_PWA_META_V1'))return s;
+  return s.replace("html=html.replace('</head>',",String.raw\`
+ // VENYL_ARCHIVE_PWA_META_V1: retain standalone app settings from 2026-10-09 archive.
+ html=html.replace('</head>',\`);
+});
+console.log('Archived mobile MP3 chooser and PWA metadata merged without replacing current Venyl.');
