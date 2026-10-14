@@ -144,3 +144,49 @@ patch('public/assets/mobile/app.js',js=>{
            .replace(/(<input\b[^>]*\btype=["']file["'][^>]*\bname=["']audio["'][^>]*\baccept=["'])audio\/\*(['"])/g,'$1'+accept+'$2');
 });
 console.log('Archived iPhone audio file chooser merged without replacing current Venyl.');
+
+
+// VENYL_IOS_NOW_PLAYING_V2: update lock-screen metadata from the visible player.
+patch('public/assets/mobile/app.js',js=>{
+  if(js.includes('VENYL_IOS_NOW_PLAYING_V2'))return js;
+  return js+String.raw`
+// VENYL_IOS_NOW_PLAYING_V2
+(()=>{
+ if(!('mediaSession' in navigator)||!('MediaMetadata' in window))return;
+ const session=navigator.mediaSession;
+ let lastKey='';
+ const text=(selectors)=>{for(const sel of selectors){const el=document.querySelector(sel);const v=el?.textContent?.trim();if(v)return v;}return '';};
+ const image=(selectors)=>{for(const sel of selectors){const el=document.querySelector(sel);const v=el?.currentSrc||el?.src||el?.getAttribute?.('src');if(v&&v!=='about:blank'){try{return new URL(v,location.href).href;}catch{}}}return '';};
+ function update(){
+  const audio=document.querySelector('audio');
+  if(!audio||!audio.currentSrc&&!audio.src)return;
+  const title=text(['#v-player .v-player-title','#v-player [data-track-title]','#v-mini .v-mini-title','#v-player h2']);
+  const artist=text(['#v-player .v-player-artist','#v-mini .v-mini-artist','#v-player [data-track-artist]']);
+  const cover=image(['#v-player img','#v-mini img']);
+  const key=[audio.currentSrc||audio.src,title,artist,cover].join('|');
+  if(key!==lastKey&&(title||artist)){
+   try{
+    session.metadata=new MediaMetadata({title:title||'Venyl',artist:artist||'',album:'',artwork:cover?[{src:cover,sizes:'512x512'}]:[]});
+    lastKey=key;
+   }catch(e){console.warn('[Venyl] Media Session metadata:',e);}
+  }
+  try{session.playbackState=audio.paused?'paused':'playing';}catch{}
+  if(Number.isFinite(audio.duration)&&audio.duration>0&&session.setPositionState){
+   try{session.setPositionState({duration:audio.duration,playbackRate:audio.playbackRate||1,position:Math.min(audio.currentTime||0,audio.duration)});}catch{}
+  }
+ }
+ document.addEventListener('play',update,true);
+ document.addEventListener('pause',update,true);
+ document.addEventListener('loadedmetadata',update,true);
+ document.addEventListener('durationchange',update,true);
+ document.addEventListener('timeupdate',update,true);
+ document.addEventListener('click',()=>queueMicrotask(update),true);
+ const observer=new MutationObserver(()=>queueMicrotask(update));
+ const root=document.querySelector('#v-player')||document.body;
+ observer.observe(root,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['src']});
+ update();
+})();
+`;
+});
+patch('lib/mobile-ui.js',s=>s.replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=ios-now-playing-2'));
+console.log('Venyl iOS lock-screen metadata synchronization enabled.');
