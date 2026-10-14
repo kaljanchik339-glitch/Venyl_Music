@@ -72,3 +72,64 @@ patch('lib/legacy.js',s=>{
   return s.replaceAll(old,replacement);
 });
 console.log('Cloudflare R2 playback URL configured.');
+
+
+// VENYL_MOBILE_NATIVE_FEEL_V1: preserve visuals, suppress browser-only gestures.
+patch('public/assets/mobile/mobile.css',css=>{
+  if(css.includes('VENYL_MOBILE_NATIVE_FEEL_V1'))return css;
+  return css+String.raw\`
+/* VENYL_MOBILE_NATIVE_FEEL_V1 */
+html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none;}
+body{-webkit-touch-callout:none;overscroll-behavior-y:none;}
+img,svg{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none;}
+button,a,[role="button"],.v-mini-meta{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+input,textarea,[contenteditable="true"]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;}
+\`;
+});
+patch('public/assets/mobile/app.js',js=>{
+  if(js.includes('VENYL_MOBILE_NATIVE_FEEL_V1'))return js;
+  return js+String.raw\`
+// VENYL_MOBILE_NATIVE_FEEL_V1
+(()=> {
+  // Prevent iOS double-tap zoom without blocking normal scrolling or controls.
+  let lastTouch=0;
+  document.addEventListener('touchend',e=>{
+    const t=e.target;
+    if(t?.closest?.('input,textarea,select,[contenteditable="true"]'))return;
+    const now=Date.now();
+    if(now-lastTouch<300 && e.cancelable)e.preventDefault();
+    lastTouch=now;
+  },{passive:false});
+  // Prevent long-press image download menus; keep links and text inputs usable.
+  document.addEventListener('contextmenu',e=>{
+    if(e.target?.closest?.('img,svg'))e.preventDefault();
+  });
+  // Keep Media Session synchronized with the actual audio element, so iOS can
+  // resume playback after pausing from the lock screen when Safari permits it.
+  if(!('mediaSession' in navigator))return;
+  let bound=null;
+  function bind(){
+    const audio=document.querySelector('audio');
+    if(!audio||audio===bound)return;
+    bound=audio;
+    const sync=()=>{try{navigator.mediaSession.playbackState=audio.paused?'paused':'playing';}catch{}};
+    audio.addEventListener('play',sync);
+    audio.addEventListener('pause',sync);
+    audio.addEventListener('ended',sync);
+    try{
+      navigator.mediaSession.setActionHandler('play',()=>{const p=audio.play();if(p?.catch)p.catch(()=>{});});
+      navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
+    }catch{}
+    sync();
+  }
+  bind();
+  document.addEventListener('play',bind,true);
+  document.addEventListener('loadedmetadata',bind,true);
+})();
+\`;
+});
+patch('lib/mobile-ui.js',s=>s
+ .replace(/\/assets\/mobile\/mobile\.css\?v=[^"']+/g,'/assets/mobile/mobile.css?v=native-feel-1')
+ .replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=native-feel-1')
+);
+console.log('Venyl mobile native-feel enhancements applied.');
