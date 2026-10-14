@@ -1,0 +1,46 @@
+name: Migrate Venyl audio to Cloudflare R2
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Preview only (true) or copy files (false)"
+        required: true
+        default: "true"
+        type: choice
+        options: ["true", "false"]
+      limit:
+        description: "Max files to process; 0 = all"
+        required: true
+        default: "0"
+permissions:
+  contents: read
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated migration dependency
+        run: npm install --no-save --no-package-lock --ignore-scripts @aws-sdk/client-s3
+      - name: Copy and verify audio
+        env:
+          SUPABASE_URL: https://hwulruialugaaufjzsdt.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.VENYL_SUPABASE_SERVICE_ROLE_KEY }}
+          R2_ACCOUNT_ID: ${{ secrets.VENYL_R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.VENYL_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.VENYL_R2_SECRET_ACCESS_KEY }}
+          SOURCE_BUCKET: tracks
+          DEST_BUCKET: venyl-tracks
+          DRY_RUN: ${{ inputs.dry_run }}
+          LIMIT: ${{ inputs.limit }}
+        run: node scripts/migrate-supabase-to-r2.mjs
+      - name: Save verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: venyl-r2-migration-report
+          path: venyl-r2-migration-report.json
+          if-no-files-found: warn
