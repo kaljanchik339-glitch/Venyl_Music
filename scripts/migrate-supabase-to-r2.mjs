@@ -32,9 +32,18 @@ const required = ['R2_ACCOUNT_ID', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY'];
 if (!dryRun && required.some(k => !process.env[k])) {
   throw new Error('Missing R2 credentials. Set environment variables privately, not in GitHub.');
 }
+// Accept a plain Cloudflare account ID or a pasted R2 S3 endpoint URL.
+function normalizeR2AccountId(input) {
+  const raw = String(input || '').trim();
+  const hostname = raw.replace(/^https?:\/\//i, '').replace(/\/.*$/, '');
+  const match = hostname.match(/^([a-f0-9]{32})(?:\.r2\.cloudflarestorage\.com)?$/i);
+  if (!match) throw new Error('R2_ACCOUNT_ID must be a 32-character Cloudflare account ID or its R2 S3 endpoint URL. Do not paste API tokens here.');
+  return match[1].toLowerCase();
+}
+const r2AccountId = dryRun ? null : normalizeR2AccountId(process.env.R2_ACCOUNT_ID);
 const r2 = dryRun ? null : new S3Client({
   region: 'auto',
-  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  endpoint: `https://${r2AccountId}.r2.cloudflarestorage.com`,
   credentials: { accessKeyId: process.env.R2_ACCESS_KEY_ID, secretAccessKey: process.env.R2_SECRET_ACCESS_KEY },
   forcePathStyle: true,
 });
