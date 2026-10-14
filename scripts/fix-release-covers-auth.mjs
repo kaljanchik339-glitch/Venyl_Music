@@ -104,27 +104,7 @@ patch('public/assets/mobile/app.js',js=>{
   document.addEventListener('contextmenu',e=>{
     if(e.target?.closest?.('img,svg'))e.preventDefault();
   });
-  // Keep Media Session synchronized with the actual audio element, so iOS can
-  // resume playback after pausing from the lock screen when Safari permits it.
-  if(!('mediaSession' in navigator))return;
-  let bound=null;
-  function bind(){
-    const audio=document.querySelector('audio');
-    if(!audio||audio===bound)return;
-    bound=audio;
-    const sync=()=>{try{navigator.mediaSession.playbackState=audio.paused?'paused':'playing';}catch{}};
-    audio.addEventListener('play',sync);
-    audio.addEventListener('pause',sync);
-    audio.addEventListener('ended',sync);
-    try{
-      navigator.mediaSession.setActionHandler('play',()=>{const p=audio.play();if(p?.catch)p.catch(()=>{});});
-      navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
-    }catch{}
-    sync();
-  }
-  bind();
-  document.addEventListener('play',bind,true);
-  document.addEventListener('loadedmetadata',bind,true);
+
 })();
 `;
 });
@@ -146,47 +126,40 @@ patch('public/assets/mobile/app.js',js=>{
 console.log('Archived iPhone audio file chooser merged without replacing current Venyl.');
 
 
-// VENYL_IOS_NOW_PLAYING_V2: update lock-screen metadata from the visible player.
-patch('public/assets/mobile/app.js',js=>{
-  if(js.includes('VENYL_IOS_NOW_PLAYING_V2'))return js;
-  return js+String.raw`
-// VENYL_IOS_NOW_PLAYING_V2
-(()=>{
- if(!('mediaSession' in navigator)||!('MediaMetadata' in window))return;
- const session=navigator.mediaSession;
- let lastKey='';
- const text=(selectors)=>{for(const sel of selectors){const el=document.querySelector(sel);const v=el?.textContent?.trim();if(v)return v;}return '';};
- const image=(selectors)=>{for(const sel of selectors){const el=document.querySelector(sel);const v=el?.currentSrc||el?.src||el?.getAttribute?.('src');if(v&&v!=='about:blank'){try{return new URL(v,location.href).href;}catch{}}}return '';};
- function update(){
-  const audio=document.querySelector('audio');
-  if(!audio||!audio.currentSrc&&!audio.src)return;
-  const title=text(['#v-player .v-player-title','#v-player [data-track-title]','#v-mini .v-mini-title','#v-player h2']);
-  const artist=text(['#v-player .v-player-artist','#v-mini .v-mini-artist','#v-player [data-track-artist]']);
-  const cover=image(['#v-player img','#v-mini img']);
-  const key=[audio.currentSrc||audio.src,title,artist,cover].join('|');
-  if(key!==lastKey&&(title||artist)){
-   try{
-    session.metadata=new MediaMetadata({title:title||'Venyl',artist:artist||'',album:'',artwork:cover?[{src:cover,sizes:'512x512'}]:[]});
-    lastKey=key;
-   }catch(e){console.warn('[Venyl] Media Session metadata:',e);}
+
+
+// VENYL_MEDIA_SESSION_STABILITY_V3
+// The real playback controller owns Media Session. Avoid competing observers,
+// multiple action handlers, and 4+ position updates per second.
+patch('public/assets/mobile/playback.js',js=>{
+  const original="audio.addEventListener('timeupdate',()=>{sample();changed(false);metadata();});";
+  if(!js.includes(original))throw new Error('[MediaSession] playback timeupdate hook changed');
+  js=js.replace(original,"audio.addEventListener('timeupdate',()=>{sample();changed(false);});");
+  const old="function metadata(){if(!('mediaSession'in navigator)||!state.currentTrack)return;";
+  if(!js.includes(old))throw new Error('[MediaSession] metadata function changed');
+  const begin=js.indexOf(old);
+  const end=js.indexOf('\n function play(',begin);
+  if(end<0)throw new Error('[MediaSession] play function not found');
+  const replacement=String.raw`let lastMediaTrackId=null,lastMediaCover='',lastMediaPosition=-1;
+ function metadata(){
+  if(!('mediaSession' in navigator)||!state.currentTrack)return;
+  const t=state.currentTrack,ms=navigator.mediaSession;
+  const cover=t.coverUrl?new URL(t.coverUrl,location.href).href:'';
+  if(lastMediaTrackId!==t.id||lastMediaCover!==cover){
+   try{ms.metadata=new MediaMetadata({title:t.title||'Venyl',artist:t.artist||'',album:t.album||'',artwork:cover?[{src:cover}]:[]});lastMediaTrackId=t.id;lastMediaCover=cover;}catch(e){console.warn('[Venyl] Now Playing metadata',e);}
   }
-  try{session.playbackState=audio.paused?'paused':'playing';}catch{}
-  if(Number.isFinite(audio.duration)&&audio.duration>0&&session.setPositionState){
-   try{session.setPositionState({duration:audio.duration,playbackRate:audio.playbackRate||1,position:Math.min(audio.currentTime||0,audio.duration)});}catch{}
+  try{ms.playbackState=audio.paused?'paused':'playing';}catch{}
+  if(Number.isFinite(audio.duration)&&audio.duration>0&&ms.setPositionState){
+   const pos=Math.max(0,Math.min(audio.duration,audio.currentTime||0));
+   if(lastMediaPosition<0||Math.abs(pos-lastMediaPosition)>10||audio.paused){
+    try{ms.setPositionState({duration:audio.duration,playbackRate:audio.playbackRate||1,position:pos});lastMediaPosition=pos;}catch{}
+   }
   }
- }
- document.addEventListener('play',update,true);
- document.addEventListener('pause',update,true);
- document.addEventListener('loadedmetadata',update,true);
- document.addEventListener('durationchange',update,true);
- document.addEventListener('timeupdate',update,true);
- document.addEventListener('click',()=>queueMicrotask(update),true);
- const observer=new MutationObserver(()=>queueMicrotask(update));
- const root=document.querySelector('#v-player')||document.body;
- observer.observe(root,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['src']});
- update();
-})();
-`;
+ }`;
+  js=js.slice(0,begin)+replacement+js.slice(end);
+  js=js.replace("audio.addEventListener('seeking',()=>{","audio.addEventListener('seeking',()=>{lastMediaPosition=-1;");
+  js=js.replace("audio.addEventListener('seeked',()=>{","audio.addEventListener('seeked',()=>{lastMediaPosition=-1;metadata();");
+  return js;
 });
-patch('lib/mobile-ui.js',s=>s.replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=ios-now-playing-2'));
-console.log('Venyl iOS lock-screen metadata synchronization enabled.');
+patch('lib/mobile-ui.js',s=>s.replace(/\/assets\/mobile\/app\.js\?v=[^"']+/g,'/assets/mobile/app.js?v=ios-stable-3'));
+console.log('Single-owner Media Session; redundant observers and position update storm removed.');
