@@ -75,6 +75,16 @@ async function list(prefix = '') {
   return out;
 }
 async function migrate(item) {
+  // Do not repeatedly transfer objects already present with matching size.
+  // Existing objects remain untouched; source is never deleted.
+  try {
+    const existing = await r2.send(new HeadObjectCommand({ Bucket: destBucket, Key: item.key }));
+    if (Number(existing.ContentLength) === item.size && existing.Metadata?.sha256) {
+      return { key: item.key, bytes: item.size, status: 'already-present' };
+    }
+  } catch (error) {
+    if (error.$metadata?.httpStatusCode !== 404 && error.name !== 'NotFound' && error.name !== 'NoSuchKey') throw error;
+  }
   const path = item.key.split('/').map(encodeURIComponent).join('/');
   const url = `${apiBase}/object/${auth ? 'authenticated' : 'public'}/${encodeURIComponent(sourceBucket)}/${path}`;
   let temp;
