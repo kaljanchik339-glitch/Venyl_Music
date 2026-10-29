@@ -1,5 +1,7 @@
 name: Migrate Venyl audio to Cloudflare R2
 on:
+  schedule:
+    - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       dry_run:
@@ -34,8 +36,8 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{ secrets.VENYL_R2_SECRET_ACCESS_KEY }}
           SOURCE_BUCKET: tracks
           DEST_BUCKET: venyl-tracks
-          DRY_RUN: ${{ inputs.dry_run }}
-          LIMIT: ${{ inputs.limit }}
+          DRY_RUN: ${{ github.event_name == 'schedule' && 'false' || inputs.dry_run }}
+          LIMIT: ${{ github.event_name == 'schedule' && '0' || inputs.limit }}
         run: node scripts/migrate-supabase-to-r2.mjs
       - name: Save verification report
         if: always()
